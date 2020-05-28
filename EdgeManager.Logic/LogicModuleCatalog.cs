@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EdgeManager.Logic
 {
-    class LogicModuleCatalog
+    public class LogicModuleCatalog
     {
     }
 }

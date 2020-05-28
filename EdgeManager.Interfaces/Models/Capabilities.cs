@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EdgeManager
+namespace EdgeManager.Interfaces.Models
 {
     public class Capabilities
     {

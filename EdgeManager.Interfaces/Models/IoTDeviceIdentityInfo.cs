@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using EdgeManager.Interfaces.Enums;
 
-namespace EdgeManager
+namespace EdgeManager.Interfaces.Models
 {
     public class IoTDeviceIdentityInfo
     {
