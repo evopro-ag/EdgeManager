@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EdgeManager
 {
-    class DirectMethodPayloadBase
+    public class DirectMethodPayloadBase
     {
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EdgeManager
 {
-    class IoTHubInfo
+    public class IoTHubInfo
     {
         //[JsonProperty("name")] // see details here: https://www.newtonsoft.com/json/help/html/JsonPropertyName.htm
         public string Name { get; set; }

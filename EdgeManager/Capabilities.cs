@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EdgeManager
 {
-    class Capabilities
+    public class Capabilities
     {
         public bool IoTEdge { get; set; }
     }

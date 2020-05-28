@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EdgeManager
 {
-    class IoTDirectMethodReply
+    public class IoTDirectMethodReply
     {
         public object Payload { get; set; }
         public int Status { get; set; }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EdgeManager
 {
-    class IoTDeviceIdentityInfo
+    public class IoTDeviceIdentityInfo
     {
         public string DeviceId { get; set; }
         public ConnectionState ConnectionState { get; set; }

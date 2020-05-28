@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EdgeManager
 {
-    class IoTHubProperties
+    public class IoTHubProperties
     {
         public string HostName { get; set; }
     }

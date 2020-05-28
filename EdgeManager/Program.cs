@@ -5,19 +5,19 @@ using Newtonsoft.Json;
 
 namespace EdgeManager
 {
-    class Program
+    public static class Program
     {
-        async Task Main(string[] args)
+        public static void Main(string[] args)
         {
-			using (var azure = new AzureCliHost())
-			{
+			//using (var azure = new AzureCliHost())
+			//{
 				//var list = await azure.Run<IoTHubInfo[]>("iot hub list");
 
 				//await azure.CallMethod("ping", "evoproTestHub", "IoT_Edge_One", "$edgeAgent", new DirectMethodPayloadBase()).Dump();
 				//return;
 
-				var list = await azure.GetIoTHubs();
-                Console.WriteLine(list);
+				//var list = await azure.GetIoTHubs();
+                //Console.WriteLine(list);
 				//foreach (var hub in list)
 				//{
 				//	var deviceList = await azure.GetIoTDevices(hub.Name);
@@ -36,12 +36,7 @@ namespace EdgeManager
 				//		}
 				//	}
 				//}
-			}
+			//}
 		}
-	}
-	public enum ConnectionState
-	{
-		Disconnected,
-		Connected
 	}
 }
