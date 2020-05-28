@@ -18,7 +18,12 @@ namespace EdgeManager
                 LoadModules(kernel);
 
 				//create azure clie
-                IAzureService azure = null; //todo: Use Ninject here
+                IAzureService azure = kernel.Get<IAzureService>(); //todo: Use Ninject here
+                IoTHubInfo ioTHub = kernel.Get<IoTHubInfo>();
+                IoTDeviceIdentityInfo ioTDeviceInfo = kernel.Get<IoTDeviceIdentityInfo>();
+                IoTDirectMethodReply ioTDirectMethodReply = kernel.Get<IoTDirectMethodReply>();
+                IoTHubProperties ioTHubProperties = kernel.Get<IoTHubProperties>();
+                IoTModuleIdentityInfo ioTModuleIdentityInfo = kernel.Get<IoTModuleIdentityInfo>();
 
                 GetAllIoTHubInfo(azure).Wait();
             }

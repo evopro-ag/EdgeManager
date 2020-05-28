@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using EdgeManager.Interfaces.Enums;
+using EdgeManager.Interfaces.Services;
 
 namespace EdgeManager.Interfaces.Models
 {
