@@ -2,16 +2,24 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EdgeManager.Interfaces.Models;
+using EdgeManager.Interfaces.Services;
 using Newtonsoft.Json;
 
 namespace EdgeManager.Logic.Services
 {
-    class AzureCliHost : PowerShellHost
-    {
+    class AzureCliHost : IAzureCli, IAzureService
+	{
+        private readonly IPowerShell powerShell;
+
+        public AzureCliHost(IPowerShell powerShell)
+        {
+            this.powerShell = powerShell;
+        }
+
 		public async Task<T> Run<T>(string command)
         {
-			var json = string.Join("\n", await base.Execute("az " + command));
-			Console.WriteLine(json); ;
+			var json = string.Join("\n", await powerShell.Execute("az " + command));
+			//Console.WriteLine(json); ;
 			return JsonConvert.DeserializeObject<T>(json);
 		}
 

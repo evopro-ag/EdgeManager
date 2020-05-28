@@ -3,11 +3,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management.Automation;
 using System.Threading.Tasks;
+using EdgeManager.Interfaces.Services;
 
 namespace EdgeManager.Logic.Services
-{
-    class PowerShellHost : IDisposable
-    {
+{ 
+    class PowerShellHost : IPowerShell
+	{
 		private readonly PowerShell ps = PowerShell.Create();
 
 		public void Dispose()
@@ -15,7 +16,7 @@ namespace EdgeManager.Logic.Services
 			ps.Dispose();
 		}
 
-		protected Task<Collection<PSObject>> Execute(string command)
+		public Task<Collection<PSObject>> Execute(string command)
 		{
 			ps.AddScript(command);
 			return Task.FromResult(ps.Invoke());
