@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdgeManager", "EdgeManager\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdgeManager.Interfaces", "EdgeManager.Interfaces\EdgeManager.Interfaces.csproj", "{776FF7BD-F8AD-4B40-8768-DD2C93BD4533}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeManager.Logic", "EdgeManager.Logic\EdgeManager.Logic.csproj", "{34848D33-15EC-4733-93D3-39B78F699BB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdgeManager.Logic", "EdgeManager.Logic\EdgeManager.Logic.csproj", "{34848D33-15EC-4733-93D3-39B78F699BB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeManager.Gui", "EdgeManager.Gui\EdgeManager.Gui.csproj", "{9F3A3387-CA0C-4CE2-BD75-50BF48FA1C02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{34848D33-15EC-4733-93D3-39B78F699BB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34848D33-15EC-4733-93D3-39B78F699BB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34848D33-15EC-4733-93D3-39B78F699BB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F3A3387-CA0C-4CE2-BD75-50BF48FA1C02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F3A3387-CA0C-4CE2-BD75-50BF48FA1C02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F3A3387-CA0C-4CE2-BD75-50BF48FA1C02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F3A3387-CA0C-4CE2-BD75-50BF48FA1C02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

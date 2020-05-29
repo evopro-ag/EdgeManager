@@ -14,11 +14,7 @@ namespace EdgeManager.Logic
         {
             Bind<IPowerShell>().To<PowerShellHost>().InSingletonScope();
             Bind<IAzureCli, IAzureService>().To<AzureCliHost>().InSingletonScope();
-            Bind<IoTHubInfo>().To<IoTHubInfo>().InSingletonScope();
-            Bind<IoTDeviceIdentityInfo>().To<IoTDeviceIdentityInfo>().InSingletonScope();
-            Bind<IoTDirectMethodReply>().To<IoTDirectMethodReply>().InSingletonScope();
-            Bind<IoTHubProperties>().To<IoTHubProperties>().InSingletonScope();
-            Bind<IoTModuleIdentityInfo>().To<IoTModuleIdentityInfo>().InSingletonScope();
+
             //todo: add more bindings
         }
     }
