@@ -11,6 +11,7 @@ namespace EdgeManager
 {
     public static class Program
     {
+        [STAThread]
         public static void Main(string[] args)
         {
             using (var kernel = new StandardKernel())
@@ -18,7 +19,7 @@ namespace EdgeManager
                 LoadModules(kernel);
 
 				//create azure clie
-                IAzureService azure = kernel.Get<IAzureService>(); //todo: Use Ninject here
+                IAzureService azure = kernel.Get<IAzureService>();
 
                 GetAllIoTHubInfo(azure).Wait();
             }

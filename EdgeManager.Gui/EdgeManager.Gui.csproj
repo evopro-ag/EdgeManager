@@ -10,9 +10,11 @@
     <Folder Include="Commands\" />
     <Folder Include="Converters\" />
     <Folder Include="Extensions\" />
-    <Folder Include="ViewModels\" />
     <Folder Include="Resources\" />
-    <Folder Include="Views\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ninject" Version="3.3.4" />
   </ItemGroup>
 
 </Project>
