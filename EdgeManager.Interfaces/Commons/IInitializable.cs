@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 
-namespace EdgeManager.Gui
+namespace EdgeManager.Interfaces.Commons
 {
-    internal interface IInitializable
+    public interface IInitializable
     {
         void Init();
     }

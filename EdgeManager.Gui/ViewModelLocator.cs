@@ -4,6 +4,8 @@ using System.Text;
 using EdgeManager.Gui.ViewModels;
 using Ninject;
 using Ninject.Parameters;
+using EdgeManager.Gui.ViewModels;
+
 
 
 namespace EdgeManager.Gui
