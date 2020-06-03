@@ -24,7 +24,7 @@ namespace EdgeManager.Logic.Services
 		}
 
 		public Task<IoTHubInfo[]> GetIoTHubs() => Run<IoTHubInfo[]>("iot hub list");
-		public Task<IoTDeviceIdentityInfo[]> GetIoTDevices(string hubName) => Run<IoTDeviceIdentityInfo[]>($"iot hub device-identity list --hub-name {hubName}");
+		public Task<IoTDeviceInfo[]> GetIoTDevices(string hubName) => Run<IoTDeviceInfo[]>($"iot hub device-identity list --hub-name {hubName}");
 		public Task<IoTModuleIdentityInfo[]> GetIoTModule(string hubName, string deviceId) => Run<IoTModuleIdentityInfo[]>
 			($"iot hub module-identity list --device-id {deviceId} --hub-name {hubName}");
 		public Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload) => Run<IoTDirectMethodReply>

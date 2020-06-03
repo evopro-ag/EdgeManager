@@ -19,7 +19,7 @@ namespace EdgeManager.Gui.Design
             });
         }
 
-        public Task<IoTDeviceIdentityInfo[]> GetIoTDevices(string hubName)
+        public Task<IoTDeviceInfo[]> GetIoTDevices(string hubName)
         {
             throw new NotImplementedException();
         }

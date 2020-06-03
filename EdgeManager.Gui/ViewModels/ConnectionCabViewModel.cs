@@ -2,6 +2,7 @@
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
 using System;
+using System.Windows;
 
 namespace EdgeManager.Gui.ViewModels
 {
@@ -9,6 +10,7 @@ namespace EdgeManager.Gui.ViewModels
     {
         private readonly IAzureService azureService;
         private IoTHubInfo selectedIotHubInfo;
+        private IoTDeviceInfo selectedIotDeviceInfo;
 
         public ConnectionCabViewModel(IAzureService azureService)
         {
@@ -19,7 +21,9 @@ namespace EdgeManager.Gui.ViewModels
         {
             try
             {
-                IotHubInfos = await azureService.GetIoTHubs();
+                IotHubInfo = await azureService.GetIoTHubs();
+                IoTDeviceInfo = await azureService.GetIoTDevices("evoproTestHub");
+
             }
             catch (Exception ex)
             {
@@ -27,7 +31,7 @@ namespace EdgeManager.Gui.ViewModels
             }
         }
 
-        public IoTHubInfo[] IotHubInfos { get; private set; }
+        public IoTHubInfo[] IotHubInfo { get; private set; }
 
         public IoTHubInfo SelectedIotHubInfo
         {
@@ -37,6 +41,20 @@ namespace EdgeManager.Gui.ViewModels
                 if (Equals(value, selectedIotHubInfo)) return;
                 selectedIotHubInfo = value;
                 raisePropertyChanged();
+                MessageBox.Show(Title);
+            }
+        }
+        public IoTDeviceInfo[] IoTDeviceInfo { get; private set; }
+
+        public IoTDeviceInfo SelectedIoTDeviceInfo
+        {
+            get => selectedIotDeviceInfo;
+            set
+            {
+                if (Equals(value, selectedIotDeviceInfo)) return;
+                selectedIotDeviceInfo = value;
+                raisePropertyChanged();
+                
             }
         }
     }

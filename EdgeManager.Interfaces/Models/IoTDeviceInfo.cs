@@ -4,7 +4,7 @@ using EdgeManager.Interfaces.Enums;
 
 namespace EdgeManager.Interfaces.Models
 {
-    public class IoTDeviceIdentityInfo
+    public class IoTDeviceInfo
     {
         public string DeviceId { get; set; }
         public ConnectionState ConnectionState { get; set; }

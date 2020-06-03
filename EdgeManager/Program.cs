@@ -45,8 +45,7 @@ namespace EdgeManager
                     throw e;
                 }
             }
-            //using (var kernel = new StandardKernel())
-            //{
+
             //    LoadModules(kernel);
 
             //    ////create azure clie
@@ -62,8 +61,6 @@ namespace EdgeManager
             //await azure.CallMethod("ping", "evoproTestHub", "IoT_Edge_One", "$edgeAgent", new DirectMethodPayloadBase()).Dump();
             //return;
 
-
-            //}
         }
 
         private static Application CreateApplication(IViewModelFactory viewModelLocator)
