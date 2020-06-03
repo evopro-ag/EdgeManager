@@ -1,9 +1,24 @@
 ﻿<Application x:Class="EdgeManager.Gui.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:gui="clr-namespace:EdgeManager.Gui"
-             StartupUri="Views/MainWindow.xaml">
+             xmlns:gui="clr-namespace:EdgeManager.Gui" >
     <Application.Resources>
-        <gui:ViewModelLocator x:Key="Locator" />
+        <ResourceDictionary>
+
+            <gui:ViewModelLocator x:Key="Locator" />
+
+            <Style TargetType="Label">
+                <Setter Property="Margin" Value="5" />
+            </Style>
+
+            <Style TargetType="TextBox">
+                <Setter Property="Margin" Value="5" />
+            </Style>
+
+            <Style TargetType="ComboBox">
+                <Setter Property="Margin" Value="5" />
+            </Style>
+
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

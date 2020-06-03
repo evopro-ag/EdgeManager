@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EdgeManager.Gui.ViewModels;
 using Ninject;
 using Ninject.Parameters;
 using EdgeManager.Gui.ViewModels;
-
+using EdgeManager.Interfaces.Commons;
 
 
 namespace EdgeManager.Gui
@@ -42,34 +39,25 @@ namespace EdgeManager.Gui
         public T Create<T>()
         {
             var newObject = Kernel.Get<T>();
-            InitializeInitialziable(newObject as IInitializable);
             return newObject;
         }
 
         public T CreateInstance<T>(ConstructorArgument[] arguments)
         {
             var vm = Kernel.Get<T>(arguments);
-            InitializeInitialziable(vm as IInitializable);
             return vm;
         }
 
         public TVm CreateViewModel<T, TVm>(T model)
         {
             var vm = Kernel.Get<TVm>(new ConstructorArgument(@"model", model));
-            InitializeInitialziable(vm as IInitializable);
             return vm;
         }
 
         public TVm CreateViewModel<TVm>()
         {
             var vm = Kernel.Get<TVm>();
-            InitializeInitialziable(vm as IInitializable);
             return vm;
-        }
-
-        private static void InitializeInitialziable(IInitializable initializable)
-        {
-            initializable?.Init();
         }
     }
 }

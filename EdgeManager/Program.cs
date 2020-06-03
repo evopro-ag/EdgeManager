@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
+using EdgeManager.Gui;
+using EdgeManager.Gui.ViewModels;
+using EdgeManager.Gui.Views;
+using EdgeManager.Interfaces.Commons;
+using EdgeManager.Interfaces.Logging;
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
 using EdgeManager.Logic;
-using Newtonsoft.Json;
+using log4net;
+using Microsoft.VisualBasic;
 using Ninject;
 
 namespace EdgeManager
@@ -14,26 +22,66 @@ namespace EdgeManager
         [STAThread]
         public static void Main(string[] args)
         {
-            using (var kernel = new StandardKernel())
+            using (IKernel kernel = new StandardKernel())
             {
-                LoadModules(kernel);
+                try
+                {
+                    CreateLogger();
+                    LoadModules(kernel);
 
-				//create azure clie
-                IAzureService azure = kernel.Get<IAzureService>();
+                    var viewModelFactory = kernel.Get<ViewModelLocator>();
+                    var application = CreateApplication(viewModelFactory);
 
-                GetAllIoTHubInfo(azure).Wait();
+                    var mainWindowViewModel = viewModelFactory.CreateViewModel<MainWindowViewModel>();
+
+                    var mainWindow = new MainWindow {DataContext = mainWindowViewModel};
+
+                    application.Run(mainWindow);
+                    application.Shutdown();
+                }
+                catch (Exception e)
+                {
+                    LoggerFactory.GetTypedLogger(typeof(Program)).Error("Unhandled exeption", e);
+                    throw e;
+                }
             }
+            //using (var kernel = new StandardKernel())
+            //{
+            //    LoadModules(kernel);
 
-			//using (var azure = new AzureCliHost())
-			//{
-			//var list = await azure.Run<IoTHubInfo[]>("iot hub list");
+            //    ////create azure clie
+            //    //            IAzureService azure = kernel.Get<IAzureService>();
 
-			//await azure.CallMethod("ping", "evoproTestHub", "IoT_Edge_One", "$edgeAgent", new DirectMethodPayloadBase()).Dump();
-			//return;
+            //    //GetAllIoTHubInfo(azure).Wait();
+            //}
+
+            //using (var azure = new AzureCliHost())
+            //{
+            //var list = await azure.Run<IoTHubInfo[]>("iot hub list");
+
+            //await azure.CallMethod("ping", "evoproTestHub", "IoT_Edge_One", "$edgeAgent", new DirectMethodPayloadBase()).Dump();
+            //return;
 
 
-			//}
-		}
+            //}
+        }
+
+        private static Application CreateApplication(IViewModelFactory viewModelLocator)
+        {
+            var application = new App() { ShutdownMode = ShutdownMode.OnLastWindowClose };
+
+            application.InitializeComponent();
+            application.ReplaceViewModelLocator(viewModelLocator);
+
+            return application;
+        }
+
+        private static void CreateLogger()
+        {
+            var loggerRepository = LogManager.CreateRepository("EdgeManager");
+            log4net.Config.XmlConfigurator.Configure(loggerRepository, new FileInfo("log4net.config"));
+            
+        }
 
         private static async Task GetAllIoTHubInfo(IAzureService azure)
         {
@@ -59,20 +107,9 @@ namespace EdgeManager
             }
         }
 
-        private static void LoadModules(StandardKernel kernel)
+        private static void LoadModules(IKernel kernel)
         {
             kernel.Load<LogicModuleCatalog>();
-        }
-    }
-
-    public static class ConsoleExtensions
-    {
-        public static object Dump(this object o, string description = "")
-        {
-            Console.WriteLine(description);
-            var serializeObject = JsonConvert.SerializeObject(o, Formatting.Indented);
-            Console.WriteLine(serializeObject);
-            return o;
         }
     }
 }

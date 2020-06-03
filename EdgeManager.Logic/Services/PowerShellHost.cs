@@ -9,6 +9,11 @@ namespace EdgeManager.Logic.Services
 { 
     class PowerShellHost : IPowerShell
 	{
+        public PowerShellHost()
+        {
+            
+        }
+
 		private readonly PowerShell ps = PowerShell.Create();
 
 		public void Dispose()

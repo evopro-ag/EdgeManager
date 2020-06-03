@@ -7,14 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\" />
-    <Folder Include="Converters\" />
-    <Folder Include="Extensions\" />
-    <Folder Include="Resources\" />
+    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Ninject" Version="3.3.4" />
+    <PackageReference Include="ReactiveUI.WPF" Version="11.4.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ninject" Version="3.3.4" />
+    <ProjectReference Include="..\EdgeManager.Interfaces\EdgeManager.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

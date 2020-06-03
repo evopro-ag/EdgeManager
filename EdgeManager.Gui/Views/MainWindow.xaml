@@ -4,32 +4,25 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:EdgeManager.Gui.Views"
+        xmlns:viewModels="clr-namespace:EdgeManager.Gui.ViewModels"
         mc:Ignorable="d"
         Title="EdgeManager"
         WindowStartupLocation="CenterScreen"
         AllowDrop="True"
         MinWidth="1024" MinHeight="800"
-        d:DesignHeight="450" d:DesignWidth="800">
+        d:DesignHeight="450" d:DesignWidth="800"
+        d:DataContext="{d:DesignInstance viewModels:DesignMainWindowViewModel, IsDesignTimeCreatable=True}">
 
     <Grid>
-        <!--<Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>-->
+       <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <!--<Button Margin="10,10,802,748" Content="Connect" Click="Button_Click"/>
-        <Button Margin="10,46,802,712" Content="Disconnect"/>
-        <ComboBox HorizontalAlignment="Left" Margin="355,12,0,0" VerticalAlignment="Top" Width="212"/>
-        <Label Content="IoT Hub" HorizontalAlignment="Left" Height="26" Margin="260,10,0,0" VerticalAlignment="Top" Width="62"/>
-        <ComboBox HorizontalAlignment="Left" Margin="355,48,0,0" VerticalAlignment="Top" Width="212"/>
-        <Label Content="IoT Edge Gerät" HorizontalAlignment="Left" Height="26" Margin="260,46,0,0" VerticalAlignment="Top" Width="92"/>-->
-        
-        <Grid Margin="0,0,0,624">
-            <views:ConnectionCabView></views:ConnectionCabView>
-        </Grid>
-        <Grid Margin="0,165,0,0">
-            <views:TabView></views:TabView>
-        </Grid>
+        <views:ConnectionCabView Grid.Row="0" DataContext="{Binding ConnectionCabViewModel}" />
+
+        <views:TabView Grid.Row="1" />
+
 
     </Grid>
 </Window>
