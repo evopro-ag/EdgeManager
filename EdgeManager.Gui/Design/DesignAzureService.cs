@@ -21,7 +21,12 @@ namespace EdgeManager.Gui.Design
 
         public Task<IoTDeviceInfo[]> GetIoTDevices(string hubName)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new[]
+            {
+                new IoTDeviceInfo {DeviceId = "Device1"},
+                new IoTDeviceInfo {DeviceId = "Device2"},
+                new IoTDeviceInfo {DeviceId = "Device3"}
+            });
         }
 
         public Task<IoTModuleIdentityInfo[]> GetIoTModule(string hubName, string deviceId)

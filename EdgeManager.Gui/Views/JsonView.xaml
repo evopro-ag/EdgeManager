@@ -4,11 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EdgeManager.Gui.Views"
+             xmlns:gui="clr-namespace:EdgeManager.Gui"
+             xmlns:design="clr-namespace:EdgeManager.Gui.Design"
+             xmlns:viewModels="clr-namespace:EdgeManager.Gui.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance viewModels:DesignJsonViewModel, IsDesignTimeCreatable=True}">
     <Grid>
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" x:Name="SvCode" Margin="20" Background="Black" Foreground="White">
-            <TextBlock>Here will be shown the json output...</TextBlock>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" Margin="20">
+            <TextBox Text="{Binding Text}"/>
         </ScrollViewer>
     </Grid>
 </UserControl>

@@ -4,14 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EdgeManager.Gui"
+             xmlns:viewModels="clr-namespace:EdgeManager.Gui.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance viewModels:DesignConnectionCabViewModel, IsDesignTimeCreatable=True}">
     <Grid>
         <StackPanel>
-            <Label Margin="5">Hub Name</Label>
-            <TextBox Margin="5"></TextBox>
-            <Label Margin="5">Host Name</Label>
-            <TextBox Margin="5"></TextBox>
+            <Label>Hub Name</Label>
+            <Label x:Name="lblHubName" Background="LightGray" MinHeight="20" Content="{Binding SelectedIotHubInfo}"/>
+            <Label>Host Name</Label>
+            <Label Background="LightGray" MinHeight="20"></Label>
         </StackPanel>
     </Grid>
 </UserControl>

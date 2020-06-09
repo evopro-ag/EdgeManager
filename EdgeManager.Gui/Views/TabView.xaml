@@ -18,7 +18,7 @@
             <local:ModuleView></local:ModuleView>
         </TabItem>
         <TabItem Header="Json">
-            <local:JsonView></local:JsonView>
+            <local:JsonView />
         </TabItem>
 
     </TabControl>

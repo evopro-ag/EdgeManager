@@ -21,7 +21,10 @@ namespace EdgeManager.Gui.ViewModels
         public override void Initialize()
         {
             ConnectionCabViewModel = viewModelFactory.CreateViewModel<ConnectionCabViewModel>();
+            JsonViewModel = viewModelFactory.CreateViewModel<JsonViewModel>();
         }
+
+        public JsonViewModel JsonViewModel { get; set; }
     }
 
     public class DesignMainWindowViewModel : MainWindowViewModel

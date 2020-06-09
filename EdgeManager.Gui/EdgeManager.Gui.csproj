@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+	  <OutputType>WinExe</OutputType>
+	  <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
@@ -11,6 +11,8 @@
     <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Ninject" Version="3.3.4" />
     <PackageReference Include="ReactiveUI.WPF" Version="11.4.1" />
+    <PackageReference Include="System.Reactive" Version="4.4.1" />
+    <PackageReference Include="System.Reactive.Linq" Version="4.4.1" />
   </ItemGroup>
 
   <ItemGroup>

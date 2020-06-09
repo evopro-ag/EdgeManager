@@ -14,14 +14,15 @@
         d:DataContext="{d:DesignInstance viewModels:DesignMainWindowViewModel, IsDesignTimeCreatable=True}">
 
     <Grid>
-       <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <views:ConnectionCabView Grid.Row="0" DataContext="{Binding ConnectionCabViewModel}" />
 
-        <views:TabView Grid.Row="1" />
+        <views:ConnectionCabView Grid.Column="0" DataContext="{Binding ConnectionCabViewModel}" />
+
+        <views:JsonView Grid.Column="1" DataContext="{Binding JsonViewModel}" />
 
 
     </Grid>

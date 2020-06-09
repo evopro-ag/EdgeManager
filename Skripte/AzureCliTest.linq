@@ -10,10 +10,10 @@
   <NuGetReference>System.Collections</NuGetReference>
   <Namespace>Newtonsoft.Json</Namespace>
   <Namespace>NJsonSchema.Annotations</Namespace>
-  <Namespace>System.Management.Automation</Namespace>
+  <Namespace>System.Net.NetworkInformation</Namespace>
   <Namespace>System.Text.Json.Serialization</Namespace>
   <Namespace>System.Threading.Tasks</Namespace>
-  <Namespace>System.Net.NetworkInformation</Namespace>
+  <Namespace>System.Management.Automation</Namespace>
 </Query>
 
 async Task Main()
@@ -22,8 +22,8 @@ async Task Main()
 	{
 		//var list = await azure.Run<IoTHubInfo[]>("iot hub list");
 
-		await azure.CallMethod("ping", "evoproTestHub", "IoT_Edge_One", "$edgeAgent", new DirectMethodPayloadBase()).Dump();
-		return;
+		//await azure.CallMethod("ping", "evoproTestHub", "IoT_Edge_One", "$edgeAgent", new DirectMethodPayloadBase()).Dump();
+		//return;
 		
 		var list = await azure.GetIoTHubs();
 		list.Dump();

@@ -15,7 +15,8 @@ namespace EdgeManager.Logic
             Bind<IPowerShell>().To<PowerShellHost>().InSingletonScope();
             Bind<IAzureCli, IAzureService>().To<AzureCliHost>().InSingletonScope();
 
-            //todo: add more bindings
+            //todo: add more bindings for selection service
+            //Bind<ISelectionService<T>>().To<SelectionServiceBase<T>>().InSingletonScope();
         }
     }
 }

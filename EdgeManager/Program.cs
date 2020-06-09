@@ -42,7 +42,6 @@ namespace EdgeManager
                 catch (Exception e)
                 {
                     LoggerFactory.GetTypedLogger(typeof(Program)).Error("Unhandled exeption", e);
-                    throw e;
                 }
             }
 
@@ -80,29 +79,29 @@ namespace EdgeManager
             
         }
 
-        private static async Task GetAllIoTHubInfo(IAzureService azure)
-        {
-            var list = await azure.GetIoTHubs();
-            Console.WriteLine(list);
-            foreach (var hub in list)
-            {
-                var deviceList = await azure.GetIoTDevices(hub.Name);
-                deviceList.Dump($"Devices for {hub.Name}");
-                foreach (var device in deviceList)
-                {
-                    if (device.Capabilities.IoTEdge)
-                    {
-                        var moduleList = await azure.GetIoTModule(hub.Name, device.DeviceId);
-                        moduleList.Dump($"Modules for {device.DeviceId}");
-                        foreach (var modul in moduleList)
-                        {
-                            var methodPayload = await azure.CallMethod("ping", hub.Name, device.DeviceId, modul.ModuleId, new DirectMethodPayloadBase());
-                            methodPayload.Dump($"Ping Status for {modul.ModuleId}");
-                        }
-                    }
-                }
-            }
-        }
+        //private static async Task GetAllIoTHubInfo(IAzureService azure)
+        //{
+        //    var list = await azure.GetIoTHubs();
+        //    Console.WriteLine(list);
+        //    foreach (var hub in list)
+        //    {
+        //        var deviceList = await azure.GetIoTDevices(hub.Name);
+        //        deviceList.Dump($"Devices for {hub.Name}");
+        //        foreach (var device in deviceList)
+        //        {
+        //            if (device.Capabilities.IoTEdge)
+        //            {
+        //                var moduleList = await azure.GetIoTModule(hub.Name, device.DeviceId);
+        //                moduleList.Dump($"Modules for {device.DeviceId}");
+        //                foreach (var modul in moduleList)
+        //                {
+        //                    var methodPayload = await azure.CallMethod("ping", hub.Name, device.DeviceId, modul.ModuleId, new DirectMethodPayloadBase());
+        //                    methodPayload.Dump($"Ping Status for {modul.ModuleId}");
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
         private static void LoadModules(IKernel kernel)
         {
