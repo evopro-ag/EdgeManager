@@ -7,16 +7,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <ListView>
-        <ListView.View>
-            <GridView>
+   <Grid>
+       <Grid.RowDefinitions>
+           <RowDefinition Height="Auto" />
+           <RowDefinition Height="Auto" />
+       </Grid.RowDefinitions>
+       <Grid.ColumnDefinitions>
+           <ColumnDefinition Width="*"/>
+       </Grid.ColumnDefinitions>
 
-                <GridViewColumn Header="DeviceID" Width="100"/>
-                <GridViewColumn Header="ConnectionState" Width="100"/>
-                
-                <GridViewColumn Header="Capability" Width="100"/>
-            </GridView>
+       <Label Grid.Row="0" Content="IoT / Edge Geräte" VerticalAlignment="Center" HorizontalAlignment="Left" />
+       <ListView Grid.Row="1" ItemsSource="{Binding SelectedIotHubInfo}" SelectedItem="{Binding SelectedIoTDeviceInfo}" DisplayMemberPath="DeviceID"/>
 
-        </ListView.View>
-    </ListView>
+    </Grid>
 </UserControl>

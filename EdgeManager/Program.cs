@@ -32,9 +32,7 @@ namespace EdgeManager
                     var viewModelFactory = kernel.Get<ViewModelLocator>();
                     var application = CreateApplication(viewModelFactory);
 
-                    var mainWindowViewModel = viewModelFactory.CreateViewModel<MainWindowViewModel>();
-
-                    var mainWindow = new MainWindow {DataContext = mainWindowViewModel};
+                    var mainWindow = new MainWindow();
 
                     application.Run(mainWindow);
                     application.Shutdown();

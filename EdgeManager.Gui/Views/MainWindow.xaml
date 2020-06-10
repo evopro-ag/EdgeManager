@@ -8,22 +8,25 @@
         mc:Ignorable="d"
         Title="EdgeManager"
         WindowStartupLocation="CenterScreen"
+        DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}"
         AllowDrop="True"
         MinWidth="1024" MinHeight="800"
         d:DesignHeight="450" d:DesignWidth="800"
-        d:DataContext="{d:DesignInstance viewModels:DesignMainWindowViewModel, IsDesignTimeCreatable=True}">
+        >
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition MinWidth="200" Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-
-        <views:ConnectionCabView Grid.Column="0" DataContext="{Binding ConnectionCabViewModel}" />
-
-        <views:JsonView Grid.Column="1" DataContext="{Binding JsonViewModel}" />
-
+        <views:HubView Grid.Column="0" DataContext="{Binding HubViewModel}" />
+        <views:EdgeView Grid.Row="1" Grid.Column="0" DataContext="{Binding EdgeViewModel}" />
+        <views:TabView Grid.Row="1" Grid.Column="1" DataContext="{Binding TabsViewModel}" />
 
     </Grid>
 </Window>

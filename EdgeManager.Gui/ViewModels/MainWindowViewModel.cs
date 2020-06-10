@@ -17,14 +17,18 @@ namespace EdgeManager.Gui.ViewModels
         }
 
         public ConnectionCabViewModel ConnectionCabViewModel { get; private set; }
+        public JsonViewModel JsonViewModel { get; set; }
+        public TabsViewModel TabsViewModel { get; set; }
+        public HubViewModel HubViewModel { get; set; }
+        public EdgeViewModel EdgeViewModel { get; set; }
 
         public override void Initialize()
         {
-            ConnectionCabViewModel = viewModelFactory.CreateViewModel<ConnectionCabViewModel>();
-            JsonViewModel = viewModelFactory.CreateViewModel<JsonViewModel>();
+            TabsViewModel = viewModelFactory.CreateViewModel<TabsViewModel>();
+            HubViewModel = viewModelFactory.CreateViewModel<HubViewModel>();
         }
 
-        public JsonViewModel JsonViewModel { get; set; }
+
     }
 
     public class DesignMainWindowViewModel : MainWindowViewModel

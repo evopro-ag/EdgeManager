@@ -11,8 +11,8 @@
     <ListView>
         <ListView.View>
             <GridView>
-                <GridViewColumn Header="ModuleID" Width="100"/>
-                <GridViewColumn Header="ConnectionState" Width="100"/>
+                <GridViewColumn Header="ModuleID" Width="Auto"/>
+                <GridViewColumn Header="ConnectionState" Width="Auto"/>
             </GridView>
 
         </ListView.View>

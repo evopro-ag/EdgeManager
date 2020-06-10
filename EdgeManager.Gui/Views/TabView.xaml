@@ -8,18 +8,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <TabControl>
-        <TabItem Header="Iot Hub">
-            <local:HubView></local:HubView>
-        </TabItem>
-        <TabItem Header="Iot Edge">
-            <local:EdgeView></local:EdgeView>
-        </TabItem>
-        <TabItem Header="Edge Module">
+      <TabItem Header="Module">
             <local:ModuleView></local:ModuleView>
         </TabItem>
-        <TabItem Header="Json">
-            <local:JsonView />
-        </TabItem>
-
     </TabControl>
 </UserControl>
