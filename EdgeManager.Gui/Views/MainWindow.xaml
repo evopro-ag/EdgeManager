@@ -25,8 +25,8 @@
         </Grid.RowDefinitions>
 
         <views:HubView Grid.Column="0" DataContext="{Binding HubViewModel}" />
-        <views:EdgeView Grid.Row="1" Grid.Column="0" DataContext="{Binding EdgeViewModel}" />
-        <views:TabView Grid.Row="1" Grid.Column="1" DataContext="{Binding TabsViewModel}" />
+        <views:DeviceView Grid.Row="1" Grid.Column="0" DataContext="{Binding DeviceViewModel}" />
+        <views:TabsView Grid.Row="1" Grid.Column="1" DataContext="{Binding TabsViewModel}" />
 
     </Grid>
 </Window>

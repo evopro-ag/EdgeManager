@@ -18,13 +18,13 @@ namespace EdgeManager.Gui.ViewModels
 
         public TabsViewModel TabsViewModel { get; set; }
         public HubViewModel HubViewModel { get; set; }
-        public EdgeViewModel EdgeViewModel { get; set; }
+        public DeviceViewModel DeviceViewModel { get; set; }
 
         public override void Initialize()
         {
             TabsViewModel = viewModelFactory.CreateViewModel<TabsViewModel>();
             HubViewModel = viewModelFactory.CreateViewModel<HubViewModel>();
-            EdgeViewModel = viewModelFactory.CreateViewModel<EdgeViewModel>();
+            DeviceViewModel = viewModelFactory.CreateViewModel<DeviceViewModel>();
         }
 
 

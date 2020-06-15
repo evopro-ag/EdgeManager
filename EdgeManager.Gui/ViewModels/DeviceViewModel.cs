@@ -10,7 +10,7 @@ using ReactiveUI;
 
 namespace EdgeManager.Gui.ViewModels
 {
-    public class EdgeViewModel : ViewModelBase
+    public class DeviceViewModel : ViewModelBase
     {
         private readonly IAzureService azureService;
         private readonly ISelectionService<IoTHubInfo> ioTHubInfoSelectionService;
@@ -18,7 +18,7 @@ namespace EdgeManager.Gui.ViewModels
         private IoTDeviceInfo selectedIoTDeviceInfo;
         private IoTDeviceInfo[] ioTDeviceInfos;
 
-        public EdgeViewModel(IAzureService azureService, ISelectionService<IoTHubInfo> ioTHubInfoSelectionService, ISelectionService<IoTDeviceInfo> ioTDeviceSelectionService)
+        public DeviceViewModel(IAzureService azureService, ISelectionService<IoTHubInfo> ioTHubInfoSelectionService, ISelectionService<IoTDeviceInfo> ioTDeviceSelectionService)
         {
             this.azureService = azureService;
             this.ioTHubInfoSelectionService = ioTHubInfoSelectionService;
@@ -76,9 +76,9 @@ namespace EdgeManager.Gui.ViewModels
         }
     }
 
-    public class DesignEdgeViewModel : EdgeViewModel
+    public class DesignDeviceViewModel : DeviceViewModel
     {
-        public DesignEdgeViewModel() : base(new DesignAzureService(), new DesignIoTHubSelectionService(), new DesignDeviceSelectionService())
+        public DesignDeviceViewModel() : base(new DesignAzureService(), new DesignIoTHubSelectionService(), new DesignDeviceSelectionService())
         {
         }
     }

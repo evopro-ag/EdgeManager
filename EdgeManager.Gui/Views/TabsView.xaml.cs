@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace EdgeManager.Gui.Views
 {
     /// <summary>
-    /// Interaction logic for TabView.xaml
+    /// Interaction logic for TabsView.xaml
     /// </summary>
-    public partial class TabView : UserControl
+    public partial class TabsView : UserControl
     {
-        public TabView()
+        public TabsView()
         {
             InitializeComponent();
         }
