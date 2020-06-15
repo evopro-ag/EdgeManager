@@ -10,9 +10,9 @@ namespace EdgeManager.Logic.Services
     {
         BehaviorSubject<T> selectedObject = new BehaviorSubject<T>(default(T));
 
-        public void Select(T selectedObject)
+        public void Select(T selection)
         {
-            selectedObject.OnNext(selectedObject)
+            selectedObject.OnNext(selection);
         }
 
         public IObservable<T> SelectedObject => selectedObject;
