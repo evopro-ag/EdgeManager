@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using EdgeManager.Gui.Design;
+using EdgeManager.Interfaces.Extensions;
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
 
@@ -10,24 +11,31 @@ namespace EdgeManager.Gui.ViewModels
     public class EdgeViewModel : ViewModelBase
     {
         private readonly IAzureService azureService;
+        private readonly ISelectionService<IoTHubInfo> ioTHubInfoSelectionService;
         private IoTDeviceInfo selectedIoTDeviceInfo;
 
-        public EdgeViewModel(IAzureService azureService)
+        public EdgeViewModel(IAzureService azureService, ISelectionService<IoTHubInfo> ioTHubInfoSelectionService)
         {
             this.azureService = azureService;
+            this.ioTHubInfoSelectionService = ioTHubInfoSelectionService;
         }
 
         public override void Initialize()
         {
-            try
-            {
-                //IoTDeviceInfo = await azureService.GetIoTDevices(SelectedIoTDeviceInfo.DeviceId);
+            ioTHubInfoSelectionService.SelectedObject
+                .Subscribe(async x =>
+                {
 
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"Error initializing ConnectionCabViewModel: {ex.Message}", ex);
-            }
+                    try
+                    {
+                        IoTDeviceInfo = await azureService.GetIoTDevices(x.Name);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error($"Error geting devices for IoT Hub {x.Name}: {e.Message}", e);
+                    }
+                })
+                .AddDisposableTo(Disposables);
         }
 
         public IoTDeviceInfo[] IoTDeviceInfo { get; private set; }
@@ -45,7 +53,7 @@ namespace EdgeManager.Gui.ViewModels
 
         public class DesignEdgeViewModel : EdgeViewModel
         {
-            public DesignEdgeViewModel() : base(new DesignAzureService())
+            public DesignEdgeViewModel() : base(new DesignAzureService(), new DesignelectionService())
             {
             }
         }

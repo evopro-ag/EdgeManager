@@ -16,7 +16,7 @@ namespace EdgeManager.Logic
             Bind<IAzureCli, IAzureService>().To<AzureCliHost>().InSingletonScope();
 
             //todo: add more bindings for selection service
-            //Bind<ISelectionService<T>>().To<SelectionServiceBase<T>>().InSingletonScope();
+            Bind<ISelectionService<IoTHubInfo>>().To<SelectionService<IoTHubInfo>>().InSingletonScope();
         }
     }
 }

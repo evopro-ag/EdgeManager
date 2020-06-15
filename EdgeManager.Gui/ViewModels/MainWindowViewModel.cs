@@ -16,8 +16,6 @@ namespace EdgeManager.Gui.ViewModels
             this.viewModelFactory = viewModelFactory;
         }
 
-        public ConnectionCabViewModel ConnectionCabViewModel { get; private set; }
-        public JsonViewModel JsonViewModel { get; set; }
         public TabsViewModel TabsViewModel { get; set; }
         public HubViewModel HubViewModel { get; set; }
         public EdgeViewModel EdgeViewModel { get; set; }
