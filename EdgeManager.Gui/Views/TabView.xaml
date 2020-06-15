@@ -5,11 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EdgeManager.Gui.Views"
              xmlns:gui="clr-namespace:EdgeManager.Gui"
+             xmlns:viewModels="clr-namespace:EdgeManager.Gui.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance viewModels:DesignTabsViewModel, IsDesignTimeCreatable=True}">
     <TabControl>
       <TabItem Header="Module">
-            <local:ModuleView></local:ModuleView>
+            <local:ModuleView DataContext="{Binding ModuleViewModel}" />
         </TabItem>
     </TabControl>
 </UserControl>

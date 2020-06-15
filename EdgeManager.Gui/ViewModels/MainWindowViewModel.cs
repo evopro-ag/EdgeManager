@@ -24,6 +24,7 @@ namespace EdgeManager.Gui.ViewModels
         {
             TabsViewModel = viewModelFactory.CreateViewModel<TabsViewModel>();
             HubViewModel = viewModelFactory.CreateViewModel<HubViewModel>();
+            EdgeViewModel = viewModelFactory.CreateViewModel<EdgeViewModel>();
         }
 
 

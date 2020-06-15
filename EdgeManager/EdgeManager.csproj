@@ -1,26 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+		<UseWpf>true</UseWpf>
+	</PropertyGroup>
 
-  <ItemGroup>
-	  <PackageReference Include="Microsoft.PowerShell.5.ReferenceAssemblies" Version="1.1.0" />
-	  <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.0.1" />
-	  <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\EdgeManager.Gui\EdgeManager.Gui.csproj" />
-    <ProjectReference Include="..\EdgeManager.Interfaces\EdgeManager.Interfaces.csproj" />
-    <ProjectReference Include="..\EdgeManager.Logic\EdgeManager.Logic.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\EdgeManager.Gui\EdgeManager.Gui.csproj" />
+		<ProjectReference Include="..\EdgeManager.Interfaces\EdgeManager.Interfaces.csproj" />
+		<ProjectReference Include="..\EdgeManager.Logic\EdgeManager.Logic.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="log4net.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="log4net.config">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

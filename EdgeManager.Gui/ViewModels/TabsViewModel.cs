@@ -2,33 +2,32 @@
 using System.Reactive.Linq;
 using System.Collections.Generic;
 using System.Text;
+using EdgeManager.Interfaces.Commons;
+using EdgeManager.Interfaces.Extensions;
 
 namespace EdgeManager.Gui.ViewModels
 {
     public class TabsViewModel : ViewModelBase
     {
-        private string text;
+        private readonly IViewModelFactory viewModelFactory;
 
-        public string Text
+        public TabsViewModel(IViewModelFactory viewModelFactory)
         {
-            get => text;
-            set
-            {
-                if (value == text) return;
-                text = value;
-                raisePropertyChanged();
-            }
+            this.viewModelFactory = viewModelFactory;
         }
         public override void Initialize()
         {
+            ModuleViewModel = viewModelFactory.Create<ModuleViewModel>();
+            ModuleViewModel.AddDisposableTo(Disposables);
             //todo
         }
+
+        public ModuleViewModel ModuleViewModel { get; private set; }
     }
     public class DesignTabsViewModel : TabsViewModel
     {
-        public DesignTabsViewModel() 
+        public DesignTabsViewModel() : base(ViewModelLocator.DesignViewModelFactory)
         {
-            Text = "WooW!";
         }
     }
 }

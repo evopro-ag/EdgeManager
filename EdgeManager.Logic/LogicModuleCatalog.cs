@@ -17,6 +17,7 @@ namespace EdgeManager.Logic
 
             //todo: add more bindings for selection service
             Bind<ISelectionService<IoTHubInfo>>().To<SelectionService<IoTHubInfo>>().InSingletonScope();
+            Bind<ISelectionService<IoTDeviceInfo>>().To<SelectionService<IoTDeviceInfo>>().InSingletonScope();
         }
     }
 }

@@ -65,7 +65,7 @@ namespace EdgeManager.Gui.ViewModels
 
     public class DesignHubViewModel : HubViewModel
     {
-        public DesignHubViewModel() : base(new DesignAzureService(), new DesignSelectionService())
+        public DesignHubViewModel() : base(new DesignAzureService(), new DesignIoTHubSelectionService())
         {
         }
     }

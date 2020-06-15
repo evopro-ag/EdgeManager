@@ -10,6 +10,10 @@ namespace EdgeManager.Logic.Services
     {
         BehaviorSubject<T> selectedObject = new BehaviorSubject<T>(default(T));
 
+        public SelectionService()
+        {
+            
+        }
         public void Select(T selection)
         {
             selectedObject.OnNext(selection);

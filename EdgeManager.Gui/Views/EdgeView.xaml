@@ -4,20 +4,35 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EdgeManager.Gui"
+             xmlns:viewModels="clr-namespace:EdgeManager.Gui.ViewModels"
+             xmlns:models="clr-namespace:EdgeManager.Interfaces.Models;assembly=EdgeManager.Interfaces"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance viewModels:DesignEdgeViewModel, IsDesignTimeCreatable=True}">
 
    <Grid>
        <Grid.RowDefinitions>
            <RowDefinition Height="Auto" />
-           <RowDefinition Height="Auto" />
+           <RowDefinition Height="*" />
        </Grid.RowDefinitions>
        <Grid.ColumnDefinitions>
            <ColumnDefinition Width="*"/>
        </Grid.ColumnDefinitions>
 
        <Label Grid.Row="0" Content="IoT / Edge Geräte" VerticalAlignment="Center" HorizontalAlignment="Left" />
-       <ListView Grid.Row="1" ItemsSource="{Binding SelectedIotHubInfo}" SelectedItem="{Binding SelectedIoTDeviceInfo}" DisplayMemberPath="DeviceID"/>
+       <ListView Grid.Row="1" ItemsSource="{Binding IoTDeviceInfos}" SelectedItem="{Binding SelectedIoTDeviceInfo}">
+           <ListView.View>
+               <GridView>
+                   <GridViewColumn Header="Devices" Width="150">
+                       <GridViewColumn.CellTemplate>
+                           <DataTemplate DataType="{x:Type models:IoTDeviceInfo}">
+                               <TextBlock Text="{Binding DeviceId}" />
+                           </DataTemplate>
+                       </GridViewColumn.CellTemplate>
+                   </GridViewColumn>
+                </GridView>
+           </ListView.View>
+       </ListView>
 
     </Grid>
 </UserControl>

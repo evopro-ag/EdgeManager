@@ -7,7 +7,7 @@ using EdgeManager.Interfaces.Services;
 
 namespace EdgeManager.Gui.Design
 {
-    class DesignSelectionService : ISelectionService<IoTHubInfo>
+    class DesignIoTHubSelectionService : ISelectionService<IoTHubInfo>
     {
         public void Select(IoTHubInfo selectedObject)
         {
