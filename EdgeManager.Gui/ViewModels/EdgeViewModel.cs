@@ -53,7 +53,7 @@ namespace EdgeManager.Gui.ViewModels
 
         public class DesignEdgeViewModel : EdgeViewModel
         {
-            public DesignEdgeViewModel() : base(new DesignAzureService(), new DesignelectionService())
+            public DesignEdgeViewModel() : base(new DesignAzureService(), new DesignSelectionService())
             {
             }
         }

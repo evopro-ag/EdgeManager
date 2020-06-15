@@ -7,7 +7,6 @@ using System.Reactive.Linq;
 using System.Windows;
 using EdgeManager.Gui.Views;
 using EdgeManager.Interfaces.Extensions;
-using EdgeManager.Logic.Services;
 using ReactiveUI;
 
 namespace EdgeManager.Gui.ViewModels
@@ -66,7 +65,7 @@ namespace EdgeManager.Gui.ViewModels
 
     public class DesignHubViewModel : HubViewModel
     {
-        public DesignHubViewModel() : base(new DesignAzureService(), new DesignelectionService())
+        public DesignHubViewModel() : base(new DesignAzureService(), new DesignSelectionService())
         {
         }
     }
