@@ -38,7 +38,16 @@
             </ListView.View>
         </ListView>
 
-        <xctk:PropertyGrid SelectedObject="{Binding SelectedIoTModuleIdentityInfo}" IsReadOnly="True" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"/>
+        <xctk:PropertyGrid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
+                           SelectedObject="{Binding SelectedIoTModuleIdentityInfo}" 
+                           IsReadOnly="True"
+                           AutoGenerateProperties="True"
+                           ShowAdvancedOptions="False"
+                           ShowSearchBox="False"
+                           ShowTitle="False"
+                           ShowSummary="False"
+                           ShowSortOptions="False"
+                           />
 
     </Grid>
 </UserControl>
