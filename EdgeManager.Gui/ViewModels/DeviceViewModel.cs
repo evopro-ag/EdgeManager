@@ -18,6 +18,7 @@ namespace EdgeManager.Gui.ViewModels
         private readonly ISelectionService<IoTDeviceInfo> ioTDeviceSelectionService;
         private IoTDeviceInfo selectedIoTDeviceInfo;
         private IoTDeviceInfo[] ioTDeviceInfos;
+        private bool loading;
 
         public DeviceViewModel(IAzureService azureService, 
             ISelectionService<IoTHubInfo> ioTHubInfoSelectionService, 
@@ -36,13 +37,31 @@ namespace EdgeManager.Gui.ViewModels
 
             ioTHubInfoSelectionService.SelectedObject
                 .Where(iotHub => iotHub != null)
+                .ObserveOnDispatcher()
+                .Do(_ => Loading = true)
+                .Subscribe()
+                .AddDisposableTo(Disposables);
+                
+            ioTHubInfoSelectionService.SelectedObject
+                .Where(iotHub => iotHub != null)
                 .SelectMany(iothub => azureService.GetIoTDevices(iothub.Name))
                 .ObserveOnDispatcher()
                 .Do(devices => IoTDeviceInfos = devices)
+                .Do(_ => Loading = false)
                 .LogAndRetryAfterDelay(Logger, TimeSpan.FromSeconds(1), "Error while retrieving devices information")
-
                 .Subscribe()
                 .AddDisposableTo(Disposables);
+        }
+
+        public bool Loading
+        {
+            get => loading;
+            set
+            {
+                if (value == loading) return;
+                loading = value;
+                raisePropertyChanged();
+            }
         }
 
         public IoTDeviceInfo[] IoTDeviceInfos
