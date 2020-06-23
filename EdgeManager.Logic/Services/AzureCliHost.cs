@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
 using Newtonsoft.Json;
@@ -19,7 +20,8 @@ namespace EdgeManager.Logic.Services
 		public async Task<T> Run<T>(string command)
         {
 			var json = string.Join("\n", await powerShell.Execute("az " + command));
-			//Console.WriteLine(json); ;
+			//Console.WriteLine(json);
+            //MessageBox.Show(json);
 			return JsonConvert.DeserializeObject<T>(json);
 		}
 
@@ -29,5 +31,6 @@ namespace EdgeManager.Logic.Services
 			($"iot hub module-identity list --device-id {deviceId} --hub-name {hubName}");
 		public Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload) => Run<IoTDirectMethodReply>
 			($"iot hub invoke-module-method --method-name '{method}' -n '{hubName}' -d '{deviceId}' -m '{moduleId}' --method-payload '{JsonConvert.SerializeObject(payload, Newtonsoft.Json.Formatting.None)}'");
-	}
+
+    }
 }
