@@ -13,7 +13,7 @@
         <TabItem Header="Module">
             <local:ModuleView DataContext="{Binding ModuleViewModel}" />
         </TabItem>
-        <TabItem Header="Json Command">
+        <TabItem Header="Raw Json">
             <local:JsonView DataContext="{Binding JsonViewModel}"/>
         </TabItem>
     </TabControl>
