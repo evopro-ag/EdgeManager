@@ -7,9 +7,38 @@
              xmlns:local="clr-namespace:EdgeManager.Gui"
              xmlns:pt="http://propertytools.org/wpf"
              xmlns:viewModels="clr-namespace:EdgeManager.Gui.ViewModels"
+             xmlns:design="clr-namespace:EdgeManager.Gui.Design"
+             xmlns:models="clr-namespace:EdgeManager.Interfaces.Models;assembly=EdgeManager.Interfaces"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance viewModels:DesignModuleViewModel, IsDesignTimeCreatable=True}">
 
-    <xctk:PropertyGrid SelectedObject="{Binding SelectedIotDevice}" IsReadOnly="True" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".5*"/>
+            <ColumnDefinition Width=".5*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Content="IoT / Edge Geräte" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <ListView Grid.Row="1" ItemsSource="{Binding IoTModuleIdentityInfos}" SelectedItem="{Binding SelectedIoTModuleIdentityInfo}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Devices" Width="150">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type models:IoTModuleIdentityInfo}">
+                                <TextBlock Text="{Binding ModuleId}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <xctk:PropertyGrid SelectedObject="{Binding SelectedIoTModuleIdentityInfo}" IsReadOnly="True" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"/>
+
+    </Grid>
 </UserControl>

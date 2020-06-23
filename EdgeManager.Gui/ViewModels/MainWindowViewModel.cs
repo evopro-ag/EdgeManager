@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using EdgeManager.Interfaces.Commons;
+using EdgeManager.Interfaces.Commands;
 using EdgeManager.Interfaces.Services;
 
 namespace EdgeManager.Gui.ViewModels

@@ -14,30 +14,49 @@ namespace EdgeManager.Gui.ViewModels
     public class HubViewModel : ViewModelBase
     {
         private readonly IAzureService azureService;
-        private readonly ISelectionService<IoTHubInfo> selectionService;
+        private readonly ISelectionService<IoTHubInfo> iotHubSelectionService;
+        private readonly ISelectionService<IoTDeviceInfo> deviceInfoSelectionService;
         private IoTHubInfo selectedIotHubInfo;
         private IoTHubInfo[] iotHubInfo;
 
-        public HubViewModel(IAzureService azureService, ISelectionService<IoTHubInfo> selectionService)
+        public HubViewModel(IAzureService azureService, 
+            ISelectionService<IoTHubInfo> iotHubSelectionService,
+            ISelectionService<IoTDeviceInfo> deviceInfoSelectionService
+            )
         {
             this.azureService = azureService;
-            this.selectionService = selectionService;
+            this.iotHubSelectionService = iotHubSelectionService;
+            this.deviceInfoSelectionService = deviceInfoSelectionService;
         }
 
-        public override async void Initialize()
+        public override void Initialize()
         {
             this.WhenAnyValue(vm => vm.SelectedIotHubInfo)
-                .ObserveOnDispatcher()
-                .Subscribe(x => selectionService.Select(x))
+                .Do(selectedhub =>
+                {
+                    deviceInfoSelectionService.Select(null);
+                    iotHubSelectionService.Select(selectedhub);
+                })
+                .Subscribe()
                 .AddDisposableTo(Disposables);
-            try
-            {
-                IotHubInfo = await azureService.GetIoTHubs();
-            }
-            catch (Exception e)
-            {
-                Logger.Error($"Error getting IoTHUbs: {e.Message}", e);
-            }
+
+
+            Observable.Return(Unit.Default)
+                .SelectMany(_ => azureService.GetIoTHubs())
+                .ObserveOnDispatcher()
+                .Do(hubs => IotHubInfo = hubs)
+                .Subscribe()
+                .AddDisposableTo(Disposables);
+
+
+            //try
+            //{
+            //    IotHubInfo = await azureService.GetIoTHubs();
+            //}
+            //catch (Exception e)
+            //{
+            //    Logger.Error($"Error getting IoTHUbs: {e.Message}", e);
+            //}
         }
 
         public IoTHubInfo[] IotHubInfo
@@ -65,7 +84,7 @@ namespace EdgeManager.Gui.ViewModels
 
     public class DesignHubViewModel : HubViewModel
     {
-        public DesignHubViewModel() : base(new DesignAzureService(), new DesignIoTHubSelectionService())
+        public DesignHubViewModel() : base(new DesignAzureService(), new DesignIoTHubSelectionService(), new DesignDeviceSelectionService())
         {
         }
     }

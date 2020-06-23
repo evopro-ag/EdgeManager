@@ -22,7 +22,7 @@ namespace EdgeManager.Gui.ViewModels
         {
             try
             {
-                IotHubInfo = await azureService.GetIoTHubs();
+                //IotHubInfo = await azureService.GetIoTHubs();
         //        IoTDeviceInfos = await azureService.GetIoTDevices(SelectedIotHubInfo.Name);
 
             }

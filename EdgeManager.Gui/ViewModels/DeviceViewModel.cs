@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Text;
+using System.Windows;
 using EdgeManager.Gui.Design;
 using EdgeManager.Interfaces.Extensions;
 using EdgeManager.Interfaces.Models;
@@ -18,7 +19,9 @@ namespace EdgeManager.Gui.ViewModels
         private IoTDeviceInfo selectedIoTDeviceInfo;
         private IoTDeviceInfo[] ioTDeviceInfos;
 
-        public DeviceViewModel(IAzureService azureService, ISelectionService<IoTHubInfo> ioTHubInfoSelectionService, ISelectionService<IoTDeviceInfo> ioTDeviceSelectionService)
+        public DeviceViewModel(IAzureService azureService, 
+            ISelectionService<IoTHubInfo> ioTHubInfoSelectionService, 
+            ISelectionService<IoTDeviceInfo> ioTDeviceSelectionService)
         {
             this.azureService = azureService;
             this.ioTHubInfoSelectionService = ioTHubInfoSelectionService;
@@ -28,28 +31,15 @@ namespace EdgeManager.Gui.ViewModels
         public override void Initialize()
         {
             this.WhenAnyValue(vm => vm.SelectedIoTDeviceInfo)
-                .ObserveOnDispatcher()
                 .Subscribe(x => ioTDeviceSelectionService.Select(x))
                 .AddDisposableTo(Disposables);
 
             ioTHubInfoSelectionService.SelectedObject
-                .Subscribe(async x =>
-                {
-                    if (x == null)
-                    {
-                        IoTDeviceInfos = new IoTDeviceInfo[0];
-                        return;
-                    }
-
-                    try
-                    {
-                        IoTDeviceInfos = await azureService.GetIoTDevices(x.Name);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error($"Error geting devices for IoT Hub {x.Name}: {e.Message}", e);
-                    }
-                })
+                .Where(iotHub => iotHub != null)
+                .SelectMany(iothub => azureService.GetIoTDevices(iothub.Name))
+                .ObserveOnDispatcher()
+                .Do(devices => IoTDeviceInfos = devices)
+                .Subscribe()
                 .AddDisposableTo(Disposables);
         }
 
@@ -72,11 +62,12 @@ namespace EdgeManager.Gui.ViewModels
                 if (Equals(value, selectedIoTDeviceInfo)) return;
                 selectedIoTDeviceInfo = value;
                 raisePropertyChanged();
+                
             }
         }
     }
 
-    public class DesignDeviceViewModel : DeviceViewModel
+    internal class DesignDeviceViewModel : DeviceViewModel
     {
         public DesignDeviceViewModel() : base(new DesignAzureService(), new DesignIoTHubSelectionService(), new DesignDeviceSelectionService())
         {

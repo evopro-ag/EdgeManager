@@ -9,7 +9,7 @@ namespace EdgeManager.Interfaces.Services
     {
         Task<IoTHubInfo[]> GetIoTHubs();
         Task<IoTDeviceInfo[]> GetIoTDevices(string hubName);
-        Task<IoTModuleIdentityInfo[]> GetIoTModule(string hubName, string deviceId);
+        Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId);
         Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload);
     }
 }

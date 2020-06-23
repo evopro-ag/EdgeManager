@@ -6,7 +6,7 @@ using System.Windows;
 using EdgeManager.Gui;
 using EdgeManager.Gui.ViewModels;
 using EdgeManager.Gui.Views;
-using EdgeManager.Interfaces.Commons;
+using EdgeManager.Interfaces.Commands;
 using EdgeManager.Interfaces.Logging;
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
@@ -89,7 +89,7 @@ namespace EdgeManager
         //        {
         //            if (device.Capabilities.IoTEdge)
         //            {
-        //                var moduleList = await azure.GetIoTModule(hub.Name, device.DeviceId);
+        //                var moduleList = await azure.GetIoTModules(hub.Name, device.DeviceId);
         //                moduleList.Dump($"Modules for {device.DeviceId}");
         //                foreach (var modul in moduleList)
         //                {

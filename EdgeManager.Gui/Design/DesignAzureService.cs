@@ -7,7 +7,7 @@ using EdgeManager.Interfaces.Services;
 
 namespace EdgeManager.Gui.Design
 {
-    class DesignAzureService : IAzureService
+    public class DesignAzureService : IAzureService
     {
         public Task<IoTHubInfo[]> GetIoTHubs()
         {
@@ -29,9 +29,14 @@ namespace EdgeManager.Gui.Design
             });
         }
 
-        public Task<IoTModuleIdentityInfo[]> GetIoTModule(string hubName, string deviceId)
+        public Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new[]
+            {
+                new IoTModuleIdentityInfo {ModuleId = "Module1"},
+                new IoTModuleIdentityInfo {ModuleId = "Module2"},
+                new IoTModuleIdentityInfo {ModuleId = "Module3"},
+            });
         }
 
         public Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload)

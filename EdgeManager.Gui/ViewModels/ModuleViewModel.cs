@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Windows;
 using EdgeManager.Gui.Design;
+using EdgeManager.Interfaces.Extensions;
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
 using ReactiveUI;
@@ -11,24 +14,81 @@ namespace EdgeManager.Gui.ViewModels
 {
     public class ModuleViewModel : ViewModelBase
     {
-        private readonly ISelectionService<IoTDeviceInfo> selectionService;
-        private ObservableAsPropertyHelper<IoTDeviceInfo> selectedIotDeviceHelper;
+        private readonly IAzureService azureService;
+        private readonly ISelectionService<IoTHubInfo> ioTHubInfoSelectionService;
+        private readonly ISelectionService<IoTDeviceInfo> ioTDeviceSelectionService;
+        private readonly ISelectionService<IoTModuleIdentityInfo> ioTModuleIdentityInfoSelectionService;
+        private IoTModuleIdentityInfo selectedIoTModuleIdentityInfo;
+        private IoTModuleIdentityInfo[] ioTModulIdentityInfos;
 
-        public ModuleViewModel(ISelectionService<IoTDeviceInfo> selectionService)
+        public ModuleViewModel(IAzureService azureService,
+            ISelectionService<IoTHubInfo> ioTHubInfoSelectionService,
+            ISelectionService<IoTDeviceInfo> ioTDeviceSelectionService, 
+            ISelectionService<IoTModuleIdentityInfo> ioTModuleIdentityInfoSelectionService)
         {
-            this.selectionService = selectionService;
-        }
-        public override void Initialize()
-        {
-            selectedIotDeviceHelper = selectionService.SelectedObject.ObserveOnDispatcher().ToProperty(this, vm => vm.SelectedIotDevice);
+            this.azureService = azureService;
+            this.ioTHubInfoSelectionService = ioTHubInfoSelectionService;
+            this.ioTDeviceSelectionService = ioTDeviceSelectionService;
+            this.ioTModuleIdentityInfoSelectionService = ioTModuleIdentityInfoSelectionService;
         }
 
-        public IoTDeviceInfo SelectedIotDevice => selectedIotDeviceHelper.Value;
+        public override async void Initialize()
+        {
+            this.WhenAnyValue(vm => vm.SelectedIoTModuleIdentityInfo)
+                .Subscribe(x => ioTModuleIdentityInfoSelectionService.Select(x))
+                .AddDisposableTo(Disposables);
+
+
+
+            // ReSharper disable once InvokeAsExtensionMethod
+            Observable.CombineLatest(
+                    ioTDeviceSelectionService.SelectedObject, 
+                    ioTHubInfoSelectionService.SelectedObject, 
+                    (device, iotHub) => new { DeviceInfo = device, IoTHubInfo = iotHub})
+                .Where(arg => arg.DeviceInfo != null && arg.IoTHubInfo != null)
+                .SelectMany(arg => azureService.GetIoTModules(arg.IoTHubInfo.Name, arg.DeviceInfo.DeviceId))
+                .ObserveOnDispatcher()
+                .Do(identityInfos => IoTModuleIdentityInfos = identityInfos)
+                .Subscribe()
+                .AddDisposableTo(Disposables);
+
+            //try
+            //{
+            //    //IotDeviceInfo = await azureService.GetIoTDevices(ioTDeviceSelectionService.ToString());
+            //}
+            //catch (Exception e)
+            //{
+            //    Logger.Error($"Error getting IoTHUbs: {e.Message}", e);
+            //}
+        }
+
+
+        public IoTModuleIdentityInfo[] IoTModuleIdentityInfos
+        {
+
+            get => ioTModulIdentityInfos;
+            set
+            {
+                if (Equals(value, ioTModulIdentityInfos)) return;
+                ioTModulIdentityInfos = value;
+                raisePropertyChanged();
+            }
+        }
+        public IoTModuleIdentityInfo SelectedIoTModuleIdentityInfo
+        {
+            get => selectedIoTModuleIdentityInfo;
+            set
+            {
+                if (Equals(value, selectedIoTModuleIdentityInfo)) return;
+                selectedIoTModuleIdentityInfo = value;
+                raisePropertyChanged();
+            }
+        }
     }
 
-    public class DesignModuleViewModel : ModuleViewModel
+    internal class DesignModuleViewModel : ModuleViewModel
     {
-        public DesignModuleViewModel() : base(new DesignDeviceSelectionService())
+        public DesignModuleViewModel() : base(new DesignAzureService(), new DesignIoTHubSelectionService(), new DesignDeviceSelectionService(), new DesignMoluleIdentitySelectionService())
         {
         }
     }
