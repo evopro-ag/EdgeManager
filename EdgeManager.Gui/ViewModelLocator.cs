@@ -2,7 +2,7 @@
 using Ninject;
 using Ninject.Parameters;
 using EdgeManager.Gui.ViewModels;
-using EdgeManager.Interfaces.Commands;
+using EdgeManager.Interfaces.Commons;
 
 
 namespace EdgeManager.Gui

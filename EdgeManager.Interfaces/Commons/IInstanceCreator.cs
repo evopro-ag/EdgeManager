@@ -2,7 +2,7 @@
 using System.Linq;
 using Ninject.Parameters;
 
-namespace EdgeManager.Interfaces.Commands
+namespace EdgeManager.Interfaces.Commons
 {
     public interface IInstanceCreator
     {

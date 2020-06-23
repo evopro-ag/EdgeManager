@@ -6,7 +6,7 @@ using System.Windows;
 using EdgeManager.Gui;
 using EdgeManager.Gui.ViewModels;
 using EdgeManager.Gui.Views;
-using EdgeManager.Interfaces.Commands;
+using EdgeManager.Interfaces.Commons;
 using EdgeManager.Interfaces.Logging;
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;

@@ -2,7 +2,7 @@
 using System.Reactive.Linq;
 using System.Collections.Generic;
 using System.Text;
-using EdgeManager.Interfaces.Commands;
+using EdgeManager.Interfaces.Commons;
 using EdgeManager.Interfaces.Extensions;
 
 namespace EdgeManager.Gui.ViewModels
