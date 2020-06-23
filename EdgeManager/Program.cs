@@ -27,19 +27,36 @@ namespace EdgeManager
                 try
                 {
                     CreateLogger();
+
+                    var logger = LoggerFactory.GetLogger();
+
+                    logger.Debug("#######################################");
+                    logger.Debug("Loding modules...");
                     LoadModules(kernel);
+                    logger.Debug("Modules loaded!");
+
+                    logger.Debug("Creating application ...");
 
                     var viewModelFactory = kernel.Get<ViewModelLocator>();
                     var application = CreateApplication(viewModelFactory);
 
                     var mainWindow = new MainWindow();
+                    logger.Debug("Application created!");
+
+
+                    logger.Debug("#######################################");
+
+                    logger.Debug("application starts ...");
 
                     application.Run(mainWindow);
                     application.Shutdown();
+
+                    logger.Debug("application ended.\n\n\n\n");
+
                 }
                 catch (Exception e)
                 {
-                    LoggerFactory.GetTypedLogger(typeof(Program)).Error("Unhandled exeption", e);
+                    LoggerFactory.GetLogger(typeof(Program)).Error("Unhandled exeption", e);
                 }
             }
 

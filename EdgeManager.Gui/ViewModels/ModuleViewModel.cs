@@ -46,9 +46,11 @@ namespace EdgeManager.Gui.ViewModels
                     ioTHubInfoSelectionService.SelectedObject, 
                     (device, iotHub) => new { DeviceInfo = device, IoTHubInfo = iotHub})
                 .Where(arg => arg.DeviceInfo != null && arg.IoTHubInfo != null)
+                .Do(arg => Logger.Info($"Received Hub '{arg.IoTHubInfo.Name}' and Device '{arg.DeviceInfo.DeviceId}' for retrieving Modules"))
                 .SelectMany(arg => azureService.GetIoTModules(arg.IoTHubInfo.Name, arg.DeviceInfo.DeviceId))
                 .ObserveOnDispatcher()
                 .Do(identityInfos => IoTModuleIdentityInfos = identityInfos)
+                .LogAndRetryAfterDelay(Logger, TimeSpan.FromSeconds(1), "Error while retrieving device modules information")
                 .Subscribe()
                 .AddDisposableTo(Disposables);
 

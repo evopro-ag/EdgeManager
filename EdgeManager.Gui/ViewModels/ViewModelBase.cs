@@ -19,7 +19,7 @@ namespace EdgeManager.Gui.ViewModels
 
         public ViewModelBase()
         {
-            Logger = LoggerFactory.GetTypedLogger(GetType());
+            Logger = LoggerFactory.GetLogger(GetType());
         }
 
         public string Title

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using EdgeManager.Interfaces.Logging;
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
 using EdgeManager.Logic.Services;
+using log4net;
 using Ninject.Modules;
 
 namespace EdgeManager.Logic
@@ -15,10 +17,12 @@ namespace EdgeManager.Logic
             Bind<IPowerShell>().To<PowerShellHost>().InSingletonScope();
             Bind<IAzureCli, IAzureService>().To<AzureCliHost>().InSingletonScope();
 
-            //todo: add more bindings for selection service
+            //bindings for selection service
             Bind<ISelectionService<IoTHubInfo>>().To<SelectionService<IoTHubInfo>>().InSingletonScope();
             Bind<ISelectionService<IoTDeviceInfo>>().To<SelectionService<IoTDeviceInfo>>().InSingletonScope();
             Bind<ISelectionService<IoTModuleIdentityInfo>>().To<SelectionService<IoTModuleIdentityInfo>>().InSingletonScope();
+
+            Bind<ILog>().ToMethod(context => LoggerFactory.GetLogger());
         }
     }
 }

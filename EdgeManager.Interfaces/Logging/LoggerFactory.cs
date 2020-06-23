@@ -10,14 +10,14 @@ namespace EdgeManager.Interfaces.Logging
 {
     public static class LoggerFactory
     {
-        public static ILog GetLogger<T>()
+        public static ILog GetLogger()
         {
-            return GetTypedLogger(typeof(T));
+            return LogManager.GetLogger("EdgeManager", "Logger");
         }
 
-        public static ILog GetTypedLogger(Type type)
+        public static ILog GetLogger(Type type)
         {
-            return LogManager.GetLogger(type);
+            return LogManager.GetLogger("EdgeManager", type);
         }
     }
 }

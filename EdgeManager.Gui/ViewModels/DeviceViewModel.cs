@@ -39,6 +39,8 @@ namespace EdgeManager.Gui.ViewModels
                 .SelectMany(iothub => azureService.GetIoTDevices(iothub.Name))
                 .ObserveOnDispatcher()
                 .Do(devices => IoTDeviceInfos = devices)
+                .LogAndRetryAfterDelay(Logger, TimeSpan.FromSeconds(1), "Error while retrieving devices information")
+
                 .Subscribe()
                 .AddDisposableTo(Disposables);
         }
