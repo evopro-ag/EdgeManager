@@ -3,39 +3,41 @@ using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Text;
 using System.Windows.Threading;
+using EdgeManager.Gui.Design;
+using EdgeManager.Interfaces.Extensions;
+using EdgeManager.Interfaces.Models;
+using EdgeManager.Interfaces.Services;
+using ReactiveUI;
 
 namespace EdgeManager.Gui.ViewModels
 {
     public class JsonViewModel : ViewModelBase
     {
-        private string text;
-
-        public string Text
+        private readonly IAzureService azureService;
+        private readonly ISelectionService<IoTHubInfo> ioTHubInfoSelectionService;
+        private readonly ISelectionService<IoTDeviceInfo> ioTDeviceSelectionService;
+        private readonly ISelectionService<IoTModuleIdentityInfo> ioTModuleIdentityInfoSelectionService;
+        public JsonViewModel(IAzureService azureService,
+            ISelectionService<IoTHubInfo> ioTHubInfoSelectionService,
+            ISelectionService<IoTDeviceInfo> ioTDeviceSelectionService,
+            ISelectionService<IoTModuleIdentityInfo> ioTModuleIdentityInfoSelectionService)
         {
-            get => text;
-            set
-            {
-                if (value == text) return;
-                text = value;
-                raisePropertyChanged();
-            }
+            this.azureService = azureService;
+            this.ioTHubInfoSelectionService = ioTHubInfoSelectionService;
+            this.ioTDeviceSelectionService = ioTDeviceSelectionService;
+            this.ioTModuleIdentityInfoSelectionService = ioTModuleIdentityInfoSelectionService;
         }
 
         public override void Initialize()
         {
-            Disposables.Add(
-                Observable.Interval(TimeSpan.FromSeconds(1))
-                                .Do(l => Text = "test " + l.ToString())
-                                .Subscribe()
-            );
+           
         }
     }
 
     public class DesignJsonViewModel : JsonViewModel
     {
-        public DesignJsonViewModel()
+        public DesignJsonViewModel() : base(new DesignAzureService(), new DesignIoTHubSelectionService(), new DesignDeviceSelectionService(), new DesignMoluleIdentitySelectionService())
         {
-            Text = "WooW!";
 
         }
     }
