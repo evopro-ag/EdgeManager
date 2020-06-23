@@ -9,11 +9,6 @@ namespace EdgeManager.Logic.Services
 { 
     class PowerShellHost : IPowerShell
 	{
-        public PowerShellHost()
-        {
-            
-        }
-
 		private readonly PowerShell ps = PowerShell.Create();
 
 		public void Dispose()
@@ -24,7 +19,7 @@ namespace EdgeManager.Logic.Services
 		public Task<Collection<PSObject>> Execute(string command)
 		{
 			ps.AddScript(command);
-			return Task.FromResult(ps.Invoke());
+			return Task.Run(() => ps.Invoke());
 		}
 	}
 }

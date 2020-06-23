@@ -8,12 +8,8 @@ namespace EdgeManager.Logic.Services
 {
     public class SelectionService<T> : ISelectionService<T>
     {
-        BehaviorSubject<T> selectedObject = new BehaviorSubject<T>(default(T));
+        readonly BehaviorSubject<T> selectedObject = new BehaviorSubject<T>(default(T));
 
-        public SelectionService()
-        {
-            
-        }
         public void Select(T selection)
         {
             selectedObject.OnNext(selection);

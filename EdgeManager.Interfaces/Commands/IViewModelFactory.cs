@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace EdgeManager.Interfaces.Commons
+namespace EdgeManager.Interfaces.Commands
 {
     public interface IViewModelFactory
     {

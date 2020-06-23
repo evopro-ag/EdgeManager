@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
-using EdgeManager.Interfaces.Commons;
+using EdgeManager.Interfaces.Commands;
 
 namespace EdgeManager
 {
