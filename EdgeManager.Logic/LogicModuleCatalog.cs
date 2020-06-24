@@ -21,6 +21,7 @@ namespace EdgeManager.Logic
             Bind<ISelectionService<IoTHubInfo>>().To<SelectionService<IoTHubInfo>>().InSingletonScope();
             Bind<ISelectionService<IoTDeviceInfo>>().To<SelectionService<IoTDeviceInfo>>().InSingletonScope();
             Bind<ISelectionService<IoTModuleIdentityInfo>>().To<SelectionService<IoTModuleIdentityInfo>>().InSingletonScope();
+            Bind<ISelectionService<JsonCommand>>().To<SelectionService<JsonCommand>>().InSingletonScope();
 
             Bind<ILog>().ToMethod(context => LoggerFactory.GetLogger());
         }
