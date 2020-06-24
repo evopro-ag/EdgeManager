@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:EdgeManager.Gui"
              xmlns:viewModels="clr-namespace:EdgeManager.Gui.ViewModels"
              xmlns:models="clr-namespace:EdgeManager.Interfaces.Models;assembly=EdgeManager.Interfaces"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance viewModels:DesignDeviceViewModel, IsDesignTimeCreatable=True}">
@@ -33,6 +34,12 @@
                 </GridView>
            </ListView.View>
        </ListView>
+       <Border Grid.Column="0" Grid.Row="1"
+               Background="Gray" Opacity="0.3"
+               Visibility="{Binding Loading, Converter={StaticResource HiddenIfFalseConverter}}">
+            <fa:ImageAwesome Icon="Spinner" Spin="True" Width="44" 
+                             VerticalAlignment="Center" />
+       </Border>
 
     </Grid>
 </UserControl>
