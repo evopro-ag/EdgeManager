@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
+using EdgeManager.Interfaces.Logging;
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
+using log4net;
 using Newtonsoft.Json;
 
 namespace EdgeManager.Logic.Services
@@ -11,6 +12,8 @@ namespace EdgeManager.Logic.Services
     class AzureCliHost : IAzureCli, IAzureService
 	{
         private readonly IPowerShell powerShell;
+
+        private readonly ILog logger = LoggerFactory.GetLogger(typeof(AzureCliHost));
 
         public AzureCliHost(IPowerShell powerShell)
         {
@@ -20,8 +23,8 @@ namespace EdgeManager.Logic.Services
 		public async Task<T> Run<T>(string command)
         {
 			var json = string.Join("\n", await powerShell.Execute("az " + command));
-			//Console.WriteLine(json);
-            //MessageBox.Show(json);
+			logger.Debug(command);
+			//todo
 			return JsonConvert.DeserializeObject<T>(json);
 		}
 
