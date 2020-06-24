@@ -22,6 +22,7 @@
             </Style>
 
             <converters:BoolToVisibilityConverter x:Key="HiddenIfFalseConverter" TrueValue="Visible" FalseValue="Hidden" />
+            <converters:BoolToVisibilityConverter x:Key="HiddenIfTrueConverter" TrueValue="Hidden" FalseValue="Visible" />
 
         </ResourceDictionary>
     </Application.Resources>
