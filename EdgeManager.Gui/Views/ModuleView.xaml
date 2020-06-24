@@ -9,7 +9,8 @@
              xmlns:viewModels="clr-namespace:EdgeManager.Gui.ViewModels"
              xmlns:design="clr-namespace:EdgeManager.Gui.Design"
              xmlns:models="clr-namespace:EdgeManager.Interfaces.Models;assembly=EdgeManager.Interfaces"
-             mc:Ignorable="d" 
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance viewModels:DesignModuleViewModel, IsDesignTimeCreatable=True}">
 
@@ -37,6 +38,13 @@
                 </GridView>
             </ListView.View>
         </ListView>
+
+        <Border Grid.Column="0" Grid.Row="1"
+                Background="Gray" Opacity="0.3"
+                Visibility="{Binding Loading, Converter={StaticResource HiddenIfFalseConverter}}">
+            <fa:ImageAwesome Icon="Spinner" Spin="True" Width="44" 
+                             VerticalAlignment="Center" />
+        </Border>
 
         <xctk:PropertyGrid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
                            SelectedObject="{Binding SelectedIoTModuleIdentityInfo}" 
