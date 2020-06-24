@@ -42,22 +42,20 @@ namespace EdgeManager.Gui.ViewModels
 
 
             // ReSharper disable once InvokeAsExtensionMethod
-            Observable.CombineLatest(
-                    ioTDeviceSelectionService.SelectedObject,
-                    ioTHubInfoSelectionService.SelectedObject,
-                    (device, iotHub) => new { DeviceInfo = device, IoTHubInfo = iotHub })
-                .Where(arg => arg.DeviceInfo != null && arg.IoTHubInfo != null)
-                .Do(_ => Loading = true)
-                .SelectMany(arg => azureService.GetIoTModules(arg.IoTHubInfo.Name, arg.DeviceInfo.DeviceId))
-                .ObserveOnDispatcher()
-                .Subscribe()
-                .AddDisposableTo(Disposables);
-
-            Observable.CombineLatest(
+            var observable = Observable.CombineLatest(
                     ioTDeviceSelectionService.SelectedObject, 
                     ioTHubInfoSelectionService.SelectedObject, 
                     (device, iotHub) => new { DeviceInfo = device, IoTHubInfo = iotHub})
-                .Where(arg => arg.DeviceInfo != null && arg.IoTHubInfo != null)
+                .Where(arg => arg.DeviceInfo != null && arg.IoTHubInfo != null);
+
+            observable
+                .ObserveOnDispatcher()
+                .Do(_ => Loading = true)
+                .Do(identityInfos => IoTModuleIdentityInfos = new IoTModuleIdentityInfo[]{})
+                .Subscribe()
+                .AddDisposableTo(Disposables);
+
+            observable
                 .Do(arg => Logger.Info($"Received Hub '{arg.IoTHubInfo.Name}' and Device '{arg.DeviceInfo.DeviceId}' for retrieving Modules"))
                 .SelectMany(arg => azureService.GetIoTModules(arg.IoTHubInfo.Name, arg.DeviceInfo.DeviceId))
                 .ObserveOnDispatcher()
