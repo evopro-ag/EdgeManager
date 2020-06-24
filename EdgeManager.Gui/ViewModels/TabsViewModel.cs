@@ -27,7 +27,7 @@ namespace EdgeManager.Gui.ViewModels
         public ModuleViewModel ModuleViewModel { get; private set; }
         public JsonViewModel JsonViewModel { get; private set; }
     }
-    public class DesignTabsViewModel : TabsViewModel
+    internal class DesignTabsViewModel : TabsViewModel
     {
         public DesignTabsViewModel() : base(ViewModelLocator.DesignViewModelFactory)
         {

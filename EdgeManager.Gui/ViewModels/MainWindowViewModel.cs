@@ -30,7 +30,7 @@ namespace EdgeManager.Gui.ViewModels
 
     }
 
-    public class DesignMainWindowViewModel : MainWindowViewModel
+    internal class DesignMainWindowViewModel : MainWindowViewModel
     {
         public DesignMainWindowViewModel() : base(ViewModelLocator.DesignViewModelFactory)
         {

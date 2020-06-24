@@ -34,7 +34,7 @@ namespace EdgeManager.Gui.ViewModels
         }
     }
 
-    public class DesignJsonViewModel : JsonViewModel
+    internal class DesignJsonViewModel : JsonViewModel
     {
         public DesignJsonViewModel() : base(new DesignAzureService(), new DesignIoTHubSelectionService(), new DesignDeviceSelectionService(), new DesignMoluleIdentitySelectionService())
         {
