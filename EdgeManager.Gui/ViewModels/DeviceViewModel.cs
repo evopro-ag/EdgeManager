@@ -39,6 +39,7 @@ namespace EdgeManager.Gui.ViewModels
                 .Where(iotHub => iotHub != null)
                 .ObserveOnDispatcher()
                 .Do(_ => Loading = true)
+                .Do(devices => IoTDeviceInfos = new IoTDeviceInfo[]{})
                 .Subscribe()
                 .AddDisposableTo(Disposables);
                 
