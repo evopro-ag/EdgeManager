@@ -20,6 +20,7 @@ namespace EdgeManager.Gui.ViewModels
         private readonly ISelectionService<IoTModuleIdentityInfo> ioTModuleIdentityInfoSelectionService;
         private IoTModuleIdentityInfo selectedIoTModuleIdentityInfo;
         private IoTModuleIdentityInfo[] ioTModulIdentityInfos;
+        private bool loading;
 
         public ModuleViewModel(IAzureService azureService,
             ISelectionService<IoTHubInfo> ioTHubInfoSelectionService,
@@ -42,6 +43,17 @@ namespace EdgeManager.Gui.ViewModels
 
             // ReSharper disable once InvokeAsExtensionMethod
             Observable.CombineLatest(
+                    ioTDeviceSelectionService.SelectedObject,
+                    ioTHubInfoSelectionService.SelectedObject,
+                    (device, iotHub) => new { DeviceInfo = device, IoTHubInfo = iotHub })
+                .Where(arg => arg.DeviceInfo != null && arg.IoTHubInfo != null)
+                .Do(_ => Loading = true)
+                .SelectMany(arg => azureService.GetIoTModules(arg.IoTHubInfo.Name, arg.DeviceInfo.DeviceId))
+                .ObserveOnDispatcher()
+                .Subscribe()
+                .AddDisposableTo(Disposables);
+
+            Observable.CombineLatest(
                     ioTDeviceSelectionService.SelectedObject, 
                     ioTHubInfoSelectionService.SelectedObject, 
                     (device, iotHub) => new { DeviceInfo = device, IoTHubInfo = iotHub})
@@ -50,20 +62,23 @@ namespace EdgeManager.Gui.ViewModels
                 .SelectMany(arg => azureService.GetIoTModules(arg.IoTHubInfo.Name, arg.DeviceInfo.DeviceId))
                 .ObserveOnDispatcher()
                 .Do(identityInfos => IoTModuleIdentityInfos = identityInfos)
+                .Do(_ => Loading = false)
                 .LogAndRetryAfterDelay(Logger, TimeSpan.FromSeconds(1), "Error while retrieving device modules information")
                 .Subscribe()
                 .AddDisposableTo(Disposables);
 
-            //try
-            //{
-            //    //IotDeviceInfo = await azureService.GetIoTDevices(ioTDeviceSelectionService.ToString());
-            //}
-            //catch (Exception e)
-            //{
-            //    Logger.Error($"Error getting IoTHUbs: {e.Message}", e);
-            //}
         }
 
+        public bool Loading
+        {
+            get => loading;
+            set
+            {
+                if (value == loading) return;
+                loading = value;
+                raisePropertyChanged();
+            }
+        }
 
         public IoTModuleIdentityInfo[] IoTModuleIdentityInfos
         {
