@@ -43,5 +43,15 @@ namespace EdgeManager.Gui.Design
         {
             throw new NotImplementedException();
         }
+
+        public Task<JsonCommand> GetCommand(string command)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDisposable Subscribe(IObserver<JsonCommand> observer)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

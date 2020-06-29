@@ -6,7 +6,7 @@ using EdgeManager.Interfaces.Services;
 
 namespace EdgeManager.Gui.Design
 {
-    public class DesignMoluleIdentitySelectionService : ISelectionService<IoTModuleIdentityInfo>
+    public class DesignModuleIdentitySelectionService : ISelectionService<IoTModuleIdentityInfo>
     {
         public void Select(IoTModuleIdentityInfo selectedObject)
         {

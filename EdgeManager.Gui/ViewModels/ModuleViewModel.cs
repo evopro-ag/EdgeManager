@@ -103,7 +103,7 @@ namespace EdgeManager.Gui.ViewModels
 
     internal class DesignModuleViewModel : ModuleViewModel
     {
-        public DesignModuleViewModel() : base(new DesignAzureService(), new DesignIoTHubSelectionService(), new DesignDeviceSelectionService(), new DesignMoluleIdentitySelectionService())
+        public DesignModuleViewModel() : base(new DesignAzureService(), new DesignIoTHubSelectionService(), new DesignDeviceSelectionService(), new DesignModuleIdentitySelectionService())
         {
         }
     }

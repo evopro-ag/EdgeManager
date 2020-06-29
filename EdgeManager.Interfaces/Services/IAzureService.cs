@@ -5,11 +5,12 @@ using EdgeManager.Interfaces.Models;
 
 namespace EdgeManager.Interfaces.Services
 {
-    public interface IAzureService
+    public interface IAzureService : IObservable<JsonCommand>
     {
         Task<IoTHubInfo[]> GetIoTHubs();
         Task<IoTDeviceInfo[]> GetIoTDevices(string hubName);
         Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId);
         Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload);
+
     }
 }

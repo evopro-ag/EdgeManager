@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 using EdgeManager.Gui;
-using EdgeManager.Gui.ViewModels;
 using EdgeManager.Gui.Views;
 using EdgeManager.Interfaces.Commons;
 using EdgeManager.Interfaces.Logging;
-using EdgeManager.Interfaces.Models;
-using EdgeManager.Interfaces.Services;
 using EdgeManager.Logic;
 using log4net;
-using Microsoft.VisualBasic;
 using Ninject;
 
 namespace EdgeManager
@@ -31,7 +25,7 @@ namespace EdgeManager
                     var logger = LoggerFactory.GetLogger();
 
                     logger.Debug("#######################################");
-                    logger.Debug("Loding modules...");
+                    logger.Debug("Loading modules...");
                     LoadModules(kernel);
                     logger.Debug("Modules loaded!");
 

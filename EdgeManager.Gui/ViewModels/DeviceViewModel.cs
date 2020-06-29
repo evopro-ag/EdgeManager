@@ -84,7 +84,6 @@ namespace EdgeManager.Gui.ViewModels
                 if (Equals(value, selectedIoTDeviceInfo)) return;
                 selectedIoTDeviceInfo = value;
                 raisePropertyChanged();
-                
             }
         }
     }
