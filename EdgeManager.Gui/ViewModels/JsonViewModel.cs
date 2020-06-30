@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Windows.Threading;
+using DynamicData;
+using DynamicData.Binding;
 using EdgeManager.Gui.Design;
 using EdgeManager.Interfaces.Extensions;
 using EdgeManager.Interfaces.Logging;
@@ -16,41 +19,40 @@ using ReactiveUI;
 
 namespace EdgeManager.Gui.ViewModels
 {
-    public class JsonViewModel : ViewModelBase, IObserver<JsonCommand>
+    public class JsonViewModel : ViewModelBase
     {
         private readonly ILog logger = LoggerFactory.GetLogger(typeof(JsonViewModel));
         private readonly IAzureService azureService;
-        private IDisposable azureServiceSubscriptionDisposeable;
-        public ObservableCollection<JsonCommand> commandCollection;
+        private JsonCommand selectedJsonCommand;
 
         public JsonViewModel(IAzureService azureService)
         {
             this.azureService = azureService;
-            commandCollection = new ObservableCollection<JsonCommand>();
+            
         }
+
+        public IObservableCollection<JsonCommand> JsonCommands { get; } = new ObservableCollectionExtended<JsonCommand>();
 
         public override void Initialize()
         {
-            azureServiceSubscriptionDisposeable = azureService.Subscribe(this);
-        }
-       
-        public void OnCompleted()
-        {
-
-        }
-
-        public void OnError(Exception error)
-        {
-            throw error;
+            azureService.JsonCommands
+                .ToObservableChangeSet(json => json.Command.GetHashCode(), limitSizeTo: 10)
+                .ObserveOnDispatcher()
+                .Bind(JsonCommands)
+                .Do(x => Console.WriteLine(this.JsonCommands.Count))
+                .Subscribe()
+                .AddDisposableTo(Disposables);
         }
 
-        public void OnNext(JsonCommand value)
-        {
-            while(commandCollection.Count > 99) {
-                commandCollection.RemoveAt(0);
+        public JsonCommand SelectedJsonCommand 
+        { 
+            get => selectedJsonCommand; 
+            set
+            {
+                if (selectedJsonCommand == value) return;
+                selectedJsonCommand = value;
+                raisePropertyChanged();
             }
-            commandCollection.Add(value);
-            logger.Debug($"Add command to commandCollection: {value.GetCommand()}");
         }
     }
 

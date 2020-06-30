@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using EdgeManager.Interfaces.Extensions;
 using EdgeManager.Interfaces.Logging;
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
@@ -10,25 +13,28 @@ using Newtonsoft.Json;
 
 namespace EdgeManager.Logic.Services
 {
-    class AzureCliHost : IAzureCli, IAzureService
+    class AzureCliHost : IAzureCli, IAzureService, IDisposable
 	{
         private readonly IPowerShell powerShell;
-        private readonly ILog logger = LoggerFactory.GetLogger(typeof(AzureCliHost));
-        List<IObserver<JsonCommand>> observers;
+        private readonly ILog logger = LoggerFactory.GetLogger(typeof(AzureCliHost));        
+        private Subject<JsonCommand> jsonCommands = new Subject<JsonCommand>();
+        private bool disposedValue;
+        private CompositeDisposable disposables = new CompositeDisposable();
+
+        public IObservable<JsonCommand> JsonCommands => jsonCommands;
 
         public AzureCliHost(IPowerShell powerShell)
         {
             this.powerShell = powerShell;
-            observers = new List<IObserver<JsonCommand>>();
+            jsonCommands.AddDisposableTo(disposables);
         }
 
 		public async Task<T> Run<T>(string command)
         {
 			var json = string.Join("\n", await powerShell.Execute("az " + command));
 			logger.Debug(command);
-            JsonCommand jsonCommand = new JsonCommand(command);
-            foreach (var observer in observers)
-                observer.OnNext(jsonCommand);
+            var jsonCommand = new JsonCommand(command);
+            jsonCommands.OnNext(jsonCommand);
             
             return JsonConvert.DeserializeObject<T>(json);
 		}
@@ -57,12 +63,32 @@ namespace EdgeManager.Logic.Services
             }
         }
 
-        public IDisposable Subscribe(IObserver<JsonCommand> observer)
-        {
-            if (!observers.Contains(observer))
-                observers.Add(observer);
+       
 
-            return new Unsubscriber(observers, observer);
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    disposables.Dispose();
+                }
+                disposedValue = true;
+            }
+        }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~AzureCliHost()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -21,7 +21,7 @@
        </Grid.ColumnDefinitions>
 
        <Label Grid.Row="0" Content="IoT / Edge Geräte" VerticalAlignment="Center" HorizontalAlignment="Left" />
-       <ListView Grid.Row="1" ItemsSource="{Binding IoTDeviceInfos}" SelectedItem="{Binding SelectedIoTDeviceInfo}">
+        <ListView Grid.Row="1" ItemsSource="{Binding  IoTDeviceInfos}" SelectedItem="{Binding SelectedIoTDeviceInfo}">
            <ListView.View>
                <GridView>
                    <GridViewColumn Header="Devices" Width="150">

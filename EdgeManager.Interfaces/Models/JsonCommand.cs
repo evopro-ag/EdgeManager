@@ -9,17 +9,11 @@ namespace EdgeManager.Interfaces.Models
     
     public class JsonCommand
     {
-        private string _command;
         public JsonCommand(string command)
         {
-            _command = command;
+            Command = command;
         }
 
-        public string GetCommand()
-        {
-            return _command;
-        } 
-        
-
+        public string Command { get; }
     }
 }

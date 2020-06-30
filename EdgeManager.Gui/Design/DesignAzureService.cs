@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EdgeManager.Interfaces.Models;
@@ -9,6 +10,8 @@ namespace EdgeManager.Gui.Design
 {
     public class DesignAzureService : IAzureService
     {
+        public IObservable<JsonCommand> JsonCommands { get; } = Observable.Never<JsonCommand>();
+
         public Task<IoTHubInfo[]> GetIoTHubs()
         {
             return Task.FromResult(new[]
