@@ -50,7 +50,7 @@ namespace EdgeManager.Gui.ViewModels
                 commandCollection.RemoveAt(0);
             }
             commandCollection.Add(value);
-            logger.Debug($"Add command to commandCollaction: {value.GetCommand()}");
+            logger.Debug($"Add command to commandCollection: {value.GetCommand()}");
         }
     }
 
