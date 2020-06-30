@@ -7,8 +7,10 @@ using System.Text;
 using System.Windows.Threading;
 using EdgeManager.Gui.Design;
 using EdgeManager.Interfaces.Extensions;
+using EdgeManager.Interfaces.Logging;
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
+using log4net;
 using Microsoft.PowerShell.Commands;
 using ReactiveUI;
 
@@ -16,9 +18,10 @@ namespace EdgeManager.Gui.ViewModels
 {
     public class JsonViewModel : ViewModelBase, IObserver<JsonCommand>
     {
+        private readonly ILog logger = LoggerFactory.GetLogger(typeof(JsonViewModel));
         private readonly IAzureService azureService;
         private IDisposable azureServiceSubscriptionDisposeable;
-        private ObservableCollection<JsonCommand> commandCollection;
+        public ObservableCollection<JsonCommand> commandCollection;
 
         public JsonViewModel(IAzureService azureService)
         {
@@ -47,6 +50,7 @@ namespace EdgeManager.Gui.ViewModels
                 commandCollection.RemoveAt(0);
             }
             commandCollection.Add(value);
+            logger.Debug($"Add command to commandCollaction: {value.GetCommand()}");
         }
     }
 
