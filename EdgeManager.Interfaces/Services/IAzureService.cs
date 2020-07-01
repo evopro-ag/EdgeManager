@@ -8,7 +8,7 @@ namespace EdgeManager.Interfaces.Services
     public interface IAzureService
     {
         IObservable<JsonCommand> JsonCommands {get;}
-        Task<IoTHubInfo[]> GetIoTHubs();
+        Task<IoTHubInfo[]> GetIoTHubs(bool reload = false);
         Task<IoTDeviceInfo[]> GetIoTDevices(string hubName);
         Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId);
         Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload);

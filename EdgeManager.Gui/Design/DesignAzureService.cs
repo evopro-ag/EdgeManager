@@ -12,7 +12,7 @@ namespace EdgeManager.Gui.Design
     {
         public IObservable<JsonCommand> JsonCommands { get; } = Observable.Never<JsonCommand>();
 
-        public Task<IoTHubInfo[]> GetIoTHubs()
+        public Task<IoTHubInfo[]> GetIoTHubs(bool reload = false)
         {
             return Task.FromResult(new[]
             {

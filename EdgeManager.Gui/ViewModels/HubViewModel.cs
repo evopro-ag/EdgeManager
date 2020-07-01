@@ -8,6 +8,8 @@ using System.Windows;
 using EdgeManager.Gui.Views;
 using EdgeManager.Interfaces.Extensions;
 using ReactiveUI;
+using System.Threading.Tasks;
+using System.Reactive.Subjects;
 
 namespace EdgeManager.Gui.ViewModels
 {
@@ -29,6 +31,9 @@ namespace EdgeManager.Gui.ViewModels
             this.deviceInfoSelectionService = deviceInfoSelectionService;
         }
 
+        public ReactiveCommand<Unit, Unit> ReloadCommand { get; set; }
+
+
         public override void Initialize()
         {
             this.WhenAnyValue(vm => vm.SelectedIotHubInfo)
@@ -49,7 +54,8 @@ namespace EdgeManager.Gui.ViewModels
                 .Subscribe()
                 .AddDisposableTo(Disposables);
 
-
+            ReloadCommand = ReactiveCommand.CreateFromTask(Reload)
+                .AddDisposableTo(Disposables);
             //try
             //{
             //    IotHubInfo = await azureService.GetIoTHubs();
@@ -58,6 +64,19 @@ namespace EdgeManager.Gui.ViewModels
             //{
             //    Logger.Error($"Error getting IoTHUbs: {e.Message}", e);
             //}
+        }
+
+        public async Task<Unit> Reload()
+        {
+            try
+            {
+                IotHubInfo = await azureService.GetIoTHubs(true);
+            }
+            catch(Exception e)
+            {
+                Logger.Error("Error in Reactive command", e);
+            }
+            return Unit.Default;
         }
 
         public IoTHubInfo[] IotHubInfo
