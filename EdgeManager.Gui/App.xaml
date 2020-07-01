@@ -24,6 +24,9 @@
             <converters:BoolToVisibilityConverter x:Key="HiddenIfFalseConverter" TrueValue="Visible" FalseValue="Hidden" />
             <converters:BoolToVisibilityConverter x:Key="HiddenIfTrueConverter" TrueValue="Hidden" FalseValue="Visible" />
 
+            <converters:BoolToBrushConverter x:Key="GreenIfTrueGrayIfFalseConverter" TrueValue="Green" FalseValue="Gray" />
+            <converters:ConnectionStateToBrushConverter x:Key="GreenIfConnectedConverter" ConnectedValue="Green" NotConnectedValue="Gray" />
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
