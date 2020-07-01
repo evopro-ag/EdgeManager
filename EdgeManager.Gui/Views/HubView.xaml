@@ -16,10 +16,13 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
         <Label Grid.Row="0" Content="IoT Hub" VerticalAlignment="Center" HorizontalAlignment="Left" />
         <ComboBox Grid.Row="1" ItemsSource="{Binding IotHubInfo}" SelectedItem="{Binding SelectedIotHubInfo}" DisplayMemberPath="Name" />
-
+        <Button Grid.Column="1" Command="{Binding ReloadCommand}">
+            reload
+        </Button>
     </Grid>
 </UserControl>
