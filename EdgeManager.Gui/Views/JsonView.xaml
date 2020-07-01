@@ -19,15 +19,15 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width=".3*"/>
-            <ColumnDefinition Width=".7*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Row="0" Content="Json Command" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <Label Grid.Row="0" Content="Commandhistorie" VerticalAlignment="Center" HorizontalAlignment="Left" />
         <ListView Grid.Row="1" ItemsSource="{Binding JsonCommands}" SelectedItem="{Binding SelectedJsonCommand}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Historie">
+                    <GridViewColumn>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type models:JsonCommand}">
                                 <TextBlock Text="{Binding Command}" />
@@ -37,8 +37,9 @@
                 </GridView>
             </ListView.View>
         </ListView>
-
-        <TextBlock Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="{Binding SelectedJsonCommand.ResultJson}" />
-
+        
+        <Label Grid.Row="0" Grid.Column="1" Content="Json for selected command" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <TextBlock Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Text="{Binding SelectedJsonCommand.ResultJson}" />
+            
     </Grid>
 </UserControl>
