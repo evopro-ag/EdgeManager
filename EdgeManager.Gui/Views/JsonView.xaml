@@ -10,7 +10,7 @@
              xmlns:models="clr-namespace:EdgeManager.Interfaces.Models;assembly=EdgeManager.Interfaces"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance viewModels:DesignJsonViewModel, IsDesignTimeCreatable=True}">
+             >
     
     <Grid>
 
@@ -20,26 +20,21 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Row="0" Content="Commandhistorie" VerticalAlignment="Center" HorizontalAlignment="Left" />
-        <ListView Grid.Row="1" ItemsSource="{Binding JsonCommands}" SelectedItem="{Binding SelectedJsonCommand}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn>
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate DataType="{x:Type models:JsonCommand}">
-                                <TextBlock Text="{Binding Command}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <Label Grid.Row="0" Content="Command Historie" VerticalAlignment="Center" HorizontalAlignment="Left" />
+
+        <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding JsonCommands}" SelectedItem="{Binding SelectedJsonCommand}" DisplayMemberPath="Command" HorizontalAlignment="Stretch"/>
+
+        <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Stretch" MinWidth="4" />
+
+        <Label Grid.Row="0" Grid.Column="2" Content="Json for selected command" VerticalAlignment="Center" HorizontalAlignment="Left" />
         
-        <Label Grid.Row="0" Grid.Column="1" Content="Json for selected command" VerticalAlignment="Center" HorizontalAlignment="Left" />
-        <TextBlock Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Text="{Binding SelectedJsonCommand.ResultJson}" />
-            
+        <ScrollViewer Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" VerticalScrollBarVisibility="Auto">
+            <TextBox Text="{Binding SelectedJsonCommand.ResultJson}" IsReadOnly="True" />
+        </ScrollViewer>
+
     </Grid>
 </UserControl>
