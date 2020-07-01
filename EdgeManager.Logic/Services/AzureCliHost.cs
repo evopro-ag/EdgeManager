@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Design;
+using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Subjects;
+using System.Reflection;
 using System.Threading.Tasks;
 using EdgeManager.Interfaces.Extensions;
 using EdgeManager.Interfaces.Logging;
@@ -23,50 +26,93 @@ namespace EdgeManager.Logic.Services
 
         public IObservable<JsonCommand> JsonCommands => jsonCommands;
 
-        public ICollection<string> jsonCollection = new List<string>();
+
+        private Dictionary<string, JsonCommand> cache = new Dictionary<string, JsonCommand>();
 
         public AzureCliHost(IPowerShell powerShell)
         {
             this.powerShell = powerShell;
-            jsonCommands.AddDisposableTo(disposables);
+
+            RestoreCache();
         }
 
-		public async Task<T> Run<T>(string command)
+        public async Task<T> Run<T>(string command)
         {
-			var json = string.Join("\n", await powerShell.Execute("az " + command));
-			logger.Debug($"Sended command to azzur cloud: {command}");
-            var jsonCommand = new JsonCommand(command, json);
-            jsonCollection.Add(json);
-            jsonCommands.OnNext(jsonCommand);
-            
+            var json = await SendOrRestoreFromCache(command);
+            return JsonConvert.DeserializeObject<T>(json);
+        }
+
+        private async Task<T> Run<T>(string command, bool reload = false)
+        {
+            var json = await SendOrRestoreFromCache(command, reload);
             return JsonConvert.DeserializeObject<T>(json);
 		}
 
-		public Task<IoTHubInfo[]> GetIoTHubs() => Run<IoTHubInfo[]>("iot hub list");
+        private void RestoreCache()
+        {
+            try
+            {
+                var currentDirectory = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                var filename = "cache.json";
+                var filepath = Path.Combine(currentDirectory, filename);
+
+                logger.Debug($"restoring cache from file '{filepath}'");
+
+                var text = File.ReadAllText(Path.Combine(currentDirectory, filename));
+
+                cache = JsonConvert.DeserializeObject<Dictionary<string, JsonCommand>>(text);
+            }
+            catch(Exception e)
+            {
+                logger.Error("error while restoring cache", e);
+            }
+        }
+
+        private void SaveCache()
+        {
+            try
+            {
+                var currentDirectory = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                var filename = "cache.json";
+
+                var text = JsonConvert.SerializeObject(cache, Formatting.Indented);
+                var filepath = Path.Combine(currentDirectory, filename);
+
+                logger.Debug($"saving cache into file '{filepath}'");
+
+                File.WriteAllText(filepath, text);
+            }
+            catch (Exception e)
+            {
+                logger.Error("error while saving cache", e);
+            }
+}
+
+        private async Task<string> SendOrRestoreFromCache(string command, bool reload = false)
+        {
+            if (cache.ContainsKey(command) && !reload)
+            {
+                logger.Debug($"restoring command '{command}' from cache");
+                jsonCommands.OnNext(cache[command]);
+                return cache[command].ResultJson;
+            }
+
+            logger.Debug($"Sended command to azure cloud: {command}");
+            var json = string.Join("\n", await powerShell.Execute("az " + command));
+            var jsonCommand = new JsonCommand(command, json);
+            jsonCommands.OnNext(jsonCommand);
+            cache[command] = jsonCommand;
+            
+            return json;
+        }
+
+
+		public Task<IoTHubInfo[]> GetIoTHubs(bool reload = false) => Run<IoTHubInfo[]>("iot hub list", reload);
 		public Task<IoTDeviceInfo[]> GetIoTDevices(string hubName) => Run<IoTDeviceInfo[]>($"iot hub device-identity list --hub-name {hubName}");
 		public Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId) => Run<IoTModuleIdentityInfo[]>
 			($"iot hub module-identity list --device-id {deviceId} --hub-name {hubName}");
 		public Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload) => Run<IoTDirectMethodReply>
 			($"iot hub invoke-module-method --method-name '{method}' -n '{hubName}' -d '{deviceId}' -m '{moduleId}' --method-payload '{JsonConvert.SerializeObject(payload, Newtonsoft.Json.Formatting.None)}'");
-
-        private class Unsubscriber : IDisposable
-        {
-            private List<IObserver<JsonCommand>> _observers;
-            private IObserver<JsonCommand> _observer;
-
-            public Unsubscriber(List<IObserver<JsonCommand>> observers, IObserver<JsonCommand> observer)
-            {
-                this._observers = observers;
-                this._observer = observer;
-            }
-
-            public void Dispose()
-            {
-                if (!(_observer == null)) _observers.Remove(_observer);
-            }
-        }
-
-       
 
         protected virtual void Dispose(bool disposing)
         {
@@ -75,6 +121,7 @@ namespace EdgeManager.Logic.Services
                 if (disposing)
                 {
                     disposables.Dispose();
+                    SaveCache();
                 }
                 disposedValue = true;
             }
