@@ -38,7 +38,7 @@
             </ListView.View>
         </ListView>
 
-        <TextBlock Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="{Binding SelectedJsonCommand.Command}" />
+        <TextBlock Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="{Binding SelectedJsonCommand.ResultJson}" />
 
     </Grid>
 </UserControl>
