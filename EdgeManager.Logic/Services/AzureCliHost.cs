@@ -23,6 +23,8 @@ namespace EdgeManager.Logic.Services
 
         public IObservable<JsonCommand> JsonCommands => jsonCommands;
 
+        public ICollection<string> jsonCollection = new List<string>();
+
         public AzureCliHost(IPowerShell powerShell)
         {
             this.powerShell = powerShell;
@@ -32,8 +34,9 @@ namespace EdgeManager.Logic.Services
 		public async Task<T> Run<T>(string command)
         {
 			var json = string.Join("\n", await powerShell.Execute("az " + command));
-			logger.Debug(command);
-            var jsonCommand = new JsonCommand(command);
+			logger.Debug($"Sended command to azzur cloud: {command}");
+            var jsonCommand = new JsonCommand(command, json);
+            jsonCollection.Add(json);
             jsonCommands.OnNext(jsonCommand);
             
             return JsonConvert.DeserializeObject<T>(json);
