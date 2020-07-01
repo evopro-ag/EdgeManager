@@ -22,6 +22,8 @@ namespace EdgeManager.Gui.ViewModels
 
         public override void Initialize()
         {
+            Logger.Debug("Initialize main window view model");
+
             TabsViewModel = viewModelFactory.CreateViewModel<TabsViewModel>();
             HubViewModel = viewModelFactory.CreateViewModel<HubViewModel>();
             DeviceViewModel = viewModelFactory.CreateViewModel<DeviceViewModel>();
