@@ -28,7 +28,14 @@
         <ListView Grid.Row="1" ItemsSource="{Binding IoTModuleIdentityInfos}" SelectedItem="{Binding SelectedIoTModuleIdentityInfo}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Devices" Width="150">
+                    <GridViewColumn Header="Status">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type models:IoTModuleIdentityInfo}">
+                                <fa:FontAwesome Icon="Cubes" Height="15" Margin="5" Foreground="{Binding ConnectionState, Converter={StaticResource GreenIfConnectedConverter}}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Devices" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type models:IoTModuleIdentityInfo}">
                                 <TextBlock Text="{Binding ModuleId}" />
