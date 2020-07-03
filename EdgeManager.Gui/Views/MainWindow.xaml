@@ -24,7 +24,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <views:HubView Grid.Column="0" DataContext="{Binding HubViewModel}" />
+        <views:HubView Grid.Row="0" Grid.Column="0" DataContext="{Binding HubViewModel}" />
         <views:DeviceView Grid.Row="1" Grid.Column="0" DataContext="{Binding DeviceViewModel}" />
         <views:TabsView Grid.Row="1" Grid.Column="1" DataContext="{Binding TabsViewModel}" />
 
