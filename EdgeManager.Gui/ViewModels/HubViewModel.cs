@@ -20,7 +20,10 @@ namespace EdgeManager.Gui.ViewModels
         private readonly ISelectionService<IoTDeviceInfo> deviceInfoSelectionService;
         private IoTHubInfo selectedIotHubInfo;
         private IoTHubInfo[] iotHubInfo;
+        private bool loading;
+        private bool notLoading = true;
 
+      
         public HubViewModel(IAzureService azureService, 
             ISelectionService<IoTHubInfo> iotHubSelectionService,
             ISelectionService<IoTDeviceInfo> deviceInfoSelectionService
@@ -39,14 +42,14 @@ namespace EdgeManager.Gui.ViewModels
             this.WhenAnyValue(vm => vm.SelectedIotHubInfo)
                 .Do(selectedhub =>
                 {
+
                     deviceInfoSelectionService.Select(null);
                     iotHubSelectionService.Select(selectedhub);
                 })
                 .Subscribe()
                 .AddDisposableTo(Disposables);
 
-
-            Observable.Return(Unit.Default)
+                 Observable.Return(Unit.Default)
                 .SelectMany(_ => azureService.GetIoTHubs())
                 .ObserveOnDispatcher()
                 .Do(hubs => IotHubInfo = hubs)
@@ -56,21 +59,38 @@ namespace EdgeManager.Gui.ViewModels
 
             ReloadCommand = ReactiveCommand.CreateFromTask(Reload)
                 .AddDisposableTo(Disposables);
-            //try
-            //{
-            //    IotHubInfo = await azureService.GetIoTHubs();
-            //}
-            //catch (Exception e)
-            //{
-            //    Logger.Error($"Error getting IoTHUbs: {e.Message}", e);
-            //}
+        }
+
+        public bool Loading
+        {
+            get => loading;
+            set
+            {
+                if (value == loading) return;
+                loading = value;
+                NotLoading = !value;
+                raisePropertyChanged();
+            }
+        }
+
+        public bool NotLoading
+        {
+            get => notLoading;
+            set
+            {
+                if (value == notLoading) return;
+                notLoading = value;
+                raisePropertyChanged();
+            }
         }
 
         public async Task<Unit> Reload()
         {
             try
             {
+                Loading = true;
                 IotHubInfo = await azureService.GetIoTHubs(true);
+                Loading = false;
             }
             catch(Exception e)
             {

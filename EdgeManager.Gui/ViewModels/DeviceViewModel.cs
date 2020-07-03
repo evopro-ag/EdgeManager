@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using EdgeManager.Gui.Design;
 using EdgeManager.Interfaces.Extensions;
@@ -19,6 +21,7 @@ namespace EdgeManager.Gui.ViewModels
         private IoTDeviceInfo selectedIoTDeviceInfo;
         private IoTDeviceInfo[] ioTDeviceInfos;
         private bool loading;
+        private string hubName;
 
         public DeviceViewModel(IAzureService azureService, 
             ISelectionService<IoTHubInfo> ioTHubInfoSelectionService, 
@@ -28,6 +31,8 @@ namespace EdgeManager.Gui.ViewModels
             this.ioTHubInfoSelectionService = ioTHubInfoSelectionService;
             this.ioTDeviceSelectionService = ioTDeviceSelectionService;
         }
+
+        public ReactiveCommand<Unit, Unit> ReloadCommand { get; set; }
 
         public override void Initialize()
         {
@@ -40,6 +45,7 @@ namespace EdgeManager.Gui.ViewModels
                 .ObserveOnDispatcher()
                 .Do(_ => Loading = true)
                 .Do(devices => IoTDeviceInfos = new IoTDeviceInfo[]{})
+                .Do(i => this.hubName = i.Name)
                 .Subscribe()
                 .AddDisposableTo(Disposables);
                 
@@ -52,6 +58,9 @@ namespace EdgeManager.Gui.ViewModels
                 .LogAndRetryAfterDelay(Logger, TimeSpan.FromSeconds(1), "Error while retrieving devices information")
                 .Subscribe()
                 .AddDisposableTo(Disposables);
+
+            ReloadCommand = ReactiveCommand.CreateFromTask(Reload)
+                .AddDisposableTo(Disposables);
         }
 
         public bool Loading
@@ -63,6 +72,21 @@ namespace EdgeManager.Gui.ViewModels
                 loading = value;
                 raisePropertyChanged();
             }
+        }
+
+        public async Task<Unit> Reload()
+        {
+            try
+            {
+                Loading = true;
+                IoTDeviceInfos = await azureService.GetIoTDevices(hubName, reload: true);
+                Loading = false;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Error in Reactive command", e);
+            }
+            return Unit.Default;
         }
 
         public IoTDeviceInfo[] IoTDeviceInfos

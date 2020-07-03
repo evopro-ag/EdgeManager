@@ -9,8 +9,8 @@ namespace EdgeManager.Interfaces.Services
     {
         IObservable<JsonCommand> JsonCommands {get;}
         Task<IoTHubInfo[]> GetIoTHubs(bool reload = false);
-        Task<IoTDeviceInfo[]> GetIoTDevices(string hubName);
-        Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId);
+        Task<IoTDeviceInfo[]> GetIoTDevices(string hubName, bool reload = false);
+        Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId, bool reload = false);
         Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload);
 
     }

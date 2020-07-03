@@ -17,17 +17,26 @@
            <RowDefinition Height="*" />
        </Grid.RowDefinitions>
        <Grid.ColumnDefinitions>
+           <ColumnDefinition Width="Auto"/>
            <ColumnDefinition Width="*"/>
        </Grid.ColumnDefinitions>
 
-       <Label Grid.Row="0" Content="IoT / Edge Geräte" VerticalAlignment="Center" HorizontalAlignment="Left" />
-        <ListView Grid.Row="1" ItemsSource="{Binding  IoTDeviceInfos}" SelectedItem="{Binding SelectedIoTDeviceInfo}">
+       <Label Grid.Column="0" Grid.Row="0" Content="IoT / Edge Geräte" VerticalAlignment="Center" HorizontalContentAlignment="Right" HorizontalAlignment="Left" />
+        <Button Grid.Column="1" Grid.Row="0" Height="20" Width="60" Margin="5" Background="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Right"
+                Command="{Binding ReloadCommand}" 
+                ToolTip="Reload Data">
+            <DockPanel>
+                <fa:FontAwesome Icon="Refresh" FontSize="16" VerticalAlignment="Center"/>
+            </DockPanel>
+        </Button>
+        
+        <ListView Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="1" ItemsSource="{Binding  IoTDeviceInfos}" SelectedItem="{Binding SelectedIoTDeviceInfo}">
            <ListView.View>
                <GridView>
                     <GridViewColumn Header="Status">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type models:IoTDeviceInfo}">
-                                <fa:FontAwesome Icon="Cubes" Height="15" Margin="5" Foreground="{Binding ConnectionState, Converter={StaticResource GreenIfConnectedConverter}}"/>
+                                <fa:FontAwesome Icon="Cubes" Height="16" Margin="5" Foreground="{Binding ConnectionState, Converter={StaticResource GreenIfConnectedConverter}}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -42,9 +51,10 @@
                 </GridView>
            </ListView.View>
        </ListView>
-       <Border Grid.Column="0" Grid.Row="1"
-               Background="Gray" Opacity="0.3"
-               Visibility="{Binding Loading, Converter={StaticResource HiddenIfFalseConverter}}">
+
+        <Border Grid.ColumnSpan="2"  Grid.Column="0" Grid.Row="1"
+                Background="White" Opacity="0.5"
+                Visibility="{Binding Loading, Converter={StaticResource HiddenIfFalseConverter}}">
             <fa:ImageAwesome Icon="Spinner" Spin="True" Width="44" 
                              VerticalAlignment="Center" />
        </Border>
