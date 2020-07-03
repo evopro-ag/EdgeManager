@@ -5,6 +5,7 @@
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<UseWpf>true</UseWpf>
+		<ApplicationIcon>em_g_2.ico</ApplicationIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
