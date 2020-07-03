@@ -22,7 +22,7 @@ namespace EdgeManager.Gui.Design
             });
         }
 
-        public Task<IoTDeviceInfo[]> GetIoTDevices(string hubName)
+        public Task<IoTDeviceInfo[]> GetIoTDevices(string hubName, bool reload = false)
         {
             return Task.FromResult(new[]
             {
@@ -32,7 +32,7 @@ namespace EdgeManager.Gui.Design
             });
         }
 
-        public Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId)
+        public Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId, bool reload = false)
         {
             return Task.FromResult(new[]
             {
