@@ -30,9 +30,9 @@
 
         <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Stretch" MinWidth="4" />
 
-        <Label Grid.Row="0" Grid.Column="2" Content="Json for selected command" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <Label Grid.Row="0" Grid.Column="2" Content="Json of selected command" VerticalAlignment="Center" HorizontalAlignment="Left" />
         
-        <ScrollViewer Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="1" Grid.Column="2" VerticalScrollBarVisibility="Auto">
             <TextBox Text="{Binding SelectedJsonCommand.ResultJson}" IsReadOnly="True" />
         </ScrollViewer>
 
