@@ -20,12 +20,22 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width=".5*"/>
-            <ColumnDefinition Width=".5*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <Label Grid.Row="0" Content="Module" VerticalAlignment="Center" HorizontalAlignment="Left" />
-        <ListView Grid.Row="1" ItemsSource="{Binding IoTModuleIdentityInfos}" SelectedItem="{Binding SelectedIoTModuleIdentityInfo}">
+        <Button Height="20" Width="60" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Background="WhiteSmoke" 
+                Command="{Binding ReloadCommand}" 
+                ToolTip="Reload Data">
+            <DockPanel>
+                <fa:FontAwesome Icon="Refresh" FontSize="16" VerticalAlignment="Center"/>
+            </DockPanel>
+        </Button>
+
+        <ListView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding IoTModuleIdentityInfos}" SelectedItem="{Binding SelectedIoTModuleIdentityInfo}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Status">
@@ -35,7 +45,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Devices" >
+                    <GridViewColumn Header="Modules" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type models:IoTModuleIdentityInfo}">
                                 <TextBlock Text="{Binding ModuleId}" />
@@ -46,23 +56,28 @@
             </ListView.View>
         </ListView>
 
-        <Border Grid.Column="0" Grid.Row="1"
-                Background="Gray" Opacity="0.3"
+        <GridSplitter Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" HorizontalAlignment="Stretch" MinWidth="4" />
+
+        <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
+                Background="White" Opacity="0.3"
                 Visibility="{Binding Loading, Converter={StaticResource HiddenIfFalseConverter}}">
             <fa:ImageAwesome Icon="Spinner" Spin="True" Width="44" 
                              VerticalAlignment="Center" />
         </Border>
 
-        <xctk:PropertyGrid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
-                           SelectedObject="{Binding SelectedIoTModuleIdentityInfo}" 
-                           IsReadOnly="True"
-                           AutoGenerateProperties="True"
-                           ShowAdvancedOptions="False"
-                           ShowSearchBox="False"
-                           ShowTitle="False"
-                           ShowSummary="False"
-                           ShowSortOptions="False"
-                           />
+        <StackPanel Grid.Row="1" Grid.Column="3">
+            <Label Visibility="Collapsed"/>
+            <xctk:PropertyGrid 
+                               SelectedObject="{Binding SelectedIoTModuleIdentityInfo}" 
+                               IsReadOnly="True"
+                               AutoGenerateProperties="True"
+                               ShowAdvancedOptions="False"
+                               ShowSearchBox="False"
+                               ShowTitle="False"
+                               ShowSummary="False"
+                               ShowSortOptions="False"
+            />
+        </StackPanel>
 
     </Grid>
 </UserControl>
