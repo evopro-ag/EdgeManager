@@ -110,7 +110,7 @@ namespace EdgeManager.Logic.Services
 		public Task<IoTHubInfo[]> GetIoTHubs(bool reload = false) => Run<IoTHubInfo[]>("iot hub list", reload);
 		public Task<IoTDeviceInfo[]> GetIoTDevices(string hubName, bool reload = false) => Run<IoTDeviceInfo[]>($"iot hub device-identity list --hub-name {hubName}", reload);
 		public Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId, bool reload = false) => Run<IoTModuleIdentityInfo[]>
-			($"iot hub module-identity list --device-id {deviceId} --hub-name {hubName}");
+			($"iot hub module-identity list --device-id {deviceId} --hub-name {hubName}", reload);
 		public Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload) => Run<IoTDirectMethodReply>
 			($"iot hub invoke-module-method --method-name '{method}' -n '{hubName}' -d '{deviceId}' -m '{moduleId}' --method-payload '{JsonConvert.SerializeObject(payload, Newtonsoft.Json.Formatting.None)}'");
 
