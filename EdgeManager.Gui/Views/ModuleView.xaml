@@ -26,7 +26,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Row="0" Content="Module" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <Label Grid.Row="0" Content="Modules" VerticalAlignment="Center" HorizontalAlignment="Left" />
         <Button Height="20" Width="60" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Background="WhiteSmoke" 
                 Command="{Binding ReloadCommand}" 
                 ToolTip="Reload Data">
@@ -45,7 +45,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Modules" >
+                    <GridViewColumn Header="ModuleID" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type models:IoTModuleIdentityInfo}">
                                 <TextBlock Text="{Binding ModuleId}" />
