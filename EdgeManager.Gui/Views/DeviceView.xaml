@@ -21,7 +21,7 @@
            <ColumnDefinition Width="*"/>
        </Grid.ColumnDefinitions>
 
-       <Label Grid.Column="0" Grid.Row="0" Content="IoT / Edge Geräte" VerticalAlignment="Center" HorizontalContentAlignment="Right" HorizontalAlignment="Left" />
+       <Label Grid.Column="0" Grid.Row="0" Content="IoT / Edge Devices" VerticalAlignment="Center" HorizontalContentAlignment="Right" HorizontalAlignment="Left" />
         <Button Grid.Column="1" Grid.Row="0" Height="20" Width="60" Margin="5" Background="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Right"
                 Command="{Binding ReloadCommand}" 
                 ToolTip="Reload Data">
@@ -41,7 +41,7 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="Devices" Width="150">
+                    <GridViewColumn Header="Device" Width="150">
                        <GridViewColumn.CellTemplate>
                            <DataTemplate DataType="{x:Type models:IoTDeviceInfo}">
                                <TextBlock Text="{Binding DeviceId}" />
