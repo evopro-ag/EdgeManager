@@ -89,7 +89,9 @@ namespace EdgeManager.Gui.ViewModels
             try
             {
                 Loading = true;
+                Logger.Debug($"Reload Button -IoT Hub- was pressed");
                 IotHubInfo = await azureService.GetIoTHubs(true);
+                Logger.Debug($"-IoT Hub- was reloaded");
                 Loading = false;
             }
             catch(Exception e)

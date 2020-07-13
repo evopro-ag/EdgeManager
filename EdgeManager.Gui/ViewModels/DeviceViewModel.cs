@@ -79,7 +79,9 @@ namespace EdgeManager.Gui.ViewModels
             try
             {
                 Loading = true;
+                Logger.Debug($"Reload Button -IoT / Edge Devices- was pressed");
                 IoTDeviceInfos = await azureService.GetIoTDevices(hubName, reload: true);
+                Logger.Debug($"-IoT / Edge Devices- was reloaded");
                 Loading = false;
             }
             catch (Exception e)

@@ -107,7 +107,9 @@ namespace EdgeManager.Gui.ViewModels
             try
             {
                 Loading = true;
+                Logger.Debug($"Reload Button -Modules- was pressed");
                 IoTModuleIdentityInfos = await azureService.GetIoTModules(hubName,  deviceId, reload: true);
+                Logger.Debug($"-Modules- was reloaded");
                 Loading = false;
             }
             catch (Exception e)
