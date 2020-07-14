@@ -12,6 +12,6 @@ namespace EdgeManager.Interfaces.Services
         Task<IoTDeviceInfo[]> GetIoTDevices(string hubName, bool reload = false);
         Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId, bool reload = false);
         Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload);
-
+        Task Login();
     }
 }
