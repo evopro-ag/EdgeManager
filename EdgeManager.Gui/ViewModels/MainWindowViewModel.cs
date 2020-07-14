@@ -9,13 +9,13 @@ namespace EdgeManager.Gui.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private readonly IViewModelFactory viewModelFactory;
-        private readonly IPowerShell powerShell;
 
         public MainWindowViewModel(IViewModelFactory viewModelFactory)
         {
             this.viewModelFactory = viewModelFactory;
         }
 
+        public LogInViewModel LogInViewModel { get; set; }
         public TabsViewModel TabsViewModel { get; set; }
         public HubViewModel HubViewModel { get; set; }
         public DeviceViewModel DeviceViewModel { get; set; }
@@ -27,6 +27,7 @@ namespace EdgeManager.Gui.ViewModels
             TabsViewModel = viewModelFactory.CreateViewModel<TabsViewModel>();
             HubViewModel = viewModelFactory.CreateViewModel<HubViewModel>();
             DeviceViewModel = viewModelFactory.CreateViewModel<DeviceViewModel>();
+            LogInViewModel = viewModelFactory.CreateViewModel<LogInViewModel>();
         }
 
 
