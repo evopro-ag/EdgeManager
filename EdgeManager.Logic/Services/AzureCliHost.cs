@@ -114,6 +114,11 @@ namespace EdgeManager.Logic.Services
 		public Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload) => Run<IoTDirectMethodReply>
 			($"iot hub invoke-module-method --method-name '{method}' -n '{hubName}' -d '{deviceId}' -m '{moduleId}' --method-payload '{JsonConvert.SerializeObject(payload, Newtonsoft.Json.Formatting.None)}'");
 
+        public async Task Login()
+        {
+            await powerShell.Execute("az login");
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
