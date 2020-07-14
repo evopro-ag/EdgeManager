@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ using EdgeManager.Interfaces.Services;
 
 namespace EdgeManager.Gui.Design
 {
-    public class DesignAzureService : IAzureService
+    internal class DesignAzureService : IAzureService
     {
         public IObservable<JsonCommand> JsonCommands { get; } = Observable.Never<JsonCommand>();
 
@@ -47,14 +48,10 @@ namespace EdgeManager.Gui.Design
             throw new NotImplementedException();
         }
 
-        public Task<JsonCommand> GetCommand(string command)
+        public Task Login()
         {
-            throw new NotImplementedException();
+            return Task.FromResult(Unit.Default);
         }
 
-        public IDisposable Subscribe(IObserver<JsonCommand> observer)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
