@@ -22,6 +22,8 @@ namespace EdgeManager.Logic
             Bind<ISelectionService<IoTDeviceInfo>>().To<SelectionService<IoTDeviceInfo>>().InSingletonScope();
             Bind<ISelectionService<IoTModuleIdentityInfo>>().To<SelectionService<IoTModuleIdentityInfo>>().InSingletonScope();
             Bind<ISelectionService<JsonCommand>>().To<SelectionService<JsonCommand>>().InSingletonScope();
+         
+            Bind<IAzureInstallationService>().To<AzureInstallationService>().InSingletonScope();
 
             Bind<ILog>().ToMethod(context => LoggerFactory.GetLogger());
         }
