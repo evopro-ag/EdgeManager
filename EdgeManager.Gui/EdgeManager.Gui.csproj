@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Views\evopro_farbig_ohne Background.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="DynamicData" Version="6.16.1" />
     <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
@@ -27,10 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EdgeManager.Interfaces\EdgeManager.Interfaces.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Views\evopro_farbig_ohne Background.png" />
   </ItemGroup>
 
 </Project>

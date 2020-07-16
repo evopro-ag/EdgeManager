@@ -53,5 +53,9 @@ namespace EdgeManager.Gui.Design
             return Task.FromResult(Unit.Default);
         }
 
+        public Task<bool> CheckCli()
+        {
+            return Task.FromResult(true);
+        }
     }
 }

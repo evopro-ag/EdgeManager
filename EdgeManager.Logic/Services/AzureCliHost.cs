@@ -4,6 +4,7 @@ using System.Drawing.Design;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -25,6 +26,16 @@ namespace EdgeManager.Logic.Services
         private CompositeDisposable disposables = new CompositeDisposable();
 
         public IObservable<JsonCommand> JsonCommands => jsonCommands;
+        public IObservable<bool> obs => Observable.Create<bool>( observer =>
+        {
+           observer.OnNext(isCliInstalled());
+           return Disposable.Empty;
+        });
+
+        private bool isCliInstalled()
+        {
+            return true;
+        }
 
 
         private Dictionary<string, JsonCommand> cache = new Dictionary<string, JsonCommand>();
@@ -32,7 +43,7 @@ namespace EdgeManager.Logic.Services
         public AzureCliHost(IPowerShell powerShell)
         {
             this.powerShell = powerShell;
-
+            
             RestoreCache();
         }
 
@@ -92,12 +103,12 @@ namespace EdgeManager.Logic.Services
         {
             if (cache.ContainsKey(command) && !reload)
             {
-                logger.Debug($"restoring command '{command}' from cache");
+                logger.Debug($"Restoring command '{command}' from cache");
                 jsonCommands.OnNext(cache[command]);
                 return cache[command].ResultJson;
             }
 
-            logger.Debug($"Sended command to azure cloud: {command}");
+            logger.Debug($"Sended command to azure cloud: '{command}'");
             var json = string.Join("\n", await powerShell.Execute("az " + command));
             var jsonCommand = new JsonCommand(command, json);
             jsonCommands.OnNext(jsonCommand);
@@ -117,6 +128,19 @@ namespace EdgeManager.Logic.Services
         public async Task Login()
         {
             await powerShell.Execute("az login");
+        }
+
+        public async Task<bool> CheckCli()
+        {
+            var result = await powerShell.Execute("az --version");
+            if (result.First().ToString().Contains("azure-cli")) return true;
+            return false;
+        }
+
+        public async Task InstallCli()
+        {
+            await powerShell.Execute(
+                @"Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; rm .\AzureCLI.msi");
         }
 
         protected virtual void Dispose(bool disposing)
