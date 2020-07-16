@@ -22,7 +22,7 @@ namespace EdgeManager.Gui.ViewModels
         private bool CliInstalled;
         //private DialogResult dialogResult;
 
-        public MainWindowViewModel(IViewModelFactory viewModelFactory, IAzureService azureService)
+        public MainWindowViewModel(IViewModelFactory viewModelFactory, IAzureService azureService) //todo: add constructor parameter for IAzureInstallationService
         {
             this.viewModelFactory = viewModelFactory;
             this.azureService = azureService;
@@ -42,7 +42,12 @@ namespace EdgeManager.Gui.ViewModels
             DeviceViewModel = viewModelFactory.CreateViewModel<DeviceViewModel>();
             LogInViewModel = viewModelFactory.CreateViewModel<LogInViewModel>();
 
-            CheckCliInstalled().Wait();
+            CheckCliInstalled().Wait(); //todo: remove this and do the thing below instead
+            
+            //todo: add subscription to IAzureInstallationService.RequestInstallation
+            //in case of a positive response from user install from IAzureInstallationService.InstallAzureCli
+            //after installation completed restart the software
+            
         }
 
         private async Task<Unit> CheckCliInstalled()
