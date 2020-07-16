@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
@@ -56,6 +54,11 @@ namespace EdgeManager.Gui.Design
         public Task<bool> CheckCli()
         {
             return Task.FromResult(true);
+        }
+
+        public Task InstallCli()
+        {
+            return Task.FromResult(Unit.Default);
         }
     }
 }
