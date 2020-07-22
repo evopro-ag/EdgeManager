@@ -26,18 +26,7 @@ namespace EdgeManager.Logic.Services
         private CompositeDisposable disposables = new CompositeDisposable();
 
         public IObservable<JsonCommand> JsonCommands => jsonCommands;
-        public IObservable<bool> obs => Observable.Create<bool>( observer =>
-        {
-           observer.OnNext(isCliInstalled());
-           return Disposable.Empty;
-        });
-
-        private bool isCliInstalled()
-        {
-            return true;
-        }
-
-
+        
         private Dictionary<string, JsonCommand> cache = new Dictionary<string, JsonCommand>();
 
         public AzureCliHost(IPowerShell powerShell)
@@ -97,7 +86,7 @@ namespace EdgeManager.Logic.Services
             {
                 logger.Error("error while saving cache", e);
             }
-}
+        }
 
         private async Task<string> SendOrRestoreFromCache(string command, bool reload = false)
         {
@@ -132,15 +121,16 @@ namespace EdgeManager.Logic.Services
 
         public async Task<bool> CheckCli()
         {
-            var result = await powerShell.Execute("az --version");
-            if (result.First().ToString().Contains("azure-cli")) return true;
-            return false;
-        }
+            var result = await powerShell.Execute("aez --version");
+            try
+            {
+                if (result.First().ToString().Contains("azure-cli")) return true;
+            }
+            catch (Exception e)
+            {
+            }
 
-        public async Task InstallCli()
-        {
-            await powerShell.Execute(
-                @"Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; rm .\AzureCLI.msi");
+            return false;
         }
 
         protected virtual void Dispose(bool disposing)

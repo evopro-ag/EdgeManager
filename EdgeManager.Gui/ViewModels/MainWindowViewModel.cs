@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
@@ -11,6 +13,8 @@ using EdgeManager.Gui.Design;
 using EdgeManager.Interfaces.Commons;
 using EdgeManager.Interfaces.Extensions;
 using EdgeManager.Interfaces.Services;
+using ReactiveUI;
+using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
 
 namespace EdgeManager.Gui.ViewModels
@@ -19,13 +23,13 @@ namespace EdgeManager.Gui.ViewModels
     {
         private readonly IAzureService azureService;
         private readonly IViewModelFactory viewModelFactory;
-        private bool CliInstalled;
-        //private DialogResult dialogResult;
+        private readonly IAzureInstallationService azureInstallationService;
 
-        public MainWindowViewModel(IViewModelFactory viewModelFactory, IAzureService azureService) //todo: add constructor parameter for IAzureInstallationService
+        public MainWindowViewModel(IViewModelFactory viewModelFactory, IAzureService azureService, IAzureInstallationService azureInstallationService) //todo: add constructor parameter for IAzureInstallationService
         {
             this.viewModelFactory = viewModelFactory;
             this.azureService = azureService;
+            this.azureInstallationService = azureInstallationService;
         }
 
         public LogInViewModel LogInViewModel { get; set; }
@@ -42,47 +46,66 @@ namespace EdgeManager.Gui.ViewModels
             DeviceViewModel = viewModelFactory.CreateViewModel<DeviceViewModel>();
             LogInViewModel = viewModelFactory.CreateViewModel<LogInViewModel>();
 
-            CheckCliInstalled().Wait(); //todo: remove this and do the thing below instead
             
             //todo: add subscription to IAzureInstallationService.RequestInstallation
             //in case of a positive response from user install from IAzureInstallationService.InstallAzureCli
             //after installation completed restart the software
-            
+            var observable = azureInstallationService.RequestInstallation
+
+                .ObserveOnDispatcher()
+                .Select(_ => AskForInstallationPermission());
+
+            observable.Where(b => b)
+                .SelectMany(async _ => await azureInstallationService.InstallAzureCli())
+                .SelectMany(_ => Restart())
+                .Subscribe()
+                .AddDisposableTo(Disposables);
+
+            observable.Where(b => !b)
+                .SelectMany(_ => ShutdownApp())
+                .Subscribe()
+                .AddDisposableTo(Disposables);
         }
 
-        private async Task<Unit> CheckCliInstalled()
+
+        private bool AskForInstallationPermission()
         {
+            var dialogResult = MessageBox.Show("AzureCli is not installed", Title, MessageBoxButton.YesNo);
+            if (dialogResult == MessageBoxResult.Yes)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private async Task<Unit> Restart()
+        {
+            Process.Start(Path.Combine(Path.GetDirectoryName(Application.ResourceAssembly.Location), "EdgeManager.exe"));
+            Logger.Error("Application restarted after install AzureCli");
             try
             {
-                CliInstalled = await azureService.CheckCli();
-                if (!CliInstalled)
-                {
-                    var dialogResult = MessageBox.Show("AzureCli is not installed", Title, MessageBoxButton.YesNo);
-                    if (dialogResult == MessageBoxResult.Yes)
-                    {
-                        await azureService.InstallCli();
-                    }
-                    else if (dialogResult == MessageBoxResult.No)
-                    {
-                        //do something else
-                    }
-                }
+                Application.Current.Shutdown();
             }
             catch (Exception e)
             {
-                Logger.Error("AzureCli is not installed", e);
+                Logger.Error("Error in Restart: did not shutdown", e);
             }
 
             return Unit.Default;
         }
-    }
 
-
-    internal class DesignMainWindowViewModel : MainWindowViewModel
-    {
-        public DesignMainWindowViewModel() : base(ViewModelLocator.DesignViewModelFactory, new DesignAzureService())
+        private async Task<Unit> ShutdownApp()
         {
-            base.Initialize();
+            Application.Current.Shutdown();
+            return Unit.Default;
         }
     }
+
+    //internal class DesignMainWindowViewModel : MainWindowViewModel
+    //{
+    //    public DesignMainWindowViewModel() : base(ViewModelLocator.DesignViewModelFactory, new DesignAzureService(), )
+    //    {
+    //        base.Initialize();
+    //    }
+    //}
 }

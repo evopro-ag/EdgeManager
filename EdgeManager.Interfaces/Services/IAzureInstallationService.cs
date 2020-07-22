@@ -5,7 +5,7 @@ using System.Windows.Forms.Design.Behavior;
 
 namespace EdgeManager.Interfaces.Services
 {
-    public interface IAzureInstallationService //Todo: Eventually rename this
+    public interface IAzureInstallationService
     {
         public IObservable<Unit> RequestInstallation { get; }
         public bool? AzureCliInstalled { get;  }

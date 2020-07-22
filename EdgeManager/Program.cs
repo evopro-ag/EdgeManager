@@ -8,6 +8,7 @@ using EdgeManager.Interfaces.Logging;
 using EdgeManager.Logic;
 using log4net;
 using Ninject;
+using Ninject.Activation.Strategies;
 
 namespace EdgeManager
 {
@@ -42,8 +43,11 @@ namespace EdgeManager
 
                     logger.Debug("application starts ...");
 
+
+
                     application.Run(mainWindow);
                     application.Shutdown();
+
 
                     logger.Debug("application ended.\n\n\n\n");
 
@@ -51,6 +55,10 @@ namespace EdgeManager
                 catch (Exception e)
                 {
                     LoggerFactory.GetLogger(typeof(Program)).Error("Unhandled exeption", e);
+                }
+                finally
+                {
+
                 }
             }
         }

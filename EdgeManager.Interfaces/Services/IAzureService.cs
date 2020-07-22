@@ -14,6 +14,5 @@ namespace EdgeManager.Interfaces.Services
         Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload);
         Task Login();
         Task<bool> CheckCli();
-        Task InstallCli();
     }
 }

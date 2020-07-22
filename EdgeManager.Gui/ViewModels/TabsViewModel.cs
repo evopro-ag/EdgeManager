@@ -22,7 +22,6 @@ namespace EdgeManager.Gui.ViewModels
 
             JsonViewModel = viewModelFactory.CreateViewModel<JsonViewModel>();
             JsonViewModel.AddDisposableTo(Disposables);
-            //todo
         }
 
         public ModuleViewModel ModuleViewModel { get; private set; }

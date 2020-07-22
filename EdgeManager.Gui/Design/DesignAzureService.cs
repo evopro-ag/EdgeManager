@@ -55,10 +55,5 @@ namespace EdgeManager.Gui.Design
         {
             return Task.FromResult(true);
         }
-
-        public Task InstallCli()
-        {
-            return Task.FromResult(Unit.Default);
-        }
     }
 }
