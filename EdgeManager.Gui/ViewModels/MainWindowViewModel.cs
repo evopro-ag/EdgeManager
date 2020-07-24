@@ -37,8 +37,8 @@ namespace EdgeManager.Gui.ViewModels
             this.applicationRestartService = applicationRestartService;
 
         }
-        public IObservable<Unit> RestartApplication =>
-            restartCheckSubject.Where(b => b.HasValue && b.Value).Select(_ => Unit.Default);
+        public IObservable<bool> RestartApplication =>
+            restartCheckSubject.Where(b => b.HasValue).Select(x =>x ?? true);
 
         public bool? RestartAfterCliInstalled => restartCheckSubject.Value;
 
@@ -60,19 +60,10 @@ namespace EdgeManager.Gui.ViewModels
             //todo: add subscription to IAzureInstallationService.RequestInstallation
             //in case of a positive response from user install from IAzureInstallationService.InstallAzureCli
             //after installation completed restart the software
-            var observable = azureInstallationService.RequestInstallation
-
+            azureInstallationService.RequestInstallation
                 .ObserveOnDispatcher()
-                .Select(_ => AskForInstallationPermission());
-
-            observable.Where(b => b)
-                .SelectMany(async _ => await azureInstallationService.InstallAzureCli())
-                .Subscribe(_ => restartCheckSubject.OnNext(true))
-                .AddDisposableTo(Disposables);
-
-            observable.Where(b => !b)
-                .SelectMany(_ => ShutdownApp())
-                .Subscribe()
+                .Select(_ => AskForInstallationPermission())
+                .Subscribe(b => restartCheckSubject.OnNext(b))
                 .AddDisposableTo(Disposables);
         }
 

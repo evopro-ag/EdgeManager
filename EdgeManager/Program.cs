@@ -50,9 +50,9 @@ namespace EdgeManager
                     logger.Debug("application starts ...");
 
                     var mainWindowViewModel = viewModelFactory.MainWindowViewModel;
+
                     subscription = mainWindowViewModel.RestartApplication
-                        .Do(_ => Console.WriteLine("Trigger"))
-                        .Subscribe(_ => Restart(application));
+                        .Subscribe(b => Restart(application, b));
 
                     application.Run(mainWindow);
                     application.Shutdown();
@@ -73,10 +73,14 @@ namespace EdgeManager
             }
         }
 
-        private static void Restart(Application app)
+        private static void Restart(Application app, bool restart)
         {
             //ToDo: Start new application
-            Process.Start(Path.Combine(Path.GetDirectoryName(Application.ResourceAssembly.Location), "EdgeManager.exe"));
+            if (restart)
+            {
+                Process.Start(Path.Combine(Path.GetDirectoryName(Application.ResourceAssembly.Location), "EdgeManager.exe"));
+            }
+
             //Logger.Debug("Application restarted after install AzureCli");
             try
             {
