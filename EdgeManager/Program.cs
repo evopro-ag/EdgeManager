@@ -49,8 +49,9 @@ namespace EdgeManager
 
                     logger.Debug("application starts ...");
 
-                    var mainWindowViewModel = kernel.Get<MainWindowViewModel>();
+                    var mainWindowViewModel = viewModelFactory.MainWindowViewModel;
                     subscription = mainWindowViewModel.RestartApplication
+                        .Do(_ => Console.WriteLine("Trigger"))
                         .Subscribe(_ => Restart(application));
 
                     application.Run(mainWindow);

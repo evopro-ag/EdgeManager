@@ -41,8 +41,8 @@ namespace EdgeManager.Logic.Services
             try
             {
                 Logger.Debug("Installing AzureCli...");
-                await powerShell.Execute(
-                    @"Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; rm .\AzureCLI.msi");
+                //await powerShell.Execute(
+                //    @"Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; rm .\AzureCLI.msi");
             }
             catch (Exception e)
             {

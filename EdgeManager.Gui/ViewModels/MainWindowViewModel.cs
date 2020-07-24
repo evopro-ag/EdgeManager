@@ -38,7 +38,7 @@ namespace EdgeManager.Gui.ViewModels
 
         }
         public IObservable<Unit> RestartApplication =>
-            restartCheckSubject.Where(b => b.HasValue && !b.Value).Select(_ => Unit.Default);
+            restartCheckSubject.Where(b => b.HasValue && b.Value).Select(_ => Unit.Default);
 
         public bool? RestartAfterCliInstalled => restartCheckSubject.Value;
 
