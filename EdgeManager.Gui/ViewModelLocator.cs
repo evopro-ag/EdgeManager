@@ -20,7 +20,7 @@ namespace EdgeManager.Gui
 
         private void BindServices()
         {
-            Kernel.Bind<MainWindowViewModel>().To<MainWindowViewModel>();
+            Kernel.Bind<MainWindowViewModel>().To<MainWindowViewModel>().InSingletonScope();
         }
 
         public ViewModelLocator(IKernel kernel)

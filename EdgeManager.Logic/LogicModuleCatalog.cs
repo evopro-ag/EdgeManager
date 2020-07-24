@@ -24,6 +24,8 @@ namespace EdgeManager.Logic
             Bind<ISelectionService<JsonCommand>>().To<SelectionService<JsonCommand>>().InSingletonScope();
          
             Bind<IAzureInstallationService>().To<AzureInstallationService>().InSingletonScope();
+            //Bind<IApplicationRestartService>().To<AzureInstallationService>().InSingletonScope();
+
 
             Bind<ILog>().ToMethod(context => LoggerFactory.GetLogger());
         }

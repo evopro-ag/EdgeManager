@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,16 +22,25 @@ namespace EdgeManager.Gui.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        private readonly BehaviorSubject<bool?> restartCheckSubject = new BehaviorSubject<bool?>(null);
         private readonly IAzureService azureService;
         private readonly IViewModelFactory viewModelFactory;
         private readonly IAzureInstallationService azureInstallationService;
+        private readonly IApplicationRestartService applicationRestartService;
+
 
         public MainWindowViewModel(IViewModelFactory viewModelFactory, IAzureService azureService, IAzureInstallationService azureInstallationService) //todo: add constructor parameter for IAzureInstallationService
         {
             this.viewModelFactory = viewModelFactory;
             this.azureService = azureService;
             this.azureInstallationService = azureInstallationService;
+            this.applicationRestartService = applicationRestartService;
+
         }
+        public IObservable<Unit> RestartApplication =>
+            restartCheckSubject.Where(b => b.HasValue && !b.Value).Select(_ => Unit.Default);
+
+        public bool? RestartAfterCliInstalled => restartCheckSubject.Value;
 
         public LogInViewModel LogInViewModel { get; set; }
         public TabsViewModel TabsViewModel { get; set; }
@@ -57,8 +67,7 @@ namespace EdgeManager.Gui.ViewModels
 
             observable.Where(b => b)
                 .SelectMany(async _ => await azureInstallationService.InstallAzureCli())
-                .SelectMany(_ => Restart())
-                .Subscribe()
+                .Subscribe(_ => restartCheckSubject.OnNext(true))
                 .AddDisposableTo(Disposables);
 
             observable.Where(b => !b)
@@ -77,23 +86,7 @@ namespace EdgeManager.Gui.ViewModels
             }
             return false;
         }
-
-        private async Task<Unit> Restart()
-        {
-            Process.Start(Path.Combine(Path.GetDirectoryName(Application.ResourceAssembly.Location), "EdgeManager.exe"));
-            Logger.Error("Application restarted after install AzureCli");
-            try
-            {
-                Application.Current.Shutdown();
-            }
-            catch (Exception e)
-            {
-                Logger.Error("Error in Restart: did not shutdown", e);
-            }
-
-            return Unit.Default;
-        }
-
+      
         private async Task<Unit> ShutdownApp()
         {
             Application.Current.Shutdown();

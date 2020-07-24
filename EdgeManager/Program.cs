@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Reactive.Linq;
 using System.Windows;
 using EdgeManager.Gui;
+using EdgeManager.Gui.ViewModels;
 using EdgeManager.Gui.Views;
 using EdgeManager.Interfaces.Commons;
 using EdgeManager.Interfaces.Logging;
 using EdgeManager.Logic;
 using log4net;
+using log4net.Repository.Hierarchy;
 using Ninject;
 using Ninject.Activation.Strategies;
 
@@ -14,6 +18,8 @@ namespace EdgeManager
 {
     public static class Program
     {
+        private static IDisposable subscription;
+
         [STAThread]
         public static void Main(string[] args)
         {
@@ -43,7 +49,9 @@ namespace EdgeManager
 
                     logger.Debug("application starts ...");
 
-
+                    var mainWindowViewModel = kernel.Get<MainWindowViewModel>();
+                    subscription = mainWindowViewModel.RestartApplication
+                        .Subscribe(_ => Restart(application));
 
                     application.Run(mainWindow);
                     application.Shutdown();
@@ -54,14 +62,34 @@ namespace EdgeManager
                 }
                 catch (Exception e)
                 {
-                    LoggerFactory.GetLogger(typeof(Program)).Error("Unhandled exeption", e);
+                    LoggerFactory.GetLogger(typeof(Program)).Error("Unhandled exception", e);
                 }
                 finally
                 {
-
+                    
+                    subscription?.Dispose();
                 }
             }
         }
+
+        private static void Restart(Application app)
+        {
+            //ToDo: Start new application
+            Process.Start(Path.Combine(Path.GetDirectoryName(Application.ResourceAssembly.Location), "EdgeManager.exe"));
+            //Logger.Debug("Application restarted after install AzureCli");
+            try
+            {
+                app.Shutdown();
+                //Application.Current.Shutdown();
+            }
+            catch (Exception e)
+            {
+                //Logger.Error("Error while restarting: did not shutdown", e);
+            }
+        }
+       
+           
+
 
         private static Application CreateApplication(IViewModelFactory viewModelLocator)
         {
