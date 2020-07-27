@@ -10,5 +10,6 @@ namespace EdgeManager.Interfaces.Services
     {
         Task<Collection<PSObject>> Execute(string command);
 
+        IObservable<int> PercentageCompleted { get; }
     }
 }
