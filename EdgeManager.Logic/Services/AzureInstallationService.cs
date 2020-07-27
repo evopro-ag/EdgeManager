@@ -20,7 +20,7 @@ namespace EdgeManager.Logic.Services
         private readonly CompositeDisposable disposables = new CompositeDisposable();
         private readonly IAzureService azureService;
         private readonly IPowerShell powerShell;
-        protected ILog Logger { get; }
+        private readonly ILog logger;
 
         public IObservable<Unit> RequestInstallation =>
             azureCheckSubject.Where(b => b.HasValue && !b.Value).Select(_ => Unit.Default);
@@ -29,34 +29,33 @@ namespace EdgeManager.Logic.Services
 
        
         public AzureInstallationService(IAzureService azureService,
-            IPowerShell powerShell, ILog logger /*todo: logger injecten*/) //todo: add constructor parameters
+            IPowerShell powerShell, ILog logger)
         {
             this.azureService = azureService;
             this.powerShell = powerShell;
-            this.Logger = logger;
+            this.logger = logger;
         }
 
         public async Task<Unit> InstallAzureCli()
         {
             try
             {
-                Logger.Debug("Installing AzureCli...");
+                logger.Debug("Installing AzureCli...");
+                
                 await powerShell.Execute(
                     @"Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; rm .\AzureCLI.msi");
             }
             catch (Exception e)
             {
-                Logger.Error("AzureCli can not be installed!", e);
+                logger.Error("AzureCli can not be installed!", e);
             }
             return Unit.Default;
         }
 
         public void Initialize()
         {
-            //todo: fill in implementation
-            // Start check in background here with Observable.Return()...
             Observable.Return(Unit.Default)
-                .SelectMany(async _ => await azureService.CheckCli())
+                .SelectMany(_ => azureService.CheckCli())
                 .Subscribe(b => azureCheckSubject.OnNext(b))
                 .AddDisposableTo(disposables);
         }
