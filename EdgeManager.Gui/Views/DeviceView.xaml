@@ -36,7 +36,7 @@
                     <GridViewColumn Header="Status">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type models:IoTDeviceInfo}">
-                                <fa:FontAwesome Icon="Cubes" Height="16" Margin="5" Foreground="{Binding ConnectionState, Converter={StaticResource GreenIfConnectedConverter}}"/>
+                                <fa:FontAwesome Icon="{Binding Capabilities.IoTEdge, Converter={StaticResource BoolToEdgeDeviceIconConverter}}" Height="16" Margin="5" Foreground="{Binding ConnectionState, Converter={StaticResource GreenIfConnectedConverter}}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
