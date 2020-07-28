@@ -25,4 +25,9 @@
     <ProjectReference Include="..\EdgeManager.Interfaces\EdgeManager.Interfaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="em_g_2.ico" />
+    <Resource Include="em_g_2.ico" />
+  </ItemGroup>
+
 </Project>
