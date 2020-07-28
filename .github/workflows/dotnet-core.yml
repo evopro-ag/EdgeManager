@@ -28,9 +28,9 @@ jobs:
     - name: Publish
       run: dotnet publish EdgeManager\EdgeManager.csproj -r win7-x64 -c Release /p:PublishSingleFile=true -o out
     - name: Compress
-      run: Compress-Archive out\EdgeManager.exe "EdgeManager_v0.1.${{ github.run_number }}.zip"
+      run: Compress-Archive out\EdgeManager.exe EdgeManager_v0.1.${{ github.run_number }}.zip
     - uses: actions/upload-artifact@v2
       with:
         name: EdgeManager
-        path: *.zip
+        path: EdgeManager_v0.1.${{ github.run_number }}.zip
 
