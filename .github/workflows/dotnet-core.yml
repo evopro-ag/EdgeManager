@@ -31,6 +31,6 @@ jobs:
       run: Compress-Archive out\EdgeManager.exe EdgeManager_${{ github.run_number }}.zip
     - uses: actions/upload-artifact@v2
       with:
-        name: EdgeManager
+        name: EdgeManager_${{ github.run_number }}.zip
         path: EdgeManager_${{ github.run_number }}.zip
 
