@@ -25,8 +25,11 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
     - name: Publish
       run: dotnet publish EdgeManager\EdgeManager.csproj -r win7-x64 -c Release /p:PublishSingleFile=true -o out
+    - name: Extract Version
+      uses: olegtarasov/get-tag@v2
+      id: tagName
     - name: Compress
-      run: Compress-Archive out\EdgeManager.exe EdgeManager_${{ github.event.release.tag_name }}.${{ github.run_number }}.zip
+      run: Compress-Archive out\EdgeManager.exe EdgeManager_${{ steps.tagName.outputs.tag }}.${{ github.run_number }}.zip
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -44,7 +47,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: EdgeManager_${{ github.event.release.tag_name }}.${{ github.run_number }}.zip
-        asset_name: EdgeManager_${{ github.event.release.tag_name }}.${{ github.run_number }}.zip
+        asset_path: EdgeManager_${{ steps.tagName.outputs.tag }}.${{ github.run_number }}.zip
+        asset_name: EdgeManager_${{ steps.tagName.outputs.tag }}.${{ github.run_number }}.zip
         asset_content_type: application/zip
 
