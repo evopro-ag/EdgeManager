@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using EdgeManager.Gui;
 using EdgeManager.Gui.ViewModels;
 using EdgeManager.Gui.Views;
 using EdgeManager.Interfaces.Commons;
+using EdgeManager.Interfaces.Extensions;
 using EdgeManager.Interfaces.Logging;
 using EdgeManager.Logic;
 using log4net;
@@ -18,8 +20,6 @@ namespace EdgeManager
 {
     public static class Program
     {
-        private static IDisposable subscription;
-
         [STAThread]
         public static void Main(string[] args)
         {
@@ -51,12 +51,18 @@ namespace EdgeManager
 
                     var mainWindowViewModel = viewModelFactory.MainWindowViewModel;
 
-                    subscription = mainWindowViewModel.RestartApplication
-                        .Subscribe(b => Restart(application, b));
+                    using (var subscriptions = new CompositeDisposable())
+                    {
 
-                    application.Run(mainWindow);
-                    application.Shutdown();
+                        mainWindowViewModel.RestartApplication
+                            .Do(_ => Restart(application))
+                            .LogAndRetryAfterDelay(logger, TimeSpan.FromMilliseconds(100), "Error while requesting restart")
+                            .Subscribe()
+                            .AddDisposableTo(subscriptions);
 
+                        application.Run(mainWindow);
+                        application.Shutdown();
+                    }
 
                     logger.Debug("application ended.\n\n\n\n");
 
@@ -65,21 +71,14 @@ namespace EdgeManager
                 {
                     LoggerFactory.GetLogger(typeof(Program)).Error("Unhandled exception", e);
                 }
-                finally
-                {
-                    
-                    subscription?.Dispose();
-                }
+                
             }
         }
 
-        private static void Restart(Application app, bool restart)
+        private static void Restart(Application app)
         {
-            //ToDo: Start new application
-            if (restart)
-            {
-                Process.Start(Path.Combine(Path.GetDirectoryName(Application.ResourceAssembly.Location), "EdgeManager.exe"));
-            }
+            Process.Start(Path.Combine(Path.GetDirectoryName(Application.ResourceAssembly.Location),
+                "EdgeManager.exe"));
 
             //Logger.Debug("Application restarted after install AzureCli");
             try

@@ -39,7 +39,6 @@ namespace EdgeManager.Gui.ViewModels
                 .ToObservableChangeSet(json => json.Command.GetHashCode(), limitSizeTo: 10)
                 .ObserveOnDispatcher()
                 .Bind(JsonCommands)
-                .Do(x => Console.WriteLine(this.JsonCommands.Count))
                 .Subscribe()
                 .AddDisposableTo(Disposables);
         }

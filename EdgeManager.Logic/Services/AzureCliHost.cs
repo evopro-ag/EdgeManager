@@ -121,7 +121,7 @@ namespace EdgeManager.Logic.Services
 
         public async Task<bool> CheckCli()
         {
-            var result = await powerShell.Execute("aez --version");
+            var result = await powerShell.Execute("az --version");
             try
             {
                 if (result.First().ToString().Contains("azure-cli")) return true;

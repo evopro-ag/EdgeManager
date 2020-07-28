@@ -1,46 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-using EdgeManager.Gui.Design;
 using EdgeManager.Interfaces.Commons;
 using EdgeManager.Interfaces.Extensions;
 using EdgeManager.Interfaces.Services;
-using ReactiveUI;
-using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
 
 namespace EdgeManager.Gui.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private readonly BehaviorSubject<bool?> restartCheckSubject = new BehaviorSubject<bool?>(null);
-        private readonly IAzureService azureService;
+        private readonly Subject<Unit> restartCheckSubject = new Subject<Unit>();
         private readonly IViewModelFactory viewModelFactory;
         private readonly IAzureInstallationService azureInstallationService;
-        private readonly IApplicationRestartService applicationRestartService;
 
 
-        public MainWindowViewModel(IViewModelFactory viewModelFactory, IAzureService azureService, IAzureInstallationService azureInstallationService) //todo: add constructor parameter for IAzureInstallationService
+        public MainWindowViewModel(IViewModelFactory viewModelFactory, IAzureInstallationService azureInstallationService)
         {
             this.viewModelFactory = viewModelFactory;
-            this.azureService = azureService;
             this.azureInstallationService = azureInstallationService;
-            this.applicationRestartService = applicationRestartService;
 
         }
-        public IObservable<bool> RestartApplication =>
-            restartCheckSubject.Where(b => b.HasValue).Select(x =>x ?? true);
-
-        public bool? RestartAfterCliInstalled => restartCheckSubject.Value;
+        public IObservable<Unit> RestartApplication => restartCheckSubject.AsObservable();
 
         public LogInViewModel LogInViewModel { get; set; }
         public TabsViewModel TabsViewModel { get; set; }
@@ -57,31 +40,20 @@ namespace EdgeManager.Gui.ViewModels
             LogInViewModel = viewModelFactory.CreateViewModel<LogInViewModel>();
 
             
-            //todo: add subscription to IAzureInstallationService.RequestInstallation
-            //in case of a positive response from user install from IAzureInstallationService.InstallAzureCli
-            //after installation completed restart the software
             azureInstallationService.RequestInstallation
                 .ObserveOnDispatcher()
                 .Select(_ => AskForInstallationPermission())
-                .Subscribe(b => restartCheckSubject.OnNext(b))
+                .Where(b => b)
+                .SelectMany(_ => azureInstallationService.InstallAzureCli())
+                .Subscribe(restartCheckSubject.OnNext)
                 .AddDisposableTo(Disposables);
         }
 
 
         private bool AskForInstallationPermission()
         {
-            var dialogResult = MessageBox.Show("AzureCli is not installed", Title, MessageBoxButton.YesNo);
-            if (dialogResult == MessageBoxResult.Yes)
-            {
-                return true;
-            }
-            return false;
-        }
-      
-        private async Task<Unit> ShutdownApp()
-        {
-            Application.Current.Shutdown();
-            return Unit.Default;
+            var dialogResult = MessageBox.Show("Would you like to install it?", "AzureCli is not installed", MessageBoxButton.YesNo);
+            return dialogResult == MessageBoxResult.Yes;
         }
     }
 

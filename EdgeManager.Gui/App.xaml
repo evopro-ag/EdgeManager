@@ -26,6 +26,7 @@
 
             <converters:BoolToBrushConverter x:Key="GreenIfTrueGrayIfFalseConverter" TrueValue="Green" FalseValue="Gray" />
             <converters:ConnectionStateToBrushConverter x:Key="GreenIfConnectedConverter" ConnectedValue="Green" NotConnectedValue="Gray" />
+            <converters:BoolToEdgeDeviceIconConverter x:Key="BoolToEdgeDeviceIconConverter"/>
 
         </ResourceDictionary>
     </Application.Resources>

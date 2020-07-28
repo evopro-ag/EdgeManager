@@ -3,7 +3,6 @@
 	<PropertyGroup>
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
-		<UseWpf>true</UseWpf>
 	</PropertyGroup>
 
 	<ItemGroup>
