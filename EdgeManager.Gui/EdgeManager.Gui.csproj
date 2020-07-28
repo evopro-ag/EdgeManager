@@ -5,6 +5,7 @@
 	  <TargetFramework>netcoreapp3.1</TargetFramework>
 	  <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	  <UseWpf>true</UseWpf>
+      <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
