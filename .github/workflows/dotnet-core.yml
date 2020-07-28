@@ -25,6 +25,12 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal
-    - name: publish
-      run: dotnet publish EdgeManager\EdgeManager.csproj -r win7-x64 -c Release /p:PublishSingleFile=true -o out --version-suffix $GITHUB_RUN_NUMBER
+    - name: Publish
+      run: dotnet publish EdgeManager\EdgeManager.csproj -r win7-x64 -c Release /p:PublishSingleFile=true -o out
+    - name: Compress
+      run: Compress-Archive out\EdgeManager.exe EdgeManager.zip
+    - uses: actions/upload-artifact@v2
+      with:
+        name: EdgeManager
+        path: EdgeManager.zip
 
