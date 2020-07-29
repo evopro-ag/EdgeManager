@@ -11,6 +11,7 @@ namespace EdgeManager.Interfaces.Services
         Task<IoTHubInfo[]> GetIoTHubs(bool reload = false);
         Task<IoTDeviceInfo[]> GetIoTDevices(string hubName, bool reload = false);
         Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId, bool reload = false);
+        Task<ModuleTwin> GetIoTModelTwinProperties(string hubName, string deviceId, string moduleId);
         Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload);
         Task Login();
         Task<bool> CheckCli();

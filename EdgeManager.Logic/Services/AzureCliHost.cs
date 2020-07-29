@@ -97,7 +97,7 @@ namespace EdgeManager.Logic.Services
                 return cache[command].ResultJson;
             }
 
-            logger.Debug($"Sended command to azure cloud: '{command}'");
+            logger.Debug($"Sent command to azure cloud: '{command}'");
             var json = string.Join("\n", await powerShell.Execute("az " + command));
             var jsonCommand = new JsonCommand(command, json);
             jsonCommands.OnNext(jsonCommand);
@@ -106,14 +106,14 @@ namespace EdgeManager.Logic.Services
             return json;
         }
 
-
-		public Task<IoTHubInfo[]> GetIoTHubs(bool reload = false) => Run<IoTHubInfo[]>("iot hub list", reload);
+        public Task<IoTHubInfo[]> GetIoTHubs(bool reload = false) => Run<IoTHubInfo[]>("iot hub list", reload);
 		public Task<IoTDeviceInfo[]> GetIoTDevices(string hubName, bool reload = false) => Run<IoTDeviceInfo[]>($"iot hub device-identity list --hub-name {hubName}", reload);
 		public Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId, bool reload = false) => Run<IoTModuleIdentityInfo[]>
 			($"iot hub module-identity list --device-id {deviceId} --hub-name {hubName}", reload);
+        public Task<ModuleTwin> GetIoTModelTwinProperties(string hubName, string deviceId, string moduleId) => Run<ModuleTwin>
+            ($"iot hub module-twin show --module-id {moduleId} --device-id {deviceId} --hub-name {hubName}");
 		public Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload) => Run<IoTDirectMethodReply>
 			($"iot hub invoke-module-method --method-name '{method}' -n '{hubName}' -d '{deviceId}' -m '{moduleId}' --method-payload '{JsonConvert.SerializeObject(payload, Newtonsoft.Json.Formatting.None)}'");
-
         public async Task Login()
         {
             await powerShell.Execute("az login");

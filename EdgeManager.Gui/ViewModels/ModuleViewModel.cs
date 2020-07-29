@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using EdgeManager.Gui.Design;
 using EdgeManager.Interfaces.Extensions;
 using EdgeManager.Interfaces.Models;
@@ -25,6 +21,7 @@ namespace EdgeManager.Gui.ViewModels
         private bool loading;
         private string hubName;
         private string deviceId;
+        private ModuleTwin currentModuleTwin;
 
         public ModuleViewModel(IAzureService azureService,
             ISelectionService<IoTHubInfo> ioTHubInfoSelectionService,
@@ -45,20 +42,13 @@ namespace EdgeManager.Gui.ViewModels
                 .Subscribe(x => ioTModuleIdentityInfoSelectionService.Select(x))
                 .AddDisposableTo(Disposables);
 
-            var observable = Observable.CombineLatest(
+            // ReSharper disable once InvokeAsExtensionMethod
+            var deviceHubInfo = Observable.CombineLatest(
                     ioTDeviceSelectionService.SelectedObject,
                     ioTHubInfoSelectionService.SelectedObject,
                     (device, iotHub) => new { DeviceInfo = device, IoTHubInfo = iotHub })
                 .Where(arg => arg.DeviceInfo != null && arg.IoTHubInfo != null);
 
-            //observable
-            //    .ObserveOnDispatcher()
-            //    .Do(_ => Loading = true)
-            //    .Do(identityInfos => IoTModuleIdentityInfos = new IoTModuleIdentityInfo[] { })
-            //    //.Do(i => this.hubName = i.IoTHubInfo.Name)
-            //    //.Do(i => this.deviceId = i.DeviceInfo.DeviceId)
-            //    .Subscribe()
-            //    .AddDisposableTo(Disposables);
 
             ioTDeviceSelectionService.SelectedObject
                 .Where(deviceInfo => deviceInfo != null)
@@ -76,7 +66,7 @@ namespace EdgeManager.Gui.ViewModels
                 .Subscribe()
                 .AddDisposableTo(Disposables);
 
-                observable
+            deviceHubInfo
                 .Do(arg => Logger.Info($"Received Hub '{arg.IoTHubInfo.Name}' and Device '{arg.DeviceInfo.DeviceId}' for retrieving Modules"))
                 .SelectMany(arg => azureService.GetIoTModules(arg.IoTHubInfo.Name, arg.DeviceInfo.DeviceId))
                 .ObserveOnDispatcher()
@@ -86,9 +76,32 @@ namespace EdgeManager.Gui.ViewModels
                 .Subscribe()
                 .AddDisposableTo(Disposables);
 
-            ReloadCommand = ReactiveCommand.CreateFromTask(Reload)
+                ReloadCommand = ReactiveCommand.CreateFromTask(Reload)
                 .AddDisposableTo(Disposables);
+                
+                // Observable erstellt von ModuleId
+                var selectedModuleId = this.WhenAnyValue(model => model.SelectedIoTModuleIdentityInfo)
+                    .Select(model => model?.ModuleId);
 
+                // ReSharper disable once InvokeAsExtensionMethod
+                Observable.CombineLatest(deviceHubInfo, selectedModuleId,
+                    (deviceHub, module) => 
+                        new
+                    {
+                        ModuleId = module, 
+                        HubName = deviceHub.IoTHubInfo.Name,
+                        DeviceId = deviceHub.DeviceInfo.DeviceId
+                    })
+                    .ObserveOnDispatcher()
+                    .Do(_ => CurrentModuleTwin = null)
+                    .Where(moduleInfo => !string.IsNullOrEmpty(moduleInfo.ModuleId))
+                    .Do(arg => Logger.Info($"Received Hub '{arg.HubName}', Device '{arg.DeviceId}' and module id {arg.ModuleId} for retrieving module twin"))
+                    .SelectMany(moduleInfo => azureService.GetIoTModelTwinProperties(moduleInfo.HubName, moduleInfo.DeviceId, moduleInfo.ModuleId))
+                    .Do(twin => CurrentModuleTwin = twin)
+                    .LogAndRetryAfterDelay(Logger, TimeSpan.FromMilliseconds(100), "Error while retrieving module twin for selection")
+                    .Subscribe()
+                    .AddDisposableTo(Disposables)
+                    ;
         }
 
         public bool Loading
@@ -137,6 +150,17 @@ namespace EdgeManager.Gui.ViewModels
             {
                 if (Equals(value, selectedIoTModuleIdentityInfo)) return;
                 selectedIoTModuleIdentityInfo = value;
+                raisePropertyChanged();
+            }
+        }
+
+        public ModuleTwin CurrentModuleTwin
+        {
+            get => currentModuleTwin;
+            set
+            {
+                if (Equals(value, currentModuleTwin)) return;
+                currentModuleTwin = value;
                 raisePropertyChanged();
             }
         }
