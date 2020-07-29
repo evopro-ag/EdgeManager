@@ -24,7 +24,7 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
     - name: Publish
-      run: dotnet publish EdgeManager\EdgeManager.csproj -r win7-x64 -c Release /p:PublishSingleFile=true -o out
+      run: dotnet publish EdgeManager\EdgeManager.csproj -r win10-x64 -c Release /p:PublishSingleFile=true -o out
     - name: Extract Version
       uses: olegtarasov/get-tag@v2
       id: tagName
