@@ -104,7 +104,7 @@
                 />
             </StackPanel>
 
-            <GridSplitter Grid.Row="4" Grid.Column="1" MinWidth="4" />
+            <GridSplitter Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch" MinWidth="4" />
 
             <StackPanel Grid.Row="4" Grid.Column="2" HorizontalAlignment="Stretch" MinWidth="4">
                 <Label Content="Reported" HorizontalContentAlignment="Left"/>
