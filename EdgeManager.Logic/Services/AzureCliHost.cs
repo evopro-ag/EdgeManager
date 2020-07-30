@@ -119,6 +119,8 @@ namespace EdgeManager.Logic.Services
             await powerShell.Execute("az login");
         }
 
+        public Task<AzureAccountInfo> GetAccount()=> Run<AzureAccountInfo>($"account show");
+
         public async Task<bool> CheckCli()
         {
             var result = await powerShell.Execute("az version");
