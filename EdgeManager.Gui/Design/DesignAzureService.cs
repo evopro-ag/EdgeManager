@@ -57,6 +57,12 @@ namespace EdgeManager.Gui.Design
             return Task.FromResult(Unit.Default);
         }
 
+        public Task<AzureAccountInfo> GetAccount()
+        {
+            return Task.FromResult(new AzureAccountInfo()
+                {Name = "MyDummy Subscription", User = new AzureUser() {Name = "Dev", Type = "User"}});
+        }
+
         public Task<bool> CheckCli()
         {
             return Task.FromResult(true);

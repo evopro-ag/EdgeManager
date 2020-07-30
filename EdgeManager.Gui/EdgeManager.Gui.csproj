@@ -5,6 +5,7 @@
 	  <TargetFramework>netcoreapp3.1</TargetFramework>
 	  <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	  <UseWpf>true</UseWpf>
+      <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +24,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EdgeManager.Interfaces\EdgeManager.Interfaces.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="em_g_2.ico" />
+    <Resource Include="em_g_2.ico" />
   </ItemGroup>
 
 </Project>
