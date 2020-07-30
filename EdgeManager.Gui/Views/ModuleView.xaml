@@ -27,7 +27,7 @@
         </Grid.ColumnDefinitions>
 
         <Label Grid.Row="0" Content="Modules" VerticalAlignment="Center" HorizontalAlignment="Left" />
-        <Button Height="20" Width="60" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Background="WhiteSmoke" 
+        <Button Height="20" Width="60" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right" Background="WhiteSmoke" 
                 Command="{Binding ReloadCommand}" 
                 ToolTip="Reload Data">
             <DockPanel>
@@ -58,9 +58,9 @@
 
         <GridSplitter Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" HorizontalAlignment="Stretch" MinWidth="4" />
 
-        <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"
-                Background="White" Opacity="0.3"
-                Visibility="{Binding Loading, Converter={StaticResource HiddenIfFalseConverter}}">
+        <Border  MinWidth="130" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"
+                 Background="White" Opacity="0.3"
+                 Visibility="{Binding Loading, Converter={StaticResource HiddenIfFalseConverter}}">
             <fa:ImageAwesome Icon="Spinner" Spin="True" Width="44" 
                              VerticalAlignment="Center" />
         </Border>
@@ -87,6 +87,7 @@
                                ShowTitle="False"
                                ShowSummary="False"
                                ShowSortOptions="False"
+                               
             />
             <Label Grid.ColumnSpan="3" Grid.Row="3" Grid.Column="0" Content="Module Properties" HorizontalContentAlignment="Center" BorderBrush="Black"/>
             <StackPanel Grid.Row="4" Grid.Column="0">
