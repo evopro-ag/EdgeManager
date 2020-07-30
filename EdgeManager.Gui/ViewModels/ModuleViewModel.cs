@@ -79,11 +79,12 @@ namespace EdgeManager.Gui.ViewModels
                 ReloadCommand = ReactiveCommand.CreateFromTask(Reload)
                 .AddDisposableTo(Disposables);
                 
-                // Observable erstellt von ModuleId
+                // Observable created from ModuleId
                 var selectedModuleId = this.WhenAnyValue(model => model.SelectedIoTModuleIdentityInfo)
                     .Select(model => model?.ModuleId);
 
                 // ReSharper disable once InvokeAsExtensionMethod
+                // Observable - combines Observable.Latest and selectedModuleId (Device + Hub + ModuleId)
                 Observable.CombineLatest(deviceHubInfo, selectedModuleId,
                     (deviceHub, module) => 
                         new
@@ -92,7 +93,8 @@ namespace EdgeManager.Gui.ViewModels
                         HubName = deviceHub.IoTHubInfo.Name,
                         DeviceId = deviceHub.DeviceInfo.DeviceId
                     })
-                    .ObserveOnDispatcher()
+
+                    .ObserveOnDispatcher() 
                     .Do(_ => CurrentModuleTwin = null)
                     .Where(moduleInfo => !string.IsNullOrEmpty(moduleInfo.ModuleId))
                     .Do(arg => Logger.Info($"Received Hub '{arg.HubName}', Device '{arg.DeviceId}' and module id {arg.ModuleId} for retrieving module twin"))
