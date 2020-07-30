@@ -74,8 +74,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Label Grid.ColumnSpan="3" Grid.Row="0" Grid.Column="0" Visibility="Collapsed"/>
@@ -89,8 +88,8 @@
                                ShowSummary="False"
                                ShowSortOptions="False"
             />
-            <Label Grid.ColumnSpan="3" Grid.Row="3" Grid.Column="0" Content="Module Properties" HorizontalContentAlignment="Center"/>
-            <StackPanel Grid.ColumnSpan="2" Grid.Row="4" Grid.Column="0">
+            <Label Grid.ColumnSpan="3" Grid.Row="3" Grid.Column="0" Content="Module Properties" HorizontalContentAlignment="Center" BorderBrush="Black"/>
+            <StackPanel Grid.Row="4" Grid.Column="0">
                 <Label Content="Desired" HorizontalContentAlignment="Left"/>
                 <xctk:PropertyGrid
                                    SelectedObject="{Binding CurrentModuleTwin.Properties.Desired}" 
@@ -104,9 +103,7 @@
                 />
             </StackPanel>
 
-            <GridSplitter Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch" MinWidth="4" />
-
-            <StackPanel Grid.Row="4" Grid.Column="2" HorizontalAlignment="Stretch" MinWidth="4">
+            <StackPanel Grid.Row="4" Grid.Column="1">
                 <Label Content="Reported" HorizontalContentAlignment="Left"/>
                 <xctk:PropertyGrid 
                                    SelectedObject="{Binding CurrentModuleTwin.Properties.Reported}" 
