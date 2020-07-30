@@ -13,9 +13,10 @@
 
    <Grid>
        <Grid.RowDefinitions>
-           <RowDefinition Height="Auto" />
-           <RowDefinition Height="*" />
-       </Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
        <Grid.ColumnDefinitions>
            <ColumnDefinition Width="Auto"/>
            <ColumnDefinition Width="*"/>
@@ -41,7 +42,7 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="Device" Width="150">
+                    <GridViewColumn Header="Device">
                        <GridViewColumn.CellTemplate>
                            <DataTemplate DataType="{x:Type models:IoTDeviceInfo}">
                                <TextBlock Text="{Binding DeviceId}" />
@@ -57,7 +58,8 @@
                 Visibility="{Binding Loading, Converter={StaticResource HiddenIfFalseConverter}}">
             <fa:ImageAwesome Icon="Spinner" Spin="True" Width="44" 
                              VerticalAlignment="Center" />
-       </Border>
+        </Border>
 
+        <Button Content="Add New Device" Grid.ColumnSpan="2"  Grid.Column="0" Grid.Row="2" Background="WhiteSmoke"/>
     </Grid>
 </UserControl>
