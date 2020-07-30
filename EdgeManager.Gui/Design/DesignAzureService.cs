@@ -4,6 +4,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
+using Newtonsoft.Json.Linq;
 
 namespace EdgeManager.Gui.Design
 {
@@ -39,6 +40,11 @@ namespace EdgeManager.Gui.Design
                 new IoTModuleIdentityInfo {ModuleId = "Module2"},
                 new IoTModuleIdentityInfo {ModuleId = "Module3"},
             });
+        }
+
+        public Task<ModuleTwin> GetIoTModelTwinProperties(string hubName, string deviceId, string moduleId)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload)

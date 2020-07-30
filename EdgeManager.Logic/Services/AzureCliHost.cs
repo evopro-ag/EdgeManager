@@ -74,6 +74,8 @@ namespace EdgeManager.Logic.Services
         public Task<IoTDeviceInfo[]> GetIoTDevices(string hubName, bool reload = false) => Run<IoTDeviceInfo[]>($"iot hub device-identity list --hub-name {hubName}", reload);
 		public Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId, bool reload = false) => Run<IoTModuleIdentityInfo[]>
 			($"iot hub module-identity list --device-id {deviceId} --hub-name {hubName}", reload);
+        public Task<ModuleTwin> GetIoTModelTwinProperties(string hubName, string deviceId, string moduleId) => Run<ModuleTwin>
+            ($"iot hub module-twin show --module-id {moduleId} --device-id {deviceId} --hub-name {hubName}");
 		public Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload) => Run<IoTDirectMethodReply>
 			($"iot hub invoke-module-method --method-name '{method}' -n '{hubName}' -d '{deviceId}' -m '{moduleId}' --method-payload '{JsonConvert.SerializeObject(payload, Newtonsoft.Json.Formatting.None)}'");
 
@@ -101,7 +103,7 @@ namespace EdgeManager.Logic.Services
             {
                 return result.Any(l => l.ToString().Contains("azure-cli"));
             }
-            catch (Exception)
+            catch (Exception e)
             {
             }
 
@@ -119,6 +121,13 @@ namespace EdgeManager.Logic.Services
                 disposedValue = true;
             }
         }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~AzureCliHost()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
 
         public void Dispose()
         {

@@ -18,6 +18,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="200" Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -27,8 +28,10 @@
 
         <views:HubView Grid.Row="0" Grid.Column="0" DataContext="{Binding HubViewModel}" />
         <views:DeviceView Grid.Row="1" Grid.Column="0" DataContext="{Binding DeviceViewModel}" />
-        <views:TabsView Grid.Row="1" Grid.Column="1" DataContext="{Binding TabsViewModel}" />
-        <views:LogInView Grid.Row="0" Grid.Column="1" DataContext="{Binding LogInViewModel}" />
+        <views:TabsView Grid.Row="1" Grid.Column="2" DataContext="{Binding TabsViewModel}" />
+        <views:LogInView Grid.Row="0" Grid.Column="2" DataContext="{Binding LogInViewModel}" />
+
+        <GridSplitter Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Stretch" MinWidth="4" MaxWidth="0.5" />
 
     </Grid>
 </Window>
