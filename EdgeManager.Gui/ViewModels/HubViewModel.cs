@@ -2,6 +2,7 @@
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
 using System;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows;
@@ -10,6 +11,7 @@ using EdgeManager.Interfaces.Extensions;
 using ReactiveUI;
 using System.Threading.Tasks;
 using System.Reactive.Subjects;
+using EdgeManager.Interfaces.Settings;
 
 namespace EdgeManager.Gui.ViewModels
 {
@@ -18,6 +20,7 @@ namespace EdgeManager.Gui.ViewModels
         private readonly IAzureService azureService;
         private readonly ISelectionService<IoTHubInfo> iotHubSelectionService;
         private readonly ISelectionService<IoTDeviceInfo> deviceInfoSelectionService;
+        private readonly ApplicationSettings settings;
         private IoTHubInfo selectedIotHubInfo;
         private IoTHubInfo[] iotHubInfo;
         private bool loading;
@@ -26,12 +29,14 @@ namespace EdgeManager.Gui.ViewModels
       
         public HubViewModel(IAzureService azureService, 
             ISelectionService<IoTHubInfo> iotHubSelectionService,
-            ISelectionService<IoTDeviceInfo> deviceInfoSelectionService
+            ISelectionService<IoTDeviceInfo> deviceInfoSelectionService,
+            ApplicationSettings settings
             )
         {
             this.azureService = azureService;
             this.iotHubSelectionService = iotHubSelectionService;
             this.deviceInfoSelectionService = deviceInfoSelectionService;
+            this.settings = settings;
         }
 
         public ReactiveCommand<Unit, Unit> ReloadCommand { get; set; }
@@ -45,17 +50,33 @@ namespace EdgeManager.Gui.ViewModels
 
                     deviceInfoSelectionService.Select(null);
                     iotHubSelectionService.Select(selectedhub);
+                    if (selectedhub != null)
+                        settings.LastUsedIoTHub = selectedhub;
                 })
                 .Subscribe()
                 .AddDisposableTo(Disposables);
-
-                 Observable.Return(Unit.Default)
-                .SelectMany(_ => azureService.GetIoTHubs())
-                .ObserveOnDispatcher()
-                .Do(hubs => IotHubInfo = hubs)
-                .LogAndRetryAfterDelay(Logger, TimeSpan.FromSeconds(1), "Error while retrieving iot hubs information")
-                .Subscribe()
-                .AddDisposableTo(Disposables);
+            
+            
+            if (settings.LastCheckedIoTHubs != null && settings.LastCheckedIoTHubs.Any())
+            {
+                IotHubInfo = settings.LastCheckedIoTHubs;
+                
+                if (settings.LastUsedIoTHub != null)
+                {
+                    SelectedIotHubInfo = settings.LastCheckedIoTHubs.Single(h => h.Name.Equals(settings.LastUsedIoTHub.Name));
+                }
+            }
+            else
+            {
+                Observable.Return(Unit.Default)
+                    .SelectMany(_ => azureService.GetIoTHubs())
+                    .ObserveOnDispatcher()
+                    .Do(hubs => IotHubInfo = hubs)
+                    .LogAndRetryAfterDelay(Logger, TimeSpan.FromSeconds(1),
+                        "Error while retrieving iot hubs information")
+                    .Subscribe()
+                    .AddDisposableTo(Disposables);
+            }
 
             ReloadCommand = ReactiveCommand.CreateFromTask(Reload)
                 .AddDisposableTo(Disposables);
@@ -126,7 +147,7 @@ namespace EdgeManager.Gui.ViewModels
 
     internal class DesignHubViewModel : HubViewModel
     {
-        public DesignHubViewModel() : base(new DesignAzureService(), new DesignIoTHubSelectionService(), new DesignDeviceSelectionService())
+        public DesignHubViewModel() : base(new DesignAzureService(), new DesignIoTHubSelectionService(), new DesignDeviceSelectionService(), new ApplicationSettings())
         {
         }
     }

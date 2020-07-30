@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Design;
-using System.IO;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Reflection;
 using System.Threading.Tasks;
 using EdgeManager.Interfaces.Extensions;
 using EdgeManager.Interfaces.Logging;
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
+using EdgeManager.Interfaces.Settings;
 using log4net;
 using Newtonsoft.Json;
 
@@ -20,6 +19,7 @@ namespace EdgeManager.Logic.Services
     class AzureCliHost : IAzureCli, IAzureService, IDisposable
 	{
         private readonly IPowerShell powerShell;
+        private readonly ApplicationSettings settings;
         private readonly ILog logger = LoggerFactory.GetLogger(typeof(AzureCliHost));        
         private Subject<JsonCommand> jsonCommands = new Subject<JsonCommand>();
         private bool disposedValue;
@@ -27,13 +27,10 @@ namespace EdgeManager.Logic.Services
 
         public IObservable<JsonCommand> JsonCommands => jsonCommands;
         
-        private Dictionary<string, JsonCommand> cache = new Dictionary<string, JsonCommand>();
-
-        public AzureCliHost(IPowerShell powerShell)
+        public AzureCliHost(IPowerShell powerShell, ApplicationSettings settings)
         {
             this.powerShell = powerShell;
-            
-            RestoreCache();
+            this.settings = settings;
         }
 
         public async Task<T> Run<T>(string command)
@@ -48,67 +45,33 @@ namespace EdgeManager.Logic.Services
             return JsonConvert.DeserializeObject<T>(json);
 		}
 
-        private void RestoreCache()
-        {
-            try
-            {
-                var currentDirectory = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-                var filename = "cache.json";
-                var filepath = Path.Combine(currentDirectory, filename);
-
-                logger.Debug($"restoring cache from file '{filepath}'");
-
-                var text = File.ReadAllText(Path.Combine(currentDirectory, filename));
-
-                cache = JsonConvert.DeserializeObject<Dictionary<string, JsonCommand>>(text);
-            }
-            catch(Exception e)
-            {
-                logger.Error("error while restoring cache", e);
-            }
-        }
-
-        private void SaveCache()
-        {
-            try
-            {
-                var currentDirectory = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-                var filename = "cache.json";
-
-                var text = JsonConvert.SerializeObject(cache, Formatting.Indented);
-                var filepath = Path.Combine(currentDirectory, filename);
-
-                logger.Debug($"saving cache into file '{filepath}'");
-
-                File.WriteAllText(filepath, text);
-            }
-            catch (Exception e)
-            {
-                logger.Error("error while saving cache", e);
-            }
-        }
-
         private async Task<string> SendOrRestoreFromCache(string command, bool reload = false)
         {
-            if (cache.ContainsKey(command) && !reload)
+            if (settings.CommandCache.ContainsKey(command) && !reload)
             {
                 logger.Debug($"Restoring command '{command}' from cache");
-                jsonCommands.OnNext(cache[command]);
-                return cache[command].ResultJson;
+                jsonCommands.OnNext(settings.CommandCache[command]);
+                return settings.CommandCache[command].ResultJson;
             }
 
             logger.Debug($"Sended command to azure cloud: '{command}'");
             var json = string.Join("\n", await powerShell.Execute("az " + command));
             var jsonCommand = new JsonCommand(command, json);
             jsonCommands.OnNext(jsonCommand);
-            cache[command] = jsonCommand;
+            settings.CommandCache[command] = jsonCommand;
             
             return json;
         }
 
 
-		public Task<IoTHubInfo[]> GetIoTHubs(bool reload = false) => Run<IoTHubInfo[]>("iot hub list", reload);
-		public Task<IoTDeviceInfo[]> GetIoTDevices(string hubName, bool reload = false) => Run<IoTDeviceInfo[]>($"iot hub device-identity list --hub-name {hubName}", reload);
+		public async Task<IoTHubInfo[]> GetIoTHubs(bool reload = false)
+        {
+            var hubs = await Run<IoTHubInfo[]>("iot hub list", reload);
+            settings.LastCheckedIoTHubs = hubs;
+            return hubs;
+        }
+
+        public Task<IoTDeviceInfo[]> GetIoTDevices(string hubName, bool reload = false) => Run<IoTDeviceInfo[]>($"iot hub device-identity list --hub-name {hubName}", reload);
 		public Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId, bool reload = false) => Run<IoTModuleIdentityInfo[]>
 			($"iot hub module-identity list --device-id {deviceId} --hub-name {hubName}", reload);
 		public Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload) => Run<IoTDirectMethodReply>
@@ -119,7 +82,17 @@ namespace EdgeManager.Logic.Services
             await powerShell.Execute("az login");
         }
 
-        public Task<AzureAccountInfo> GetAccount()=> Run<AzureAccountInfo>($"account show");
+        public async Task Logout()
+        {
+            await powerShell.Execute("az logout");
+        }
+
+        public async Task<AzureAccountInfo> GetAccount()
+        {
+            var accountInfo = await Run<AzureAccountInfo>($"account show");
+            if (accountInfo != null) settings.AzureAccountInfo = accountInfo;
+            return accountInfo;
+        }
 
         public async Task<bool> CheckCli()
         {
@@ -128,7 +101,7 @@ namespace EdgeManager.Logic.Services
             {
                 return result.Any(l => l.ToString().Contains("azure-cli"));
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
 
@@ -142,18 +115,10 @@ namespace EdgeManager.Logic.Services
                 if (disposing)
                 {
                     disposables.Dispose();
-                    SaveCache();
                 }
                 disposedValue = true;
             }
         }
-
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~AzureCliHost()
-        // {
-        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        //     Dispose(disposing: false);
-        // }
 
         public void Dispose()
         {

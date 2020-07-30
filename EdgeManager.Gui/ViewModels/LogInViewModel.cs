@@ -8,6 +8,7 @@ using EdgeManager.Gui.Design;
 using EdgeManager.Interfaces.Extensions;
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
+using EdgeManager.Interfaces.Settings;
 using ReactiveUI;
 
 namespace EdgeManager.Gui.ViewModels
@@ -15,14 +16,16 @@ namespace EdgeManager.Gui.ViewModels
     public class LogInViewModel : ViewModelBase
     {
         private readonly IAzureService azureService;
+        private readonly ApplicationSettings settings;
         private AzureAccountInfo accountInfo;
         private bool shouldLogIn = true;
         public ReactiveCommand<Unit, Unit> LogInCommand { get; set; }
         
 
-        public LogInViewModel(IAzureService azureService)
+        public LogInViewModel(IAzureService azureService, ApplicationSettings settings)
         {
             this.azureService = azureService;
+            this.settings = settings;
         }
 
         public AzureAccountInfo AccountInfo
@@ -50,7 +53,7 @@ namespace EdgeManager.Gui.ViewModels
                 .AddDisposableTo(Disposables)
                 ;
             
-            Observable.Timer(TimeSpan.FromSeconds(1))
+            Observable.Return(Unit.Default)
                 .SelectMany(_ => azureService.GetAccount())
                 .ObserveOnDispatcher()
                 .Do(account => AccountInfo = account)
@@ -89,7 +92,7 @@ namespace EdgeManager.Gui.ViewModels
 
     internal class DesignLogInViewModel : LogInViewModel
     {
-        public DesignLogInViewModel() : base(new DesignAzureService())
+        public DesignLogInViewModel() : base(new DesignAzureService(), new ApplicationSettings())
         {
             base.Initialize();
         }
