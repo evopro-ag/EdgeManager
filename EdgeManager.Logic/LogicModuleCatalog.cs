@@ -4,8 +4,10 @@ using System.Text;
 using EdgeManager.Interfaces.Logging;
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
+using EdgeManager.Interfaces.Settings;
 using EdgeManager.Logic.Services;
 using log4net;
+using Ninject;
 using Ninject.Modules;
 
 namespace EdgeManager.Logic
@@ -14,6 +16,10 @@ namespace EdgeManager.Logic
     {
         public override void Load()
         {
+            Bind<ISettingsService>().To<SettingsService>().InSingletonScope();
+            Bind<ApplicationSettings>().ToMethod(context => context.Kernel.Get<ISettingsService>().Settings);
+            Bind<IDirectoryService>().To<DirectoryService>().InSingletonScope();
+            
             Bind<IPowerShell>().To<PowerShellHost>().InSingletonScope();
             Bind<IAzureCli, IAzureService>().To<AzureCliHost>().InSingletonScope();
 

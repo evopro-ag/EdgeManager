@@ -14,6 +14,7 @@ namespace EdgeManager.Interfaces.Services
         Task<ModuleTwin> GetIoTModelTwinProperties(string hubName, string deviceId, string moduleId);
         Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload);
         Task Login();
+        Task Logout();
         Task<AzureAccountInfo> GetAccount();
         Task CreateNewDevice(string hubName, string newDeviceName);
         Task<bool> CheckCli();

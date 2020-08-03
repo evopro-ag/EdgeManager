@@ -57,6 +57,11 @@ namespace EdgeManager.Gui.Design
             return Task.FromResult(Unit.Default);
         }
 
+        public Task Logout()
+        {
+            return Task.FromResult(Unit.Default);
+        }
+
         public Task<AzureAccountInfo> GetAccount()
         {
             return Task.FromResult(new AzureAccountInfo()
