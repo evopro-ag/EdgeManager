@@ -20,7 +20,8 @@
         </Grid.ColumnDefinitions>
 
         <Label Grid.Row="0" Content="IoT Hub" VerticalAlignment="Center" HorizontalAlignment="Left" />
-        <Button ToolTip="Reload Data" Grid.Row="0" Grid.Column="1" Height="20" Width="60" Margin="5" Background="WhiteSmoke" Command="{Binding ReloadCommand}" Visibility="{Binding NotLoading, Converter={StaticResource HiddenIfFalseConverter}}">
+        <Button ToolTip="Reload Data" Grid.Row="0" Grid.Column="1" Height="20" Width="60" Margin="5" Background="WhiteSmoke" 
+                Command="{Binding ReloadCommand}" Visibility="{Binding NotLoading, Converter={StaticResource HiddenIfFalseConverter}}">
             <DockPanel>
                 <fa:FontAwesome Icon="Refresh" VerticalAlignment="Center" FontSize="16"/>
             </DockPanel>

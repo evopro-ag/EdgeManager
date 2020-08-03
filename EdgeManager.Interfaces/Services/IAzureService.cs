@@ -15,7 +15,7 @@ namespace EdgeManager.Interfaces.Services
         Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload);
         Task Login();
         Task<AzureAccountInfo> GetAccount();
-
+        Task CreateNewDevice(string hubName, string newDeviceName);
         Task<bool> CheckCli();
     }
 }

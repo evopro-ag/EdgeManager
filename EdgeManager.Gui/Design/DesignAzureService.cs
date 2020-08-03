@@ -63,6 +63,11 @@ namespace EdgeManager.Gui.Design
                 {Name = "MyDummy Subscription", User = new AzureUser() {Name = "Dev", Type = "User"}});
         }
 
+        public Task CreateNewDevice(string hubName, string newDeviceName)
+        {
+            return Task.FromResult(Unit.Default);
+        }
+
         public Task<bool> CheckCli()
         {
             return Task.FromResult(true);
