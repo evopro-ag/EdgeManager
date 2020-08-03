@@ -60,6 +60,7 @@
                              VerticalAlignment="Center" />
         </Border>
 
-        <Button Content="Add New Device" Grid.ColumnSpan="2"  Grid.Column="0" Grid.Row="2" Background="WhiteSmoke"/>
+        <Button Content="Add New Device" Grid.ColumnSpan="2"  Grid.Column="0" Grid.Row="2" Background="WhiteSmoke"
+                Command="{Binding AddNewDeviceCommand}"/>
     </Grid>
 </UserControl>
