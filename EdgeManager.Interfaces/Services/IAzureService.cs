@@ -17,6 +17,7 @@ namespace EdgeManager.Interfaces.Services
         Task Logout();
         Task<AzureAccountInfo> GetAccount();
         Task CreateNewDevice(string hubName, string newDeviceName);
+        Task DeleteSelectedDevice(string hubName, string deviceId);
         Task<bool> CheckCli();
     }
 }

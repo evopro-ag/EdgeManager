@@ -73,6 +73,11 @@ namespace EdgeManager.Gui.Design
             return Task.FromResult(Unit.Default);
         }
 
+        public Task DeleteSelectedDevice(string hubName, string deviceId)
+        {
+            return Task.FromResult(Unit.Default);
+        }
+
         public Task<bool> CheckCli()
         {
             return Task.FromResult(true);

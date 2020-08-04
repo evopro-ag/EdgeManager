@@ -16,6 +16,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
        <Grid.ColumnDefinitions>
            <ColumnDefinition Width="Auto"/>
@@ -62,5 +63,7 @@
 
         <Button Content="Add New Device" Grid.ColumnSpan="2"  Grid.Column="0" Grid.Row="2" Background="WhiteSmoke"
                 Command="{Binding AddNewDeviceCommand}"/>
+        <Button Content="Delete Selected Device" Grid.ColumnSpan="2"  Grid.Column="0" Grid.Row="3" Background="WhiteSmoke"
+                Command="{Binding DeleteSelectedDeviceCommand}"/>
     </Grid>
 </UserControl>

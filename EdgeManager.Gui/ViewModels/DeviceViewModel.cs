@@ -26,8 +26,12 @@ namespace EdgeManager.Gui.ViewModels
         private IoTDeviceInfo[] ioTDeviceInfos;
         private bool loading;
         private string hubName;
+        private string deviceId;
+
 
         public ReactiveCommand<Unit, Unit> AddNewDeviceCommand { get; set; }
+        public ReactiveCommand<Unit, Unit> DeleteSelectedDeviceCommand { get; set; }
+        public ReactiveCommand<Unit, Unit> ReloadCommand { get; set; }
 
         public DeviceViewModel(IAzureService azureService, 
             ISelectionService<IoTHubInfo> ioTHubInfoSelectionService, 
@@ -39,11 +43,11 @@ namespace EdgeManager.Gui.ViewModels
             this.viewModelFactory = viewModelFactory;
         }
 
-        public ReactiveCommand<Unit, Unit> ReloadCommand { get; set; }
-
         public override void Initialize()
         {
             AddNewDeviceCommand = ReactiveCommand.CreateFromTask(CreateNewDevice, ioTHubInfoSelectionService.SelectedObject.Select(iotHub => iotHub != null))
+                    .AddDisposableTo(Disposables);
+            DeleteSelectedDeviceCommand = ReactiveCommand.CreateFromTask(DeleteSelectedDevice, ioTDeviceSelectionService.SelectedObject.Select(ioTDeviceInfos => ioTDeviceInfos != null))
                     .AddDisposableTo(Disposables);
 
             this.WhenAnyValue(vm => vm.SelectedIoTDeviceInfo)
@@ -69,6 +73,13 @@ namespace EdgeManager.Gui.ViewModels
                 .Subscribe()
                 .AddDisposableTo(Disposables);
 
+            //ioTDeviceSelectionService.SelectedObject
+            //    .Where(ioTDeviceInfos => ioTDeviceInfos != null)
+            //    .SelectMany(ioTDeviceInfos => azureService.GetIoTModules(hubName, ioTDeviceInfos.DeviceId))
+            //    .ObserveOnDispatcher()
+            //    .Subscribe()
+            //    .AddDisposableTo(Disposables);
+
 
             ReloadCommand = ReactiveCommand.CreateFromTask(Reload)
                 .AddDisposableTo(Disposables);
@@ -80,6 +91,7 @@ namespace EdgeManager.Gui.ViewModels
             {
                 try
                 {
+                    Logger.Debug($"User pressed 'Add New Device'");
                     var dialog = new InputWindowDevice();
                     var viewModel = viewModelFactory.CreateViewModel<InputWindowDeviceViewModel>();
                     viewModel.AddDisposableTo(disposables);
@@ -87,11 +99,14 @@ namespace EdgeManager.Gui.ViewModels
                     dialog.DataContext = viewModel;
                     dialog.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                     var finished = dialog.ShowDialog();
+                    Logger.Debug($"Opend Dialog Window to add New Device Name");
 
                     if (viewModel.CanAddDevice)
                     {
                         var newDeviceName = viewModel.NewDeviceName;
+                        Logger.Debug($"User entered Name:'{viewModel.NewDeviceName}' and pressed 'Create New Device' Button");
                         await azureService.CreateNewDevice(hubName, newDeviceName);
+                        Logger.Debug($"Command was send with AzureCli");
                         await Reload();
                     }
                 }
@@ -102,6 +117,25 @@ namespace EdgeManager.Gui.ViewModels
             }
 
             return Unit.Default;
+        }
+
+        public async Task<Unit> DeleteSelectedDevice()
+        {
+            using (var disposables = new CompositeDisposable())
+            {
+                try
+                {
+                    Logger.Debug($"Delete Selected Device was pressed");
+                    await azureService.DeleteSelectedDevice(hubName, selectedIoTDeviceInfo.DeviceId);
+                    Logger.Debug($"Selected Device was deleted");
+                    await Reload();
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("Error in Reactive command", e);
+                }
+                return Unit.Default;
+            }
         }
 
         public bool Loading

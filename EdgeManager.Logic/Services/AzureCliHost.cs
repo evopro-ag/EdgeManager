@@ -97,10 +97,13 @@ namespace EdgeManager.Logic.Services
 
         public async Task CreateNewDevice(string hubName, string newDeviceName)
         {
-            await powerShell.Execute($"az iot hub device-identity create --device-id {newDeviceName} --hub-name {hubName} --edge-enabled"); // add Device
-            //await powerShell.Execute("az iot hub device-identity delete --device-id NewDevice_added_with_PowerShell --hub-name evoproTestHub"); //delete Device
+            await powerShell.Execute($"az iot hub device-identity create --device-id {newDeviceName} --hub-name {hubName} --edge-enabled");
         }
-        
+        public async Task DeleteSelectedDevice(string hubName, string deviceId)
+        {
+            await powerShell.Execute($"az iot hub device-identity delete --device-id {deviceId} --hub-name {hubName}");
+        }
+       
         public async Task<bool> CheckCli()
         {
             var result = await powerShell.Execute("az version");

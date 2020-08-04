@@ -26,12 +26,13 @@
 
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
                Content="Add NAME for new device"/>
+
         <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding NewDeviceName, UpdateSourceTrigger=PropertyChanged}"/>
 
         <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"  Margin="5"
                 Content="Create New Device"
                 Command="{Binding AddDeviceCommand}"
-                />
+        />
 
         <Button Grid.Row="2" Grid.Column="2" Margin="5"
                 Content="Cancel"
