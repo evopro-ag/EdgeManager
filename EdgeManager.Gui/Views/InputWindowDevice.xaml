@@ -7,7 +7,8 @@
         xmlns:viewModels="clr-namespace:EdgeManager.Gui.ViewModels"
         xmlns:models="clr-namespace:EdgeManager.Interfaces.Models;assembly=EdgeManager.Interfaces"
         mc:Ignorable="d"
-        Title="InputWindow_Device" Height="150" Width="300"
+        Title="InputWindow_Device" 
+        Height="150" Width="300"
         WindowStyle="None"
         d:DataContext="{d:DesignInstance viewModels:InputWindowDeviceViewModel, IsDesignTimeCreatable=True}"
         >
