@@ -16,7 +16,7 @@ namespace EdgeManager.Logic.Services
         private readonly PowerShell ps = PowerShell.Create();
         private readonly Subject<int> percentageCompleted = new Subject<int>();
         public IObservable<int> PercentageCompleted => percentageCompleted.AsObservable();
-        
+        private readonly object lockObject = new object();
         public PowerShellHost(ILog logger)
         {
             this.logger = logger;
@@ -33,9 +33,12 @@ namespace EdgeManager.Logic.Services
 
 		public Task<Collection<PSObject>> Execute(string command)
 		{
-			logger.Debug($"Executing command '{command}' into power shell...");
-			ps.AddScript(command);
-			return Task.Run(() => ps.Invoke());
+			lock (lockObject)
+			{
+				logger.Debug($"Executing command '{command}' into power shell...");
+				ps.AddScript(command);
+				return Task.Run(() => ps.Invoke());
+			}
 		}
 	}
 }
