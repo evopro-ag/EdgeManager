@@ -21,19 +21,9 @@ namespace EdgeManager.Gui.ViewModels
 
             CloseCommand = ReactiveCommand.CreateFromTask(CloseWindow)
                 .AddDisposableTo(Disposables);
-
-            DeleteCommand = ReactiveCommand.CreateFromTask(DeleteSelectedDevice)
-                .AddDisposableTo(Disposables);
         }
 
-        public ReactiveCommand<Unit, Unit> DeleteCommand { get; set; }
-        public bool DeleteDevice { get; set; }
-        private Task DeleteSelectedDevice()
-        {
-            DeleteDevice = true;
-            return Task.FromResult(Unit.Default);
-        }
-
+      
         public ReactiveCommand<Unit, Unit> CloseCommand { get; set; }
 
         private Task CloseWindow()
