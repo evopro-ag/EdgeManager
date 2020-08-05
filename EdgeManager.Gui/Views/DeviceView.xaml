@@ -43,7 +43,7 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="Device">
+                    <GridViewColumn Header="Device" Width="Auto">
                        <GridViewColumn.CellTemplate>
                            <DataTemplate DataType="{x:Type models:IoTDeviceInfo}">
                                <TextBlock Text="{Binding DeviceId}" />

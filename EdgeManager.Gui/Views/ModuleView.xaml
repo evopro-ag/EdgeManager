@@ -45,7 +45,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="ModuleID" >
+                    <GridViewColumn Header="ModuleID" Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type models:IoTModuleIdentityInfo}">
                                 <TextBlock Text="{Binding ModuleId}" />
