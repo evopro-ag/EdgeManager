@@ -12,6 +12,8 @@ namespace EdgeManager.Gui.Design
     {
         public IObservable<JsonCommand> JsonCommands { get; } = Observable.Never<JsonCommand>();
 
+        public bool Loading => throw new NotImplementedException();
+
         public Task<IoTHubInfo[]> GetIoTHubs(bool reload = false)
         {
             return Task.FromResult(new[]

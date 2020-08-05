@@ -26,7 +26,6 @@ namespace EdgeManager.Gui.ViewModels
         private IoTDeviceInfo[] ioTDeviceInfos;
         private bool loading;
         private string hubName;
-        private string deviceId;
 
 
         public ReactiveCommand<Unit, Unit> AddNewDeviceCommand { get; set; }
@@ -34,8 +33,8 @@ namespace EdgeManager.Gui.ViewModels
         public ReactiveCommand<Unit, Unit> ReloadCommand { get; set; }
 
         public DeviceViewModel(IAzureService azureService, 
-            ISelectionService<IoTHubInfo> ioTHubInfoSelectionService, 
-            ISelectionService<IoTDeviceInfo> ioTDeviceSelectionService, IViewModelFactory viewModelFactory)
+            ISelectionService<IoTHubInfo> ioTHubInfoSelectionService, ISelectionService<IoTDeviceInfo> ioTDeviceSelectionService, 
+            IViewModelFactory viewModelFactory)
         {
             this.azureService = azureService;
             this.ioTHubInfoSelectionService = ioTHubInfoSelectionService;
@@ -49,7 +48,7 @@ namespace EdgeManager.Gui.ViewModels
                     .AddDisposableTo(Disposables);
             DeleteSelectedDeviceCommand = ReactiveCommand.CreateFromTask(DeleteSelectedDevice, ioTDeviceSelectionService.SelectedObject.Select(ioTDeviceInfos => ioTDeviceInfos != null))
                     .AddDisposableTo(Disposables);
-
+           
             this.WhenAnyValue(vm => vm.SelectedIoTDeviceInfo)
                 .Subscribe(x => ioTDeviceSelectionService.Select(x))
                 .AddDisposableTo(Disposables);
@@ -72,14 +71,6 @@ namespace EdgeManager.Gui.ViewModels
                 .LogAndRetryAfterDelay(Logger, TimeSpan.FromSeconds(1), "Error while retrieving devices information")
                 .Subscribe()
                 .AddDisposableTo(Disposables);
-
-            //ioTDeviceSelectionService.SelectedObject
-            //    .Where(ioTDeviceInfos => ioTDeviceInfos != null)
-            //    .SelectMany(ioTDeviceInfos => azureService.GetIoTModules(hubName, ioTDeviceInfos.DeviceId))
-            //    .ObserveOnDispatcher()
-            //    .Subscribe()
-            //    .AddDisposableTo(Disposables);
-
 
             ReloadCommand = ReactiveCommand.CreateFromTask(Reload)
                 .AddDisposableTo(Disposables);
@@ -121,14 +112,32 @@ namespace EdgeManager.Gui.ViewModels
 
         public async Task<Unit> DeleteSelectedDevice()
         {
+            if (azureService.Loading)
+            {
+                MessageBox.Show("Wait while loding Modules...", "Warning!", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
             using (var disposables = new CompositeDisposable())
             {
                 try
                 {
-                    Logger.Debug($"Delete Selected Device was pressed");
-                    await azureService.DeleteSelectedDevice(hubName, selectedIoTDeviceInfo.DeviceId);
-                    Logger.Debug($"Selected Device was deleted");
-                    await Reload();
+                    Logger.Debug($"User pressed 'Delete Selcted Device'");
+                    var dialog = new ConfirmWindow();
+                    var viewModel = viewModelFactory.CreateViewModel<ConfirmWindowViewModel>();
+                    viewModel.AddDisposableTo(disposables);
+                    viewModel.Window = dialog;
+                    dialog.DataContext = viewModel;
+                    dialog.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                    var finished = dialog.ShowDialog();
+                    Logger.Debug($"Opend Dialog Window to Confirm if User want to delete the selected Device");
+
+                    if (viewModel.DeleteDevice)
+                    {
+                        Logger.Debug($"User Confirm with 'Yes Delete'");
+                        await azureService.DeleteSelectedDevice(hubName, selectedIoTDeviceInfo.DeviceId);
+                        Logger.Debug($"Selected Device was deleted");
+                        await Reload();
+                    }
                 }
                 catch (Exception e)
                 {
@@ -154,7 +163,7 @@ namespace EdgeManager.Gui.ViewModels
             try
             {
                 Loading = true;
-                Logger.Debug($"Reload Button -IoT / Edge Devices- was pressed");
+                Logger.Debug($"Start reloading -IoT / Edge Devices-");
                 IoTDeviceInfos = await azureService.GetIoTDevices(hubName, reload: true);
                 Logger.Debug($"-IoT / Edge Devices- was reloaded");
                 Loading = false;

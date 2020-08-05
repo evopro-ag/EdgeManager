@@ -42,5 +42,12 @@
                 Content="No Close"
                 Command="{Binding CloseCommand}"
         />
+
+        <!--<Border  MinWidth="130" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
+                 Background="White" Opacity="0.4" Margin="5"
+                 Visibility="{Binding Loading, Converter={StaticResource HiddenIfFalseConverter}}">
+            <fa:ImageAwesome Icon="Spinner" Spin="True" Width="30" 
+                             VerticalAlignment="Center" />
+        </Border>-->
     </Grid>
 </Window>

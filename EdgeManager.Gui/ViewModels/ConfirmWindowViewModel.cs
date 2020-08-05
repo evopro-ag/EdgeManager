@@ -11,6 +11,8 @@ namespace EdgeManager.Gui.ViewModels
 {
     public class ConfirmWindowViewModel : ViewModelBase
     {
+        private bool loading;
+
         public override void Initialize()
         {
             DeleteCommand = ReactiveCommand.CreateFromTask(DeleteSelectedDevice)

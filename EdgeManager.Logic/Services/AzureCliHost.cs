@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Management.Automation;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -26,7 +28,9 @@ namespace EdgeManager.Logic.Services
         private CompositeDisposable disposables = new CompositeDisposable();
 
         public IObservable<JsonCommand> JsonCommands => jsonCommands;
-        
+
+        public bool Loading { get; private set; }
+
         public AzureCliHost(IPowerShell powerShell, ApplicationSettings settings)
         {
             this.powerShell = powerShell;
@@ -55,7 +59,7 @@ namespace EdgeManager.Logic.Services
             }
 
             logger.Debug($"Sended command to azure cloud: '{command}'");
-            var json = string.Join("\n", await powerShell.Execute("az " + command));
+            var json = string.Join("\n", await ExecutePowershellCommand("az " + command));
             var jsonCommand = new JsonCommand(command, json);
             jsonCommands.OnNext(jsonCommand);
             settings.CommandCache[command] = jsonCommand;
@@ -81,11 +85,20 @@ namespace EdgeManager.Logic.Services
 
         public async Task Login()
         {
-            await powerShell.Execute("az login");
+            await ExecutePowershellCommand("az login");
         }
+        private async Task<Collection<PSObject>> ExecutePowershellCommand(string command)
+        {
+            Loading = true;
+            var result = await powerShell.Execute(command);
+            Loading = false;
+
+            return result;
+        }
+
         public async Task Logout()
         {
-            await powerShell.Execute("az logout");
+            await ExecutePowershellCommand("az logout");
         }
 
         public async Task<AzureAccountInfo> GetAccount()
@@ -97,16 +110,16 @@ namespace EdgeManager.Logic.Services
 
         public async Task CreateNewDevice(string hubName, string newDeviceName)
         {
-            await powerShell.Execute($"az iot hub device-identity create --device-id {newDeviceName} --hub-name {hubName} --edge-enabled");
+            await ExecutePowershellCommand($"az iot hub device-identity create --device-id {newDeviceName} --hub-name {hubName} --edge-enabled");
         }
         public async Task DeleteSelectedDevice(string hubName, string deviceId)
         {
-            await powerShell.Execute($"az iot hub device-identity delete --device-id {deviceId} --hub-name {hubName}");
+            await ExecutePowershellCommand($"az iot hub device-identity delete --device-id {deviceId} --hub-name {hubName}");
         }
        
         public async Task<bool> CheckCli()
         {
-            var result = await powerShell.Execute("az version");
+            var result = await ExecutePowershellCommand("az version");
             try
             {
                 return result.Any(l => l.ToString().Contains("azure-cli"));
