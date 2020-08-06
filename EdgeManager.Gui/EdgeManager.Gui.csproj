@@ -28,7 +28,11 @@
 
   <ItemGroup>
     <None Remove="em_g_2.ico" />
+    <None Remove="Resources\evopro_Logo.png" />
     <Resource Include="em_g_2.ico" />
+    <Resource Include="Resources\evopro_Logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
