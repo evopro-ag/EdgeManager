@@ -10,8 +10,6 @@ namespace EdgeManager.Interfaces.Services
     public interface IPowerShellService
     {
         Task<Collection<PSObject>> Execute(string command);
-
-        IObservable<PercentageInformation> PercentageCompleted { get; }
-        IObservable<Exception> Errors { get; }
+        ICommandHandler ExecuteAsync(string command);
     }
 }
