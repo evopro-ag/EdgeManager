@@ -7,7 +7,7 @@ using EdgeManager.Interfaces.Models;
 
 namespace EdgeManager.Interfaces.Services
 {
-    public interface IPowerShell : IDisposable
+    public interface IPowerShellService
     {
         Task<Collection<PSObject>> Execute(string command);
 

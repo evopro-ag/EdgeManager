@@ -19,7 +19,7 @@ namespace EdgeManager.Logic.Services
         private readonly BehaviorSubject<bool?> azureCheckSubject = new BehaviorSubject<bool?>(null);
         private readonly CompositeDisposable disposables = new CompositeDisposable();
         private readonly IAzureService azureService;
-        private readonly IPowerShell powerShell;
+        private readonly IPowerShellService powerShellService;
         private readonly ILog logger;
 
         public IObservable<Unit> RequestInstallation =>
@@ -29,10 +29,10 @@ namespace EdgeManager.Logic.Services
 
        
         public AzureInstallationService(IAzureService azureService,
-            IPowerShell powerShell, ILog logger)
+            IPowerShellService powerShellService, ILog logger)
         {
             this.azureService = azureService;
-            this.powerShell = powerShell;
+            this.powerShellService = powerShellService;
             this.logger = logger;
         }
 
@@ -42,7 +42,7 @@ namespace EdgeManager.Logic.Services
             {
                 logger.Debug("Installing AzureCli...");
                 
-                await powerShell.Execute(
+                await powerShellService.Execute(
                     @"Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; rm .\AzureCLI.msi");
             }
             catch (Exception e)
