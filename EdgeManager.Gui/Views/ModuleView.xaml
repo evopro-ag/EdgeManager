@@ -65,7 +65,9 @@
                              VerticalAlignment="Center" />
         </Border>
 
-        <Grid Grid.Row="1" Grid.Column="3">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1" Grid.Column="3">
+
+            <Grid >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -86,38 +88,39 @@
                                ShowSearchBox="False"
                                ShowTitle="False"
                                ShowSummary="False"
-                               ShowSortOptions="False"
-                               
-            />
-            <Label Grid.ColumnSpan="3" Grid.Row="3" Grid.Column="0" Content="Module Properties" HorizontalContentAlignment="Center" BorderBrush="Black"/>
-            <StackPanel Grid.Row="4" Grid.Column="0">
-                <Label Content="Desired" HorizontalContentAlignment="Left"/>
-                <xctk:PropertyGrid
-                                   SelectedObject="{Binding CurrentModuleTwin.Properties.Desired}" 
-                                   IsReadOnly="True"
-                                   AutoGenerateProperties="True"
-                                   ShowAdvancedOptions="False"
-                                   ShowSearchBox="False"
-                                   ShowTitle="False"
-                                   ShowSummary="False"
-                                   ShowSortOptions="False"
-                />
-            </StackPanel>
+                               ShowSortOptions="False" />
 
-            <StackPanel Grid.Row="4" Grid.Column="1">
-                <Label Content="Reported" HorizontalContentAlignment="Left"/>
-                <xctk:PropertyGrid 
-                                   SelectedObject="{Binding CurrentModuleTwin.Properties.Reported}" 
-                                   IsReadOnly="True"
-                                   AutoGenerateProperties="True"
-                                   ShowAdvancedOptions="False"
-                                   ShowSearchBox="False"
-                                   ShowTitle="False"
-                                   ShowSummary="False"
-                                   ShowSortOptions="False"
-                />
-            </StackPanel>
+            <Label Grid.ColumnSpan="3" Grid.Row="3" Grid.Column="0" Content="Module Properties" HorizontalContentAlignment="Center" BorderBrush="Black"/>
+
+                <StackPanel Grid.Row="4" Grid.Column="0">
+                    <Label Content="Desired" HorizontalContentAlignment="Left"/>
+                    <xctk:PropertyGrid
+                        SelectedObject="{Binding CurrentModuleTwin.Properties.Desired}" 
+                        IsReadOnly="True"
+                        AutoGenerateProperties="True"
+                        ShowAdvancedOptions="False"
+                        ShowSearchBox="False"
+                        ShowTitle="False"
+                        ShowSummary="False"
+                        ShowSortOptions="False"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="4" Grid.Column="1">
+                    <Label Content="Reported" HorizontalContentAlignment="Left"/>
+
+                    <xctk:PropertyGrid
+                        SelectedObject="{Binding CurrentModuleTwin.Properties.Reported}" 
+                        IsReadOnly="True"
+                        AutoGenerateProperties="True"
+                        ShowAdvancedOptions="False"
+                        ShowSearchBox="False"
+                        ShowTitle="False"
+                        ShowSummary="False"
+                        ShowSortOptions="False"/>
+                </StackPanel>
+
         </Grid>
+        </ScrollViewer>
 
     </Grid>
 </UserControl>
