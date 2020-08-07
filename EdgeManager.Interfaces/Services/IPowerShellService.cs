@@ -3,13 +3,13 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management.Automation;
 using System.Threading.Tasks;
+using EdgeManager.Interfaces.Models;
 
 namespace EdgeManager.Interfaces.Services
 {
-    public interface IPowerShell : IDisposable
+    public interface IPowerShellService
     {
         Task<Collection<PSObject>> Execute(string command);
-
-        IObservable<int> PercentageCompleted { get; }
+        ICommandHandler ExecuteAsync(string command);
     }
 }

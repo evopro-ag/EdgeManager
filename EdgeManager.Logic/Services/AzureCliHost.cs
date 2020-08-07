@@ -20,7 +20,7 @@ namespace EdgeManager.Logic.Services
 {
     class AzureCliHost : IAzureCli, IAzureService, IDisposable
 	{
-        private readonly IPowerShell powerShell;
+        private readonly IPowerShellService powerShellService;
         private readonly ApplicationSettings settings;
         private readonly ILog logger = LoggerFactory.GetLogger(typeof(AzureCliHost));        
         private Subject<JsonCommand> jsonCommands = new Subject<JsonCommand>();
@@ -31,9 +31,9 @@ namespace EdgeManager.Logic.Services
 
         public bool Loading { get; private set; }
 
-        public AzureCliHost(IPowerShell powerShell, ApplicationSettings settings)
+        public AzureCliHost(IPowerShellService powerShellService, ApplicationSettings settings)
         {
-            this.powerShell = powerShell;
+            this.powerShellService = powerShellService;
             this.settings = settings;
         }
 
@@ -90,7 +90,7 @@ namespace EdgeManager.Logic.Services
         private async Task<Collection<PSObject>> ExecutePowershellCommand(string command)
         {
             Loading = true;
-            var result = await powerShell.Execute(command);
+            var result = await powerShellService.Execute(command);
             Loading = false;
 
             return result;

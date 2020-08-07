@@ -20,7 +20,7 @@ namespace EdgeManager.Logic
             Bind<ApplicationSettings>().ToMethod(context => context.Kernel.Get<ISettingsService>().Settings);
             Bind<IDirectoryService>().To<DirectoryService>().InSingletonScope();
             
-            Bind<IPowerShell>().To<PowerShellHost>().InSingletonScope();
+            Bind<IPowerShellService>().To<PowerShellService>().InSingletonScope();
             Bind<IAzureCli, IAzureService>().To<AzureCliHost>().InSingletonScope();
 
             //bindings for selection service
