@@ -123,6 +123,7 @@ namespace EdgeManager.Logic.Services
             }
             catch (Exception e)
             {
+                logger.Error("error while checking az cli was installed", e);
             }
 
             return false;
@@ -139,13 +140,6 @@ namespace EdgeManager.Logic.Services
                 disposedValue = true;
             }
         }
-
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~AzureCliHost()
-        // {
-        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        //     Dispose(disposing: false);
-        // }
 
         public void Dispose()
         {

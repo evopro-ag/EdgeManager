@@ -88,7 +88,7 @@ namespace EdgeManager
             }
             catch (Exception e)
             {
-                //Logger.Error("Error while restarting: did not shutdown", e);
+                LoggerFactory.GetLogger(typeof(Program)).Error("Error while restarting: did not shutdown", e);
             }
         }
        
