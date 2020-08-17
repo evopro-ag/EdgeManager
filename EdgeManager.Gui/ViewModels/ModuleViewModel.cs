@@ -76,7 +76,7 @@ namespace EdgeManager.Gui.ViewModels
                 .Subscribe()
                 .AddDisposableTo(Disposables);
 
-                ReloadCommand = ReactiveCommand.CreateFromTask(Reload)
+                ReloadCommand = ReactiveCommand.CreateFromTask(Reload, ioTDeviceSelectionService.SelectedObject.Select(deviceInfo => deviceInfo != null))
                 .AddDisposableTo(Disposables);
                 
                 // Observable created from ModuleId

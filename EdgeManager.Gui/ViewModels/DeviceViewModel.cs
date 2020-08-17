@@ -72,7 +72,7 @@ namespace EdgeManager.Gui.ViewModels
                 .Subscribe()
                 .AddDisposableTo(Disposables);
 
-            ReloadCommand = ReactiveCommand.CreateFromTask(Reload)
+            ReloadCommand = ReactiveCommand.CreateFromTask(Reload, ioTHubInfoSelectionService.SelectedObject.Select(iotHub => iotHub != null))
                 .AddDisposableTo(Disposables);
         }
 
