@@ -7,6 +7,7 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading;
 using System.Threading.Tasks;
 using EdgeManager.Interfaces.Extensions;
 using EdgeManager.Interfaces.Logging;
@@ -29,8 +30,6 @@ namespace EdgeManager.Logic.Services
 
         public IObservable<JsonCommand> JsonCommands => jsonCommands;
 
-        public bool Loading { get; private set; }
-
         public AzureCliHost(IPowerShellService powerShellService, ApplicationSettings settings)
         {
             this.powerShellService = powerShellService;
@@ -39,17 +38,17 @@ namespace EdgeManager.Logic.Services
 
         public async Task<T> Run<T>(string command)
         {
-            var json = await SendOrRestoreFromCache(command);
+            var json = await SendOrRestoreFromCache(command, false);
             return JsonConvert.DeserializeObject<T>(json);
         }
 
-        private async Task<T> Run<T>(string command, bool reload = false)
+        private async Task<T> Run<T>(string command, bool reload)
         {
             var json = await SendOrRestoreFromCache(command, reload);
             return JsonConvert.DeserializeObject<T>(json);
 		}
 
-        private async Task<string> SendOrRestoreFromCache(string command, bool reload = false)
+        private async Task<string> SendOrRestoreFromCache(string command, bool reload)
         {
             if (settings.CommandCache.ContainsKey(command) && !reload)
             {
@@ -59,7 +58,7 @@ namespace EdgeManager.Logic.Services
             }
 
             logger.Debug($"Sended command to azure cloud: '{command}'");
-            var json = string.Join("\n", await ExecutePowershellCommand("az " + command));
+            var json = string.Join("\n", await ExecutePowerShellCommand("az " + command));
             var jsonCommand = new JsonCommand(command, json);
             jsonCommands.OnNext(jsonCommand);
             settings.CommandCache[command] = jsonCommand;
@@ -83,22 +82,20 @@ namespace EdgeManager.Logic.Services
 		public Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload) => Run<IoTDirectMethodReply>
 			($"iot hub invoke-module-method --method-name '{method}' -n '{hubName}' -d '{deviceId}' -m '{moduleId}' --method-payload '{JsonConvert.SerializeObject(payload, Newtonsoft.Json.Formatting.None)}'");
 
-        public async Task Login()
+        public async Task Login(CancellationToken token)
         {
-            await ExecutePowershellCommand("az login");
+            await ExecutePowerShellCommand("az login");
         }
-        private async Task<Collection<PSObject>> ExecutePowershellCommand(string command)
+        private async Task<Collection<PSObject>> ExecutePowerShellCommand(string command)
         {
-            Loading = true;
             var result = await powerShellService.Execute(command);
-            Loading = false;
 
             return result;
         }
 
         public async Task Logout()
         {
-            await ExecutePowershellCommand("az logout");
+            await ExecutePowerShellCommand("az logout");
         }
 
         public async Task<AzureAccountInfo> GetAccount()
@@ -110,16 +107,16 @@ namespace EdgeManager.Logic.Services
 
         public async Task CreateNewDevice(string hubName, string newDeviceName)
         {
-            await ExecutePowershellCommand($"az iot hub device-identity create --device-id {newDeviceName} --hub-name {hubName} --edge-enabled");
+            await ExecutePowerShellCommand($"az iot hub device-identity create --device-id {newDeviceName} --hub-name {hubName} --edge-enabled");
         }
         public async Task DeleteSelectedDevice(string hubName, string deviceId)
         {
-            await ExecutePowershellCommand($"az iot hub device-identity delete --device-id {deviceId} --hub-name {hubName}");
+            await ExecutePowerShellCommand($"az iot hub device-identity delete --device-id {deviceId} --hub-name {hubName}");
         }
        
         public async Task<bool> CheckCli()
         {
-            var result = await ExecutePowershellCommand("az version");
+            var result = await ExecutePowerShellCommand("az version");
             try
             {
                 return result.Any(l => l.ToString().Contains("azure-cli"));

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using EdgeManager.Interfaces.Models;
 using EdgeManager.Interfaces.Services;
@@ -54,7 +55,7 @@ namespace EdgeManager.Gui.Design
             throw new NotImplementedException();
         }
 
-        public Task Login()
+        public Task Login(CancellationToken token)
         {
             return Task.FromResult(Unit.Default);
         }

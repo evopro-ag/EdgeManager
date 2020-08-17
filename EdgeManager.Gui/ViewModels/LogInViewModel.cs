@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using EdgeManager.Gui.Design;
 using EdgeManager.Interfaces.Extensions;
@@ -79,7 +80,7 @@ namespace EdgeManager.Gui.ViewModels
         {
             try
             {
-                await azureService.Login();
+                await azureService.Login(CancellationToken.None);
             }
             catch (Exception e)
             {

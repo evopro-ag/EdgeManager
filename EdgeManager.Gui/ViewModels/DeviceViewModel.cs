@@ -112,11 +112,6 @@ namespace EdgeManager.Gui.ViewModels
 
         public async Task<Unit> DeleteSelectedDevice()
         {
-            if (azureService.Loading)
-            {
-                MessageBox.Show("Wait while loding Modules...", "Warning!", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-
             using (var disposables = new CompositeDisposable())
             {
                 try

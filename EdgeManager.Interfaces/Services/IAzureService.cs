@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using EdgeManager.Interfaces.Models;
 
@@ -13,13 +14,11 @@ namespace EdgeManager.Interfaces.Services
         Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId, bool reload = false);
         Task<ModuleTwin> GetIoTModelTwinProperties(string hubName, string deviceId, string moduleId);
         Task<IoTDirectMethodReply> CallMethod(string method, string hubName, string deviceId, string moduleId, DirectMethodPayloadBase payload);
-        Task Login();
+        Task Login(CancellationToken token);
         Task Logout();
         Task<AzureAccountInfo> GetAccount();
         Task CreateNewDevice(string hubName, string newDeviceName);
         Task DeleteSelectedDevice(string hubName, string deviceId);
         Task<bool> CheckCli();
-
-        bool Loading { get; }
     }
 }
