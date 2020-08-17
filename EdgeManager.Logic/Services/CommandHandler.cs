@@ -12,7 +12,7 @@ namespace EdgeManager.Logic.Services
     public class CommandHandler : ICommandHandler
     {
         private readonly CompositeDisposable disposables = new CompositeDisposable();
-        private PowerShell ps = PowerShell.Create();
+        private readonly PowerShell ps = PowerShell.Create();
         private readonly Subject<PercentageInformation> percentageCompleted = new Subject<PercentageInformation>();
         private readonly Subject<Exception> errorSubject = new Subject<Exception>();
         private readonly Subject<string> outputSubject = new Subject<string>();
