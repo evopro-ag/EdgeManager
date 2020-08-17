@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using EdgeManager.Gui.Design;
@@ -20,8 +19,10 @@ namespace EdgeManager.Gui.ViewModels
         private readonly ApplicationSettings settings;
         private AzureAccountInfo accountInfo;
         private bool shouldLogIn = true;
+        private readonly BehaviorSubject<Unit> reloadAccountInfo = new BehaviorSubject<Unit>(Unit.Default);
         public ReactiveCommand<Unit, Unit> LogInCommand { get; set; }
-        
+        public ReactiveCommand<Unit, Unit> CancelCommand { get; set; }
+        public CancellationTokenSource CancellationTokenSouce { get; set; }
 
         public LogInViewModel(IAzureService azureService, ApplicationSettings settings)
         {
@@ -45,6 +46,10 @@ namespace EdgeManager.Gui.ViewModels
             LogInCommand = ReactiveCommand.CreateFromTask(PerformAzureLogin)
                     .AddDisposableTo(Disposables)
                 ;
+            
+            CancelCommand = ReactiveCommand.CreateFromTask(CancelLogin)
+                    .AddDisposableTo(Disposables)
+                ;
 
             this.WhenAnyValue(model => model.AccountInfo)
                 .Where(info => info != null)
@@ -54,7 +59,7 @@ namespace EdgeManager.Gui.ViewModels
                 .AddDisposableTo(Disposables)
                 ;
             
-            Observable.Return(Unit.Default)
+            reloadAccountInfo
                 .SelectMany(_ => azureService.GetAccount())
                 .ObserveOnDispatcher()
                 .Do(account => AccountInfo = account)
@@ -63,6 +68,12 @@ namespace EdgeManager.Gui.ViewModels
                 .AddDisposableTo(Disposables)
                 ;
             
+        }
+
+        private Task CancelLogin()
+        {
+            CancellationTokenSouce?.Cancel();
+            return Task.FromResult(Unit.Default);
         }
 
         public bool ShouldLogIn
@@ -80,13 +91,17 @@ namespace EdgeManager.Gui.ViewModels
         {
             try
             {
-                await azureService.Login(CancellationToken.None);
+                CancellationTokenSouce = new CancellationTokenSource();
+                await azureService.Login(CancellationTokenSouce.Token);
+                reloadAccountInfo.OnNext(Unit.Default);
             }
             catch (Exception e)
             {
                 Logger.Error("Error while login", e);
             }
 
+            CancellationTokenSouce.Dispose();
+            CancellationTokenSouce = null;
             return Unit.Default;
         }
     }

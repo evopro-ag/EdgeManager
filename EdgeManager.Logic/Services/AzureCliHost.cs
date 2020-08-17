@@ -86,7 +86,9 @@ namespace EdgeManager.Logic.Services
         {
             using (var command = powerShellService.ExecuteAsync("az login"))
             {
-                await Task.Run(() => command.Wait(), token);
+                var loginTask = Task.Run(() => command.Wait(), token);
+                var cancelTask = Task.Delay(-1, token);
+                await Task.WhenAny(cancelTask, loginTask);
             }
         }
         private async Task<Collection<PSObject>> ExecutePowerShellCommand(string command)
@@ -103,7 +105,7 @@ namespace EdgeManager.Logic.Services
 
         public async Task<AzureAccountInfo> GetAccount()
         {
-            var accountInfo = await Run<AzureAccountInfo>($"account show");
+            var accountInfo = await Run<AzureAccountInfo>($"account show", true);
             if (accountInfo != null) settings.AzureAccountInfo = accountInfo;
             return accountInfo;
         }
