@@ -84,7 +84,10 @@ namespace EdgeManager.Logic.Services
 
         public async Task Login(CancellationToken token)
         {
-            await ExecutePowerShellCommand("az login");
+            using (var command = powerShellService.ExecuteAsync("az login"))
+            {
+                await Task.Run(() => command.Wait(), token);
+            }
         }
         private async Task<Collection<PSObject>> ExecutePowerShellCommand(string command)
         {
