@@ -5,16 +5,13 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using EdgeManager.Gui;
-using EdgeManager.Gui.ViewModels;
 using EdgeManager.Gui.Views;
 using EdgeManager.Interfaces.Commons;
 using EdgeManager.Interfaces.Extensions;
 using EdgeManager.Interfaces.Logging;
 using EdgeManager.Logic;
 using log4net;
-using log4net.Repository.Hierarchy;
 using Ninject;
-using Ninject.Activation.Strategies;
 
 namespace EdgeManager
 {

@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdgeManager.Logic", "EdgeMa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeManager.Gui", "EdgeManager.Gui\EdgeManager.Gui.csproj", "{9F3A3387-CA0C-4CE2-BD75-50BF48FA1C02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeManager.Tests", "EdgeManager.Tests\EdgeManager.Tests.csproj", "{21076BED-9243-4041-9F03-70BEE8F0718A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{9F3A3387-CA0C-4CE2-BD75-50BF48FA1C02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F3A3387-CA0C-4CE2-BD75-50BF48FA1C02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F3A3387-CA0C-4CE2-BD75-50BF48FA1C02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21076BED-9243-4041-9F03-70BEE8F0718A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21076BED-9243-4041-9F03-70BEE8F0718A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21076BED-9243-4041-9F03-70BEE8F0718A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21076BED-9243-4041-9F03-70BEE8F0718A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
