@@ -31,7 +31,7 @@ namespace EdgeManager.Logic.Services
                 .Subscribe(percentageCompleted.OnNext)
                 .AddDisposableTo(disposables);
 		    
-            Observable.FromEventPattern<DataAddedEventArgs>(h => ps.Streams.Progress.DataAdded += h,
+            Observable.FromEventPattern<DataAddedEventArgs>(h => ps.Streams.Error.DataAdded += h,
                     h => ps.Streams.Error.DataAdded -= h)
                 .Select(arg => ((PSDataCollection<ErrorRecord>)arg.Sender)[arg.EventArgs.Index].Exception)
                 .Subscribe(errorSubject.OnNext)

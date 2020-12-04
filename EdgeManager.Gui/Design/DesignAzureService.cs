@@ -85,5 +85,10 @@ namespace EdgeManager.Gui.Design
         {
             return Task.FromResult(true);
         }
+
+        public ICommandHandler ObserveDevice(string hubName, string deviceId)
+        {
+            return new DesignCommandHandler();
+        }
     }
 }

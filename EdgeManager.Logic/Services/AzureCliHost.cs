@@ -91,6 +91,10 @@ namespace EdgeManager.Logic.Services
                 await Task.WhenAny(cancelTask, loginTask);
             }
         }
+
+        public ICommandHandler ObserveDevice(string hubName, string deviceId) =>
+            powerShellService.ExecuteAsync($"az iot hub monitor-events -d {deviceId} -n {hubName} -y -o jsonc");
+        
         private async Task<Collection<PSObject>> ExecutePowerShellCommand(string command)
         {
             var result = await powerShellService.Execute(command);
@@ -121,9 +125,9 @@ namespace EdgeManager.Logic.Services
        
         public async Task<bool> CheckCli()
         {
-            var result = await ExecutePowerShellCommand("az version");
             try
             {
+                var result = await ExecutePowerShellCommand("az version");
                 return result.Any(l => l.ToString().Contains("azure-cli"));
             }
             catch (Exception e)

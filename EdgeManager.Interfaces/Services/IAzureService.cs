@@ -20,5 +20,6 @@ namespace EdgeManager.Interfaces.Services
         Task CreateNewDevice(string hubName, string newDeviceName);
         Task DeleteSelectedDevice(string hubName, string deviceId);
         Task<bool> CheckCli();
+        ICommandHandler ObserveDevice(string hubName, string deviceId);
     }
 }
