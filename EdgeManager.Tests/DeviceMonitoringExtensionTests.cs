@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using EdgeManager.Interfaces.Extensions;
 using EdgeManager.Interfaces.Services;
 using Moq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Shouldly;
 
@@ -93,6 +96,83 @@ namespace EdgeManager.Tests
             
             retrievedMessages.ShouldContain(event1);
             retrievedMessages.ShouldContain(event2);
+        }
+        
+        [Test]
+        public void MessagesAreGroupedByEventInJson()
+        {
+            //arrange
+            var simulatedFeed = new List<string>()
+            {
+                "{",
+                "    \"event\": {",
+                "        \"origin\": \"GP630\",",
+                "        \"module\": \"coilmachine\",",
+                "        \"interface\": \"\",",
+                "        \"component\": \"\",",
+                "        \"payload\": {",
+                "            \"ContentType\": \"DeviceAlive\",",
+                "            \"EdgeSendTime\": \"2020-12-07T18:37:13.3699542Z\",",
+                "            \"v\": 1,",
+                "            \"UUID\": \"8b9c1b02-77c3-402c-96ae-36ee42ffc377\",",
+                "            \"MachineName\": \"GP630\",",
+                "            \"Payload\": {",
+                "                \"DeviceName\": \"IoTEdge.coilmachine\"",
+                "            }",
+                "        }",
+                "    }",
+                "}",
+                "{",
+                "    \"event\": {",
+                "        \"origin\": \"GP630\",",
+                "        \"module\": \"systemstate\",",
+                "        \"interface\": \"\",",
+                "        \"component\": \"\",",
+                "        \"payload\": {",
+                "            \"ContentType\": \"DeviceAlive\",",
+                "            \"EdgeSendTime\": \"2020-12-07T18:37:14.3267733Z\",",
+                "            \"v\": 1,",
+                "            \"UUID\": \"e514fcb6-3cf0-42c8-afa6-14c2dc216e3a\",",
+                "            \"MachineName\": \"GP630\",",
+                "            \"Payload\": {",
+                "                \"DeviceName\": \"IoTEdge.systemstate\"",
+                "            }",
+                "        }",
+                "    }",
+            };
+            
+            var simulatedSubject = new Subject<string>();
+            
+            // // create a moq for ICommandHandler
+            var commandHandlerMock = new Mock<ICommandHandler>();
+            commandHandlerMock.Setup(handler => handler.OutputLines)
+                .Returns(simulatedSubject)
+                ;
+            
+            
+            //act
+
+            var retrievedMessages = new List<JObject>();
+            var subscription = commandHandlerMock
+                                                .Object
+                                                .GetTelemetryMessagesInJsonFormat()
+                                                .Subscribe(o => retrievedMessages.Add(o));
+            // // Add some lines like in azure cli
+            foreach (var line in simulatedFeed)
+            {
+                simulatedSubject.OnNext(line);
+            }
+            
+            
+            //assert
+
+            // Task.Delay(500).Wait();
+
+            var event1 = "{\"event\":{\"origin\":\"GP630\",\"module\":\"coilmachine\",\"interface\":\"\",\"component\":\"\",\"payload\":{\"ContentType\":\"DeviceAlive\",\"EdgeSendTime\":\"2020-12-07T18:37:13.3699542Z\",\"v\":1,\"UUID\":\"8b9c1b02-77c3-402c-96ae-36ee42ffc377\",\"MachineName\":\"GP630\",\"Payload\":{\"DeviceName\":\"IoTEdge.coilmachine\"}}}}";
+            var event2 = "{\"event\":{\"origin\":\"GP630\",\"module\":\"systemstate\",\"interface\":\"\",\"component\":\"\",\"payload\":{\"ContentType\":\"DeviceAlive\",\"EdgeSendTime\":\"2020-12-07T18:37:14.3267733Z\",\"v\":1,\"UUID\":\"e514fcb6-3cf0-42c8-afa6-14c2dc216e3a\",\"MachineName\":\"GP630\",\"Payload\":{\"DeviceName\":\"IoTEdge.systemstate\"}}}}";
+            
+            retrievedMessages.Single(o => o["event"]["UUID"] == JsonConvert.DeserializeObject<JObject>(event1)["event"]["UUID"]).ShouldNotBeNull();
+            retrievedMessages.Single(o => o["event"]["UUID"] == JsonConvert.DeserializeObject<JObject>(event2)["event"]["UUID"]).ShouldNotBeNull();
         }
     }
 }

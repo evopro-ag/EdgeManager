@@ -74,7 +74,15 @@ namespace EdgeManager.Logic.Services
             return hubs;
         }
 
-        public Task<IoTDeviceInfo[]> GetIoTDevices(string hubName, bool reload = false) => Run<IoTDeviceInfo[]>($"iot hub device-identity list --hub-name {hubName}", reload);
+        public async Task<IoTDeviceInfo[]> GetIoTDevices(string hubName, bool reload = false)
+        {
+            var devices = await Run<IoTDeviceInfo[]>($"iot hub device-identity list --hub-name {hubName}", reload);
+            foreach (var device in devices)
+            {
+                device.HubName = hubName;
+            }
+            return devices;
+        }
 		public Task<IoTModuleIdentityInfo[]> GetIoTModules(string hubName, string deviceId, bool reload = false) => Run<IoTModuleIdentityInfo[]>
 			($"iot hub module-identity list --device-id {deviceId} --hub-name {hubName}", reload);
         public Task<ModuleTwin> GetIoTModelTwinProperties(string hubName, string deviceId, string moduleId) => Run<ModuleTwin>
@@ -92,9 +100,12 @@ namespace EdgeManager.Logic.Services
             }
         }
 
-        public ICommandHandler ObserveDevice(string hubName, string deviceId) =>
+        public ICommandHandler ObserveDeviceMessages(string hubName, string deviceId) =>
             powerShellService.ExecuteAsync($"az iot hub monitor-events -d {deviceId} -n {hubName} -y -o jsonc");
         
+        public ICommandHandler MonitorDevice(string hubName, string deviceId) =>
+            powerShellService.ExecuteAsync($"az iot hub monitor-events -d {deviceId} -n {hubName} -y -o json");
+
         private async Task<Collection<PSObject>> ExecutePowerShellCommand(string command)
         {
             var result = await powerShellService.Execute(command);

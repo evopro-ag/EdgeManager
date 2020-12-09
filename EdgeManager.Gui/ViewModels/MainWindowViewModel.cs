@@ -35,10 +35,13 @@ namespace EdgeManager.Gui.ViewModels
             Logger.Debug("Initialize main window view model");
 
             TabsViewModel = viewModelFactory.CreateViewModel<TabsViewModel>();
+            TabsViewModel.AddDisposableTo(Disposables);
             HubViewModel = viewModelFactory.CreateViewModel<HubViewModel>();
+            HubViewModel.AddDisposableTo(Disposables);
             DeviceViewModel = viewModelFactory.CreateViewModel<DeviceViewModel>();
+            DeviceViewModel.AddDisposableTo(Disposables);
             LogInViewModel = viewModelFactory.CreateViewModel<LogInViewModel>();
-
+            LogInViewModel.AddDisposableTo(Disposables);
             
             azureInstallationService.RequestInstallation
                 .ObserveOnDispatcher()

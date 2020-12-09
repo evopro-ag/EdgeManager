@@ -1,0 +1,86 @@
+﻿<Window x:Class="EdgeManager.Gui.Views.MonitorDeviceWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:EdgeManager.Gui.Views"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:viewModels="clr-namespace:EdgeManager.Gui.ViewModels"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
+        xmlns:converters="clr-namespace:EdgeManager.Gui.Converters"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance viewModels:DesignMonitorDeviceViewModel, IsDesignTimeCreatable=True}"
+        Title="EdgeManager Monitor Device"
+        Width="600" Height="800"
+        Icon="../em_g_2.ico">
+    <Window.Resources>
+        <converters:BoolToIconConverter x:Key="BoolToIconConverter" TrueValue="Pause" FalseValue="Play"/>
+        <converters:BoolToBrushConverter x:Key="PlayPauseConverter" TrueValue="CornflowerBlue" FalseValue="Green"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition  Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <fa:FontAwesome Icon="Cloud" FontSize="32" Foreground="CornflowerBlue" Grid.Column="0" VerticalAlignment="Center"/>
+            <Label Content="{Binding Path=Model.DeviceId}" Grid.Column="1" FontSize="24" VerticalContentAlignment="Center"/>
+            <StackPanel Grid.Column="2" Margin="8" Orientation="Horizontal">
+                <Button Margin="8" Padding="8" Command="{Binding ToggleRecordStateCommand}">
+                    <fa:ImageAwesome 
+                        Icon="{Binding Record, Converter={StaticResource BoolToIconConverter}}"
+                        Foreground="{Binding Record, Converter={StaticResource PlayPauseConverter}}"
+                        Width="24"
+                        />
+                </Button>
+                <Button Margin="8" Command="{Binding SaveCommand}" Padding="8">
+                    <fa:ImageAwesome 
+                        Icon="Save"
+                        Foreground="CornflowerBlue"
+                        Width="24"
+                    />
+                </Button>
+            </StackPanel>
+        </Grid>
+        <!-- Content -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition  Width=".5*"/>
+                <ColumnDefinition  Width="Auto"/>
+                <ColumnDefinition Width=".5*"/>
+            </Grid.ColumnDefinitions>
+                <ListBox Grid.Column="0" Margin="8" ItemsSource="{Binding Events}" 
+                         SelectedItem="{Binding SelectedEvent}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="4">
+                                <Label Content="{Binding Time}" ContentStringFormat="{}{0:s}"/>
+                                <Label Content="{Binding Module}" ContentStringFormat="Module: {0}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Column="2">
+                <TextBlock Text="{Binding SelectedEvent.FormattedPayload}" Margin="16" FontSize="14"/> 
+            </ScrollViewer>
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" MinWidth="4" MaxWidth="0.5" />
+        </Grid>
+        
+        <!-- footer -->
+        <Grid Grid.Row="2">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding Autoscroll}" Margin="8" VerticalContentAlignment="Center">Autoscroll</CheckBox>
+                <TextBox Text="{Binding MaxNumberOfEvents}" Margin="8,8,4,8" VerticalContentAlignment="Center" MinWidth="100" /> 
+                <Label Margin="8" VerticalAlignment="Center">Max nr. of Events</Label>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

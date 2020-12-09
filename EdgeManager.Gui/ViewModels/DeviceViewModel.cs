@@ -31,6 +31,7 @@ namespace EdgeManager.Gui.ViewModels
         public ReactiveCommand<Unit, Unit> AddNewDeviceCommand { get; set; }
         public ReactiveCommand<Unit, Unit> DeleteSelectedDeviceCommand { get; set; }
         public ReactiveCommand<Unit, Unit> ReloadCommand { get; set; }
+        public ReactiveCommand<IoTDeviceInfo, Unit> MonitorDevice { get; set; }
 
         public DeviceViewModel(IAzureService azureService, 
             ISelectionService<IoTHubInfo> ioTHubInfoSelectionService, ISelectionService<IoTDeviceInfo> ioTDeviceSelectionService, 
@@ -74,6 +75,21 @@ namespace EdgeManager.Gui.ViewModels
 
             ReloadCommand = ReactiveCommand.CreateFromTask(Reload, ioTHubInfoSelectionService.SelectedObject.Select(iotHub => iotHub != null))
                 .AddDisposableTo(Disposables);
+
+            MonitorDevice = ReactiveCommand.CreateFromTask<IoTDeviceInfo, Unit>(OpenMonitorDevice)
+                .AddDisposableTo(Disposables);
+        }
+
+        private Task<Unit> OpenMonitorDevice(IoTDeviceInfo device)
+        {
+            Logger.Debug($"Opening monitor window for {device.DeviceId}...");
+            var window = new MonitorDeviceWindow();
+            var viewModel = viewModelFactory.CreateViewModel<IoTDeviceInfo, MonitorDeviceViewModel>(device);
+            viewModel.AddDisposableTo(Disposables);
+            window.DataContext = viewModel;
+            window.Show();
+            Logger.Debug($"Opend Dialog Window to add New Device Name");
+            return Task.FromResult(Unit.Default);
         }
 
         private async Task<Unit> CreateNewDevice()

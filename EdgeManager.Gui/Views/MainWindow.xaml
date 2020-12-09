@@ -7,12 +7,12 @@
         xmlns:viewModels="clr-namespace:EdgeManager.Gui.ViewModels"
         mc:Ignorable="d"
         Title="EdgeManager"
-        WindowStartupLocation="CenterScreen"
         DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}"
         AllowDrop="True"
         MinWidth="1024" MinHeight="800"
         d:DesignHeight="450" d:DesignWidth="800"
         Icon="../em_g_2.ico"
+        
         >
 
     <Grid>

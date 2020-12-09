@@ -62,7 +62,7 @@ namespace EdgeManager
                     }
 
                     logger.Debug("application ended.\n\n\n\n");
-
+                    Process.GetCurrentProcess().Kill();
                 }
                 catch (Exception e)
                 {

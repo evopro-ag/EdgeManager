@@ -29,9 +29,9 @@ namespace EdgeManager.Gui.Design
         {
             return Task.FromResult(new[]
             {
-                new IoTDeviceInfo {DeviceId = "Device1"},
-                new IoTDeviceInfo {DeviceId = "Device2"},
-                new IoTDeviceInfo {DeviceId = "Device3"}
+                new IoTDeviceInfo {DeviceId = "Device1", HubName = hubName},
+                new IoTDeviceInfo {DeviceId = "Device2", HubName = hubName},
+                new IoTDeviceInfo {DeviceId = "Device3", HubName = hubName}
             });
         }
 
@@ -86,7 +86,12 @@ namespace EdgeManager.Gui.Design
             return Task.FromResult(true);
         }
 
-        public ICommandHandler ObserveDevice(string hubName, string deviceId)
+        public ICommandHandler ObserveDeviceMessages(string hubName, string deviceId)
+        {
+            return new DesignCommandHandler();
+        }
+
+        public ICommandHandler MonitorDevice(string hubName, string deviceId)
         {
             return new DesignCommandHandler();
         }
