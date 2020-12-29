@@ -65,7 +65,7 @@ namespace EdgeManager.Gui.ViewModels
                 .Subscribe()
                 .AddDisposableTo(Disposables);
 
-            observeDevice.AddDisposableTo(Disposables).AddDisposableTo(Disposables);
+            observeDevice.AddDisposableTo(Disposables);
 
             SaveCommand = ReactiveCommand.CreateFromTask(SaveEvents);
             
