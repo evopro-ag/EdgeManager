@@ -26,7 +26,7 @@ jobs:
     - name: Publish
       run: dotnet publish EdgeManager\EdgeManager.csproj -r win10-x64 -c Release /p:PublishSingleFile=true -o out
     - name: Extract Version
-      uses: olegtarasov/get-tag@v2
+      uses: olegtarasov/get-tag@v2.1
       id: tagName
     - name: Compress
       run: Compress-Archive out\EdgeManager.exe EdgeManager_${{ steps.tagName.outputs.tag }}.${{ github.run_number }}.zip
